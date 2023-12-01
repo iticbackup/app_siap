@@ -40,7 +40,7 @@
                 <div class="card-header bg-dark">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h4 class="card-title text-white">@yield('title')</h4>
+                            <h4 class="card-title text-white">@yield('title') Test</h4>
                         </div>
                         <div class="col-auto">
                             <button class="btn" style="background-color: #1AACAC; color: white" onclick="downloadDataKaryawan()"><i class="fas fa-download"></i> Download Rekap Excel</button>
