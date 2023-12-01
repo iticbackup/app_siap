@@ -1,0 +1,11 @@
+@extends('layouts.docs.master')
+@section('content')
+    @component('components.breadcrumb')
+        @slot('li_1')
+            @yield('title')
+        @endslot
+        @slot('title')
+            @yield('title')
+        @endslot
+    @endcomponent
+@endsection
