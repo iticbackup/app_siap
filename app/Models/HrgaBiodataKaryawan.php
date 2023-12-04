@@ -47,6 +47,11 @@ class HrgaBiodataKaryawan extends Model
         return $this->belongsTo(\App\Models\BiodataKaryawan::class, 'nik','nik');
     }
 
+    public function biodata_nama_karyawan()
+    {
+        return $this->belongsTo(\App\Models\BiodataKaryawan::class, 'nama','nama');
+    }
+
     public function log_posisi()
     {
         return $this->belongsTo(\App\Models\LogPosisi::class, 'nik','nik');

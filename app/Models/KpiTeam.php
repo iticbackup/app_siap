@@ -24,10 +24,12 @@ class KpiTeam extends Model
     {
         return $this->belongsTo(\App\Models\Kpi::class, 'id');
     }
+
     public function departemen_user()
     {
         return $this->belongsTo(\App\Models\DepartemenUser::class, 'departemen_user_id');
     }
+    
     public function kpi_departemen()
     {
         return $this->belongsTo(\App\Models\KpiDepartemen::class, 'kpi_departemen_id');

@@ -14,6 +14,9 @@ use App\Models\HrgaKaryawanResign;
 
 use App\Models\RekapPelatihanSeminar;
 use App\Models\RekapPelatihanSeminarPeserta;
+use App\Models\RekapPelatihanSeminarKategori;
+use App\Models\Departemen;
+use App\Models\DepartemenUser;
 
 use App\Exports\RekapDataKaryawanAktifExcel;
 use App\Exports\RekapDataKaryawanNonAktifExcel;
@@ -35,6 +38,7 @@ class HRGAController extends Controller
         HrgaRiwayatKonselingKaryawan $hrga_riwayat_konseling,
         HrgaRiwayatTraining $hrga_riwayat_training,
         HrgaKaryawanResign $hrga_karyawan_resign,
+        RekapPelatihanSeminar $rekap_pelatihan,
         RekapPelatihanSeminarPeserta $rekap_pelatihan_seminar_peserta
     ){
         $this->biodata_karyawan = $biodata_karyawan;
@@ -43,7 +47,9 @@ class HRGAController extends Controller
         $this->hrga_riwayat_konseling = $hrga_riwayat_konseling;
         $this->hrga_riwayat_training = $hrga_riwayat_training;
         $this->hrga_karyawan_resign = $hrga_karyawan_resign;
+        $this->rekap_pelatihan = $rekap_pelatihan;
         $this->rekap_pelatihan_seminar_peserta = $rekap_pelatihan_seminar_peserta;
+        $this->day = 0;
     }
 
     public function index_biodata_karyawan(Request $request)
@@ -970,5 +976,150 @@ class HRGAController extends Controller
         // return view('hrga.excel.download_rekap_excel_non_aktif',$data);
         return Excel::download(new SheetRekapDataKaryawanExcel($tanggal), 'Rekap Data Karyawan PT Indonesian Tobacco Tbk Periode '.$tanggal.'.xlsx');
         // return Excel::download(new RekapDataKaryawanNonAktifExcel($tanggal), 'Rekap Data Karyawan PT Indonesian Tobacco Tbk Periode '.$tanggal.'.xlsx');
+    }
+
+    public function rekap_pelatihan(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = $this->rekap_pelatihan->all();
+            return DataTables::of($data)
+                            ->addIndexColumn()
+                            ->addColumn('tema', function($row){
+                                $datelive = Carbon::now()->addDay($this->day)->format('Y-m-d H:i');
+                                $explode_tanggal = explode(',',$row->tanggal);
+                                // $explode_tanggal_2 = explode('#',$row->tanggal);
+                                if (strtotime($datelive) < strtotime($explode_tanggal[0])) {
+                                    return substr($row->tema,0,50);
+                                }
+                                elseif (strtotime($datelive) >= strtotime($explode_tanggal[0]) && strtotime($datelive) <= strtotime($explode_tanggal[1])) {
+                                    // return '<span class="badge bg-warning"><i class="mdi mdi-file-table-outline"></i> '.'ON PROCESS'.'</span>';
+                                    return substr($row->tema,0,50);
+                                }else{
+                                    if ($row->status != 'Done') {
+                                        return substr($row->tema,0,50).'<a href="javascript:void()" onclick="update_canvas(`'.$row->id.'`)" class="btn btn-link"><i class="dripicons-warning"></i> Perbarui Total Jam Pelatihan</a>';
+                                    }else{
+                                        return substr($row->tema,0,50);
+                                    }
+                                }
+                            })
+                            ->addColumn('tanggal', function($row){
+                                $explode_tanggal = explode(',',$row->tanggal);
+                                if ($row->check_date == 'yes') {
+                                    return Carbon::create($explode_tanggal[0])->format('d').' , '.Carbon::create($explode_tanggal[1])->isoFormat('LL');
+                                }else{
+                                    if (Carbon::create($explode_tanggal[0])->format('Y-m-d') == Carbon::create($explode_tanggal[1])->format('Y-m-d')) {
+                                        return Carbon::create($explode_tanggal[1])->isoFormat('LL');
+                                    }else{
+                                        return Carbon::create($explode_tanggal[0])->format('d').' - '.Carbon::create($explode_tanggal[1])->isoFormat('LL');
+                                    }
+                                }
+                            })
+                            ->addColumn('status', function($row){
+                                $datelive = Carbon::now()->addDay($this->day)->format('Y-m-d H:i');
+                                $explode_tanggal = explode(',',$row->tanggal);
+                                if (strtotime($datelive) < strtotime($explode_tanggal[0])) {
+                                    return '<span class="badge bg-primary"><i class="mdi mdi-file-table-outline"></i> '.'PLAN'.'</span>';
+                                }
+                                elseif (strtotime($datelive) >= strtotime($explode_tanggal[0]) && strtotime($datelive) <= strtotime($explode_tanggal[1])) {
+                                    return '<span class="badge bg-warning"><i class="mdi mdi-file-table-outline"></i> '.'ON PROCESS'.'</span>';
+                                }else{
+                                    return '<span class="badge bg-success"><i class="mdi mdi-check-box-outline"></i> '.'SELESAI'.'</span>';
+                                }
+                            })
+                            ->addColumn('status_rekap', function($row){
+                                
+                            })
+                            ->addColumn('action', function($row){
+                                $btn = '<div class="btn-group">';
+                                $btn.= '<button type="button" onclick="perbarui(`'.$row->id.'`)" class="btn btn-primary btn-icon">
+                                            <i class="fa fa-upload"></i> Perbarui Pelatihan Karyawan
+                                        </button>';
+                                $btn.= '</div>';
+                                return $btn;
+                            })
+                            ->rawColumns(['action','status'])
+                            ->make(true);
+        }
+        return view('hrga.rekap_pelatihan.index');
+    }
+
+    public function rekap_pelatihan_detail($id)
+    {
+        $rekap_pelatihan = $this->rekap_pelatihan->find($id);
+        if (empty($rekap_pelatihan)) {
+            return response()->json([
+                'success' => false,
+                'message_title' => 'Gagal',
+                'message_content' => 'Data tidak ditemukan'
+            ]);
+        }
+        $rekap_pelatihan_seminar_peserta = $this->rekap_pelatihan_seminar_peserta->where('rekap_pelatihan_seminar_id',$rekap_pelatihan->id)->get();
+        // dd($rekap_pelatihan_seminar_peserta);
+        foreach ($rekap_pelatihan_seminar_peserta as $key => $rpsp) {
+            $nik_karyawan = $this->biodata_karyawan->select('nik','nama')->where('nama',$rpsp->peserta)
+                                                    ->where('status_karyawan','!=','R')
+                                                    ->first();
+            $hrga_biodata_karyawan = $this->hrga_biodata_karyawan->select('id','nik')->where('nik',$nik_karyawan->nik)->first();
+            $hrga_riwayat_training = $this->hrga_riwayat_training->where('hrga_biodata_karyawan_id',$hrga_biodata_karyawan->id)->first();
+            if (empty($hrga_riwayat_training)) {
+                $to = "<i class='mdi mdi-arrow-right-bold-circle-outline'></i>";
+            }else{
+                $to = "<i class='mdi mdi-check-circle-outline' style='color: green'></i>";
+            }
+
+            $data_peserta[] = [
+                'id' => $rpsp->id,
+                'rekap_pelatihan_seminar_id' => $rpsp->rekap_pelatihan_seminar_id,
+                'id_biodata_karyawan' => $hrga_biodata_karyawan->id,
+                'riwayat_training' => $rpsp->rekap_pelatihan_seminar_detail->tema,
+                'peserta' => $rpsp->peserta,
+                'to' => $to
+            ];
+        }
+
+        return [
+            'id' => $rekap_pelatihan->id,
+            'tema' => $rekap_pelatihan->tema,
+            'kategori_pelatihan' => $rekap_pelatihan->kategori_pelatihan,
+            'penyelenggara' => $rekap_pelatihan->penyelenggara,
+            'jenis' => $rekap_pelatihan->jenis,
+            'jml_hari' => $rekap_pelatihan->jml_hari,
+            'jml_jam_dlm_hari' => $rekap_pelatihan->jml_jam_dlm_hari,
+            'total_peserta' => $rekap_pelatihan->total_peserta,
+            'periode' => $rekap_pelatihan->periode,
+            'data_peserta' => $data_peserta
+        ];
+    }
+
+    public function rekap_pelatihan_detail_simpan(Request $request)
+    {
+        $id_hrga_riwayat_training = $this->hrga_riwayat_training->max('id');
+        foreach ($request->id_hrga_biodata_karyawan as $key => $value) {
+            // $data[] = [
+            //     'id' => $id_hrga_riwayat_training+$key+1,
+            //     'hrga_biodata_karyawan_id' => $value,
+            //     'riwayat_training' => $request->riwayat_training[$key]
+            // ];
+            $this->hrga_riwayat_training->firstOrCreate(
+                [
+                    'hrga_biodata_karyawan_id' => $value,
+                    'riwayat_training' => $request->riwayat_training[$key]
+                ],
+                [
+                    'id' => $id_hrga_riwayat_training+$key+1,
+                    'hrga_biodata_karyawan_id' => $value,
+                    'riwayat_training' => $request->riwayat_training[$key]
+                ]
+            );
+        }
+
+        return response()->json([
+            'success' => true,
+            'message_title' => 'Berhasil',
+            'message_content' => 'Rekap Pelatihan / Seminar Karyawan Berhasil Diperbarui',
+            'message_type' => 'success'
+        ]);
+        // dd($data);
+        // dd($request->all());
     }
 }

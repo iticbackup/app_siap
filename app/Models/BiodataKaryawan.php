@@ -34,4 +34,9 @@ class BiodataKaryawan extends Model
         'status_kontrak',
         'tanggal_resign',
     ];
+
+    public function log_posisi()
+    {
+        return $this->belongsTo(\App\Models\LogPosisi::class, 'nik','nik');
+    }
 }

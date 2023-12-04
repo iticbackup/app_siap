@@ -40,9 +40,10 @@
                 <div class="card-header bg-dark">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h4 class="card-title text-white">@yield('title') Test</h4>
+                            <h4 class="card-title text-white">@yield('title')</h4>
                         </div>
                         <div class="col-auto">
+                            <a href="{{ route('hrga.rekap_pelatihan') }}" class="btn" style="background-color: #EEF296; color: black"><i class="fas fa-file"></i> Rekap Pelatihan</a>
                             <button class="btn" style="background-color: #1AACAC; color: white" onclick="downloadDataKaryawan()"><i class="fas fa-download"></i> Download Rekap Excel</button>
                             <button class="btn" style="background-color: #F31559; color: white" onclick="buatDataResign()"><i class="fas fa-plus"></i> Buat
                                 Data Resign</button>
@@ -374,7 +375,7 @@
         }
 
         function reload(){
-            table.ajax.reload();
+            table.ajax.reload(null, false);
         }
 
         function buatDataResign() {
@@ -817,7 +818,7 @@
                                     'success'
                                 );
                                 document.getElementById("form-simpan").reset();
-                                table.ajax.reload();
+                                table.ajax.reload(null, false);
 
                                 $('.modalBuatDataKaryawan').modal('hide');
                             }else{
@@ -889,7 +890,7 @@
                                     'success'
                                 );
                                 
-                                table.ajax.reload();
+                                table.ajax.reload(null, false);
 
                                 $('.modalEditDataKaryawan').modal('hide');
                             }else{
@@ -961,7 +962,7 @@
                                     'success'
                                 );
                                 document.getElementById("form-resign-simpan").reset();
-                                table.ajax.reload();
+                                table.ajax.reload(null, false);
 
                                 $('.modalBuatDataResign').modal('hide');
                             }else{

@@ -24,4 +24,14 @@ class RekapPelatihanSeminarPeserta extends Model
     {
         return $this->hasMany(\App\Models\RekapPelatihanSeminar::class, 'id');
     }
+
+    public function hrga_rekap_pelatihan_karyawan()
+    {
+        return $this->belongsTo(\App\Models\RekapPelatihanSeminar::class, 'rekap_pelatihan_seminar_id');
+    }
+
+    public function rekap_pelatihan_seminar_detail()
+    {
+        return $this->belongsTo(\App\Models\RekapPelatihanSeminar::class, 'rekap_pelatihan_seminar_id');
+    }
 }

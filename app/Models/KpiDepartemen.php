@@ -17,4 +17,9 @@ class KpiDepartemen extends Model
         // 'id',
         'departemen',
     ];
+
+    public function kpi_team()
+    {
+        return $this->hasMany(\App\Models\KpiTeam::class,'kpi_departemen_id');
+    }
 }

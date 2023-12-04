@@ -191,6 +191,11 @@ Route::group(['middleware' => ['auth']], function() {
             Route::get('aktif', [App\Http\Controllers\HRGAController::class, 'index_biodata_karyawan_aktif'])->name('hrga.biodata_karyawan.aktif');
             Route::get('non_aktif', [App\Http\Controllers\HRGAController::class, 'index_biodata_karyawan_non_aktif'])->name('hrga.biodata_karyawan.non_aktif');
         });
+        Route::prefix('rekap_pelatihan')->group(function () {
+            Route::get('/', [App\Http\Controllers\HRGAController::class, 'rekap_pelatihan'])->name('hrga.rekap_pelatihan');
+            Route::get('{id}/detail', [App\Http\Controllers\HRGAController::class, 'rekap_pelatihan_detail'])->name('hrga.rekap_pelatihan_detail');
+            Route::post('simpan', [App\Http\Controllers\HRGAController::class, 'rekap_pelatihan_detail_simpan'])->name('hrga.rekap_pelatihan_detail_simpan');
+        });
     });
 
     Route::prefix('profile')->group(function () {
