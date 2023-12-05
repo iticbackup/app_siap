@@ -959,6 +959,7 @@ class HRGAController extends Controller
         //                             ->groupBy('hrga_biodata_karyawan.departemen_dept')
         //                             ->orderBy('hrga_biodata_karyawan.departemen_dept','asc')
         //                             ->get();
+        // dd($data);
         // return view('hrga.excel.download_rekap_excel',$data);
         // return Excel::download(new RekapDataKaryawanAktifExcel($tanggal), 'Rekap Data Karyawan PT Indonesian Tobacco Tbk Periode '.$tanggal.'.xlsx');
         

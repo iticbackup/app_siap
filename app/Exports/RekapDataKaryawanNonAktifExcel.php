@@ -67,7 +67,7 @@ WithColumnFormatting
                                     ->leftJoin('itic_emp.log_posisi','itic_emp.log_posisi.nik','=','hrga_biodata_karyawan.nik')
                                     ->where('itic_emp.log_posisi.tanggal','<=',$this->tanggal)
                                     ->where('hrga_biodata_karyawan.status_karyawan','T')
-                                    ->groupBy('app_itic.hrga_biodata_karyawan.departemen_dept')
+                                    ->groupBy('hrga_biodata_karyawan.departemen_dept')
                                     ->orderBy('hrga_biodata_karyawan.departemen_dept','asc')
                                     ->get();
         // return $data;

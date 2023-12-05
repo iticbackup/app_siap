@@ -48,8 +48,8 @@
             </tr> --}}
             <tr>
                 <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; width: 50px; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">NO</th>
-                <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; width: 50px; height: 50px; word-wrap: break-word; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7; color: red">NO. URUT LEVEL</th>
-                <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; width: 50px; height: 50px; word-wrap: break-word; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7; color: #002060">NO. URUT DEPT</th>
+                {{-- <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; width: 50px; height: 50px; word-wrap: break-word; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7; color: red">NO. URUT LEVEL</th>
+                <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; width: 50px; height: 50px; word-wrap: break-word; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7; color: #002060">NO. URUT DEPT</th> --}}
                 <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">NIK</th>
                 <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">NAMA</th>
                 <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">NOMOR TELEPON</th>
@@ -168,8 +168,8 @@
                 @endphp
                 <tr>
                     <td style="text-align: center; font-weight: bold; border: 1px solid black; vertical-align: top;">{{ $no }}</td>
-                    <td style="text-align: center; font-weight: bold; border: 1px solid black; vertical-align: top; color:red">{{ $kr->hrga_biodata_karyawan->no_urut_level }}</td>
-                    <td style="text-align: center; font-weight: bold; border: 1px solid black; vertical-align: top; color:#002060">{{ $kr->hrga_biodata_karyawan->no_urut_departemen }}</td>
+                    {{-- <td style="text-align: center; font-weight: bold; border: 1px solid black; vertical-align: top; color:red">{{ $kr->hrga_biodata_karyawan->no_urut_level }}</td>
+                    <td style="text-align: center; font-weight: bold; border: 1px solid black; vertical-align: top; color:#002060">{{ $kr->hrga_biodata_karyawan->no_urut_departemen }}</td> --}}
                     <td style="text-align: center; font-weight: bold; border: 1px solid black; vertical-align: top; {{ $data_status_kerja_pk == 'Kontrak' ? 'color:red; font-weight: bold;' : null }}">{{ $kr->hrga_biodata_karyawan->nik }}</td>
                     <td style="text-align: left; font-weight: bold; border: 1px solid black; vertical-align: top">{{ $kr->hrga_biodata_karyawan->biodata_karyawan->nama }}</td>
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $kr->hrga_biodata_karyawan->no_telepon }}</td>
