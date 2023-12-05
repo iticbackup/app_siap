@@ -54,42 +54,28 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-2">
                                     <label for="">Email</label>
                                     <input type="email" name="edit_email" class="form-control" placeholder="Email" id="edit_email">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-2">
                                     <label for="">NPWP</label>
                                     <input type="text" name="edit_no_npwp" class="form-control mb_npwp" placeholder="NPWP" id="edit_mb_npwp">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-2">
+                                    <label for="">No. Telepon</label>
+                                    <input type="text" name="edit_no_telepon" placeholder="No. Telepon" class="form-control" id="edit_no_telepon">
                                 </div>
                             </div>
                         </div>
                         <div class="mb-2">
                             <label for="">Alamat</label>
                             <textarea name="edit_alamat" class="form-control" id="edit_mb_alamat" cols="30" rows="5"></textarea>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class="mb-2">
-                                    <label for="">No. Urut Level</label>
-                                    <input type="number" name="edit_no_urut_level" placeholder="No. Urut Lvl" class="form-control" id="edit_no_urut_level">
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="mb-2">
-                                    <label for="">No. Urut Dept</label>
-                                    <input type="number" name="edit_no_urut_departemen" placeholder="No. Urut Dept" class="form-control" id="edit_no_urut_departemen">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-2">
-                                    <label for="">No. Telepon</label>
-                                    <input type="text" name="edit_no_telepon" placeholder="No. Telepon" class="form-control" id="edit_no_telepon">
-                                </div>
-                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
