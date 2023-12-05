@@ -536,8 +536,8 @@ class HRGAController extends Controller
             'edit_tanggal_lahir' => 'required',
             'edit_jenis_kelamin' => 'required',
             'edit_email' => 'required',
-            'edit_no_urut_level' => 'required',
-            'edit_no_urut_departemen' => 'required',
+            // 'edit_no_urut_level' => 'required',
+            // 'edit_no_urut_departemen' => 'required',
             'edit_no_bpjs_ketenagakerjaan' => 'required',
             'edit_no_bpjs_kesehatan' => 'required',
             'edit_no_rekening_mandiri' => 'required',
@@ -559,8 +559,8 @@ class HRGAController extends Controller
             'edit_tanggal_lahir.required'  => 'Tanggal Lahir wajib diisi.',
             'edit_jenis_kelamin.required'  => 'Jenis Kelamin wajib diisi.',
             'edit_email.required'  => 'Email wajib diisi.',
-            'edit_no_urut_level.required'  => 'No. Urut Level wajib diisi.',
-            'edit_no_urut_departemen.required'  => 'No. Urut Departemen wajib diisi.',
+            // 'edit_no_urut_level.required'  => 'No. Urut Level wajib diisi.',
+            // 'edit_no_urut_departemen.required'  => 'No. Urut Departemen wajib diisi.',
             'edit_no_bpjs_ketenagakerjaan.required'  => 'No. Bpjs Ketenagakerjaan wajib diisi.',
             'edit_no_bpjs_kesehatan.required'  => 'No. Bpjs Kesehatan wajib diisi.',
             'edit_no_rekening_mandiri.required'  => 'No. Rekening Mandiri wajib diisi.',
@@ -588,8 +588,8 @@ class HRGAController extends Controller
             $input['no_npwp'] = $request->edit_no_npwp;
             $input['no_telepon'] = $request->edit_no_telepon;
             $input['email'] = $request->edit_email;
-            $input['no_urut_level'] = $request->edit_no_urut_level;
-            $input['no_urut_departemen'] = $request->edit_no_urut_departemen;
+            // $input['no_urut_level'] = $request->edit_no_urut_level;
+            // $input['no_urut_departemen'] = $request->edit_no_urut_departemen;
             $input['no_bpjs_ketenagakerjaan'] = $request->edit_no_bpjs_ketenagakerjaan;
             $input['no_bpjs_kesehatan'] = $request->edit_no_bpjs_kesehatan;
             $input['no_rekening_mandiri'] = $request->edit_no_rekening_mandiri;
