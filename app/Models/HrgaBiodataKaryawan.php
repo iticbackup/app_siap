@@ -15,8 +15,8 @@ class HrgaBiodataKaryawan extends Model
 
     public $fillable = [
         'id',
-        'no_urut_level',
-        'no_urut_departemen',
+        // 'no_urut_level',
+        // 'no_urut_departemen',
         'nik',
         'no_npwp',
         'no_telepon',

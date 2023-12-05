@@ -294,8 +294,8 @@ class HRGAController extends Controller
             'tanggal_lahir' => 'required',
             'jenis_kelamin' => 'required',
             'email' => 'required',
-            'no_urut_level' => 'required',
-            'no_urut_departemen' => 'required',
+            // 'no_urut_level' => 'required',
+            // 'no_urut_departemen' => 'required',
             'no_bpjs_ketenagakerjaan' => 'required',
             'no_bpjs_kesehatan' => 'required',
             'no_rekening_mandiri' => 'required',
@@ -318,8 +318,8 @@ class HRGAController extends Controller
             'tanggal_lahir.required'  => 'Tanggal Lahir wajib diisi.',
             'jenis_kelamin.required'  => 'Jenis Kelamin wajib diisi.',
             'email.required'  => 'Email wajib diisi.',
-            'no_urut_level.required'  => 'No. Urut Level wajib diisi.',
-            'no_urut_departemen.required'  => 'No. Urut Departemen wajib diisi.',
+            // 'no_urut_level.required'  => 'No. Urut Level wajib diisi.',
+            // 'no_urut_departemen.required'  => 'No. Urut Departemen wajib diisi.',
             'no_bpjs_ketenagakerjaan.required'  => 'No. Bpjs Ketenagakerjaan wajib diisi.',
             'no_bpjs_kesehatan.required'  => 'No. Bpjs Kesehatan wajib diisi.',
             'no_rekening_mandiri.required'  => 'No. Rekening Mandiri wajib diisi.',
@@ -349,8 +349,8 @@ class HRGAController extends Controller
             $input['no_npwp'] = $request->no_npwp;
             $input['no_telepon'] = $request->no_telepon;
             $input['email'] = $request->email;
-            $input['no_urut_level'] = $request->no_urut_level;
-            $input['no_urut_departemen'] = $request->no_urut_departemen;
+            // $input['no_urut_level'] = $request->no_urut_level;
+            // $input['no_urut_departemen'] = $request->no_urut_departemen;
             $input['no_bpjs_ketenagakerjaan'] = $request->no_bpjs_ketenagakerjaan;
             $input['no_bpjs_kesehatan'] = $request->no_bpjs_kesehatan;
             $input['no_rekening_mandiri'] = $request->no_rekening_mandiri;

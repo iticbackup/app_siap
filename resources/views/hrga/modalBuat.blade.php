@@ -58,16 +58,22 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-2">
                                     <label for="">Email</label>
                                     <input type="email" name="email" class="form-control" placeholder="Email">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-2">
                                     <label for="">NPWP</label>
                                     <input type="text" name="no_npwp" class="form-control mb_npwp" placeholder="NPWP" id="mb_npwp">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-2">
+                                    <label for="">No. Telepon</label>
+                                    <input type="text" name="no_telepon" placeholder="No. Telepon" class="form-control" id="">
                                 </div>
                             </div>
                         </div>
@@ -75,7 +81,7 @@
                             <label for="">Alamat</label>
                             <textarea name="alamat" class="form-control" id="mb_alamat" cols="30" rows="5"></textarea>
                         </div>
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-2">
                                 <div class="mb-2">
                                     <label for="">No. Urut Level</label>
@@ -94,7 +100,7 @@
                                     <input type="text" name="no_telepon" placeholder="No. Telepon" class="form-control" id="">
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-2">
