@@ -1054,14 +1054,19 @@ class HRGAController extends Controller
                 'message_content' => 'Data tidak ditemukan'
             ]);
         }
-        $rekap_pelatihan_seminar_peserta = $this->rekap_pelatihan_seminar_peserta->where('rekap_pelatihan_seminar_id',$rekap_pelatihan->id)->get();
+
+        $rekap_pelatihan_seminar_peserta = $this->rekap_pelatihan_seminar_peserta->where('rekap_pelatihan_seminar_id',$rekap_pelatihan->id)
+                                                                                ->where('peserta','!=','Shirley Suwantinna')
+                                                                                ->get();
         // dd($rekap_pelatihan_seminar_peserta);
         foreach ($rekap_pelatihan_seminar_peserta as $key => $rpsp) {
             $nik_karyawan = $this->biodata_karyawan->select('nik','nama')->where('nama',$rpsp->peserta)
                                                     ->where('status_karyawan','!=','R')
                                                     ->first();
             $hrga_biodata_karyawan = $this->hrga_biodata_karyawan->select('id','nik')->where('nik',$nik_karyawan->nik)->first();
-            $hrga_riwayat_training = $this->hrga_riwayat_training->where('hrga_biodata_karyawan_id',$hrga_biodata_karyawan->id)->first();
+            $hrga_riwayat_training = $this->hrga_riwayat_training->where('hrga_biodata_karyawan_id',$hrga_biodata_karyawan->id)
+                                                                ->where('riwayat_training',$rpsp->rekap_pelatihan_seminar_detail->tema)
+                                                                ->first();
             if (empty($hrga_riwayat_training)) {
                 $to = "<i class='mdi mdi-arrow-right-bold-circle-outline'></i>";
             }else{
