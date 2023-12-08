@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Exports\RekapPelatihanExcel;
 use App\Exports\RekapPelatihanAllDepExcel;
 use App\Exports\TotalRekapPelatihanExcel;
@@ -801,7 +802,7 @@ class RekapPelatihanController extends Controller
         // File Sertifikat
         if ($request->file('upload_file_sertifikat')) {
             $sertifikat = $request->file('upload_file_sertifikat');
-            $nama_sertifikat = Carbon::now()->format('d-m-Y-H-i-s')."_".$sertifikat->getClientOriginalName();
+            $nama_sertifikat = Carbon::now()->format('d-m-Y-H-i-s')."_".Str::slug($sertifikat->getClientOriginalName()).'.'.$sertifikat->getClientOriginalExtension();
             $tujuan_upload_sertifikat = 'public/file_sertifikat';
             $sertifikat->move($tujuan_upload_sertifikat,$nama_sertifikat);
             $input['file_sertifikat'] = $nama_sertifikat;
@@ -820,7 +821,7 @@ class RekapPelatihanController extends Controller
         // File Sertifikat
         if ($request->file('upload_file_absensi')) {
             $absensi = $request->file('upload_file_absensi');
-            $nama_absensi = Carbon::now()->format('d-m-Y-H-i-s')."_".$absensi->getClientOriginalName();
+            $nama_absensi = Carbon::now()->format('d-m-Y-H-i-s')."_".Str::slug($absensi->getClientOriginalName()).'.'.$absensi->getClientOriginalExtension();
             $tujuan_upload_absensi = 'public/file_absensi';
             $absensi->move($tujuan_upload_absensi,$nama_absensi);
             $input['file_absensi'] = $nama_absensi;
