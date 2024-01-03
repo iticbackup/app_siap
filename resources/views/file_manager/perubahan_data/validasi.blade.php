@@ -125,7 +125,7 @@
                                 $explode_validasi_signature = explode('|',$file_manager_perubahan_data->status);
                             @endphp
                             @if (empty($file_manager_perubahan_data->status))
-                                @if (auth()->user()->nik == 1207514 || auth()->user()->nik == 0000000)
+                                @if (auth()->user()->nik == 1207514 || auth()->user()->nik == 0000000 || auth()->user()->nik == 2007275)
                                 <tr>
                                     <td colspan="6" style="text-align: right">Status Validasi Document Control</td>
                                     <td>
@@ -201,7 +201,7 @@
                     @php
                         $explode_validasi = explode('|',$file_manager_perubahan_data->status);
                     @endphp
-                    @if (auth()->user()->nik == 1207514 || auth()->user()->nik == 1711952 || auth()->user()->nik == 0000000)
+                    @if (auth()->user()->nik == 1207514 || auth()->user()->nik == 1711952 || auth()->user()->nik == 0000000 || auth()->user()->nik == 2007275)
                         @if ($file_manager_perubahan_data->status == null || $explode_validasi[2] == null)
                         <div class="mb-2 badge badge-outline-danger">
                             <b>Catatan:</b>
@@ -301,7 +301,7 @@
                 <div class="card-footer">
                     <a href="{{ route('perubahan_data') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i>
                         Back</a>
-                    @if (auth()->user()->nik == 1207514 || auth()->user()->nik == 1711952 || auth()->user()->nik == 0000000)
+                    @if (auth()->user()->nik == 1207514 || auth()->user()->nik == 1711952 || auth()->user()->nik == 0000000 || auth()->user()->nik == 2007275)
                         @php
                             $explode_validasi = explode('|',$file_manager_perubahan_data->status);
                             // dd($explode_validasi);
