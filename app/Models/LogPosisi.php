@@ -17,6 +17,14 @@ class LogPosisi extends Model
     public $fillable = [
         'id',
         'nik',
+        'id_posisi',
+        'id_jabatan',
+        'satuan_kerja',
         'tanggal',
     ];
+
+    // public function jabatan()
+    // {
+    //     return $this->belongsTo(\App\Models\EmpJabatan::class, 'satuan_kerja','satuan_kerja');
+    // }
 }
