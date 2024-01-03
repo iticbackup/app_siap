@@ -570,7 +570,7 @@
                 series: [
                     {
                         name: 'Total Rekap Pelatihan Selesai',
-                        // data: @json($total_hasil_rekap_done)
+                        
                         // data: [0, 60, 20, 90, 45, 110, 55, 130, 44, 110, 75, 120]
                     },
                 ],
