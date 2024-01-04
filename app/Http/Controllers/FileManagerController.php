@@ -148,8 +148,8 @@ class FileManagerController extends Controller
         $kategori = $this->file_manager_kategori->find($kategori_id);
         $data = $this->file_manager_list->where('file_manager_category_id',$kategori_id)->get();
         $live_date = Carbon::today()->format('Y-m-d');
-        $start_date = Carbon::createFromDate(2023,12,01)->format('Y-m-d');
-        $end_date = Carbon::createFromDate(2023,12,31)->format('Y-m-d');
+        $start_date = Carbon::createFromDate(2024,01,01)->format('Y-m-d');
+        $end_date = Carbon::createFromDate(2024,01,31)->format('Y-m-d');
         if ($live_date >= $start_date && $live_date <= $end_date) {
             $status_aktif = true;
             $status_message = 'Mulai tanggal '.Carbon::parse($start_date)->isoFormat('LL').' - '.Carbon::parse($end_date)->isoFormat('LL').' dibuka untuk pengumpulan file sesuai dengan jadwal. 
