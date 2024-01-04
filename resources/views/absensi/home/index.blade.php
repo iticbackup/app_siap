@@ -1,13 +1,16 @@
 @extends('layouts.absensi.master')
 <?php $asset = asset('public/absensi/'); ?>
 @section('css')
+    <link rel="stylesheet" href="{{ $asset }}/assets/plugins/notifications/css/lobibox.min.css" />
     <link href="{{ $asset }}/assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lobipanel/1.0.6/css/lobipanel.css" integrity="sha512-Ll5C6X686xv2Mb9RS2l9ojDcX6GUTaN1y9i8fujwr8bxkPB/3ldxgnFO2KpeEWof070O++saS31PBcrrF73DxA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> --}}
 @endsection
 @section('title')
     Dashboard Absensi
 @endsection
 @section('content')
     <div class="page-content">
+        @include('absensi.home.modal_detail_absen_masuk')
         @include('absensi.home.modal_jam_non_absen_masuk')
         @include('absensi.home.modal_jam_edit_non_absen_masuk')
         <div class="col">
@@ -310,6 +313,10 @@
 @section('script')
     <script src="{{ $asset }}/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
     <script src="{{ $asset }}/assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/lobipanel/1.0.6/js/lobipanel.min.js" integrity="sha512-87ZExUcqiYtb95dZZDnehfTeEhUUsvmm5BILx99vEjFXjdn0hJtZo//oFwp8l7AV0F01Md817fVCl1ahn3QSNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
+    <script src="{{ $asset }}/assets/plugins/notifications/js/lobibox.min.js"></script>
+	<script src="{{ $asset }}/assets/plugins/notifications/js/notifications.min.js"></script>
+    <script src="{{ $asset }}/assets/plugins/notifications/js/notification-custom-script.js"></script>
     <script>
         $.ajaxSetup({
             headers: {
@@ -397,7 +404,64 @@
 
         function reload() {
             table.ajax.reload(null, false);
+            // Lobibox.notify('success', {
+            //     pauseDelayOnHover: true,
+            //     continueDelayOnInactiveTab: false,
+            //     position: 'top right',
+            //     icon: 'bx bx-check-circle',
+            //     msg: 'Lorem ipsum dolor sit amet hears farmer indemnity inherent.'
+            // });
         };
+
+        function detail_absensi_jam_masuk(scan_date,pin){
+            // alert(date_live+' '+pin);
+            // $('.modalBuatJamMasuk').modal('show');
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('absensi/absensi_masuk') }}"+'/'+scan_date+'/'+pin,
+                contentType: "application/json;  charset=utf-8",
+                cache: false,
+                success: (result) => {
+                    if (result.success == true) {
+                        // alert('test');
+                        document.getElementById('detail_masuk_nik').innerHTML = result.biodata_karyawan.nik;
+                        document.getElementById('detail_masuk_nama_karyawan').innerHTML = result.biodata_karyawan.nama;
+                        document.getElementById('detail_masuk_tanggal_masuk').innerHTML = result.data.scan_date;
+                        $('#detail_masuk_pin').val(result.data.pin);
+                        $('#detail_masuk_tanggal_masuk').val(result.data.scan_date);
+                        $('#detail_masuk_jam_masuk_status').val(result.data.status);
+                        $('#detail_masuk_keterangan_jam_masuk').val(result.data.keterangan);
+                        
+                        $('#detail_masuk_penyesuaian_masuk_jam_masuk_jam').val(result.data.penyesuaian_masuk_jam);
+                        $('#detail_masuk_penyesuaian_masuk_jam_masuk_menit').val(result.data.penyesuaian_masuk_menit);
+                        $('#detail_masuk_penyesuaian_istirahat_jam_masuk_jam').val(result.data.penyesuaian_istirahat_jam);
+                        $('#detail_masuk_penyesuaian_istirahat_jam_masuk_menit').val(result.data.penyesuaian_istirahat_menit);
+                        $('#detail_masuk_penyesuaian_pulang_jam_masuk_jam').val(result.data.penyesuaian_pulang_jam);
+                        $('#detail_masuk_penyesuaian_pulang_jam_masuk_menit').val(result.data.penyesuaian_pulang_menit);
+                        // document.getElementById('detail_masuk_tanggal_masuk').innerHTML = result.data.scan_date;
+                        $('.modalDetailAbsenMasuk').modal('show');
+                    } else {
+                        // Lobibox.notify('error', {
+                        //     pauseDelayOnHover: true,
+                        //     continueDelayOnInactiveTab: false,
+                        //     position: 'top right',
+                        //     icon: 'bx bx-x-circle',
+                        //     msg: result.message_content
+                        // });
+                        document.getElementById('detail_masuk_nik').innerHTML = result.biodata_karyawan.nik;
+                        document.getElementById('detail_masuk_nama_karyawan').innerHTML = result.biodata_karyawan.nama;
+                        document.getElementById('detail_masuk_tanggal_masuk').innerHTML = result.data.scan_date;
+                        $('#detail_masuk_pin').val(result.data.pin);
+                        $('#detail_masuk_tanggal_masuk').val(result.data.scan_date);
+                        // document.getElementById('detail_masuk_tanggal_masuk').innerHTML = result.data.scan_date;
+                        $('.modalDetailAbsenMasuk').modal('show');
+                    }
+                },
+                error: function(request, status, error) {
+
+                }
+            });
+        }
 
         function detail_non_absen_jam_masuk(date_live,pin,inout){
             // alert(date_live+' '+pin);
@@ -518,11 +582,15 @@
                 },
                 success: (result) => {
                     if (result.success != false) {
-                        alert(result.message_content);
-                        // iziToast.success({
-                        //     title: result.message_title,
-                        //     message: result.message_content
-                        // });
+                        // alert(result.message_content);
+                        Lobibox.notify('success', {
+                            pauseDelayOnHover: true,
+                            continueDelayOnInactiveTab: false,
+                            position: 'top right',
+                            icon: 'bx bx-check-circle',
+                            msg: result.message_content
+                        });
+                        $('.modalEditJamMasukNonAbsen').modal('hide');
                     } else {
                         alert('Gagal Disimpan');
                         // iziToast.error({
@@ -537,6 +605,52 @@
                     //     message: error,
                     // });
                     alert(error);
+                }
+            });
+        });
+        
+        $('#form-simpan-jam-masuk-detail_masuk').submit(function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            // $('#image-input-error').text('');
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('absensi.detail_jam_masuk_simpan') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function() {
+                    // $('.modalLoading').modal('show');
+                },
+                success: (result) => {
+                    if (result.success != false) {
+                        // alert(result.message_content);
+                        Lobibox.notify('success', {
+                            pauseDelayOnHover: true,
+                            continueDelayOnInactiveTab: false,
+                            position: 'top right',
+                            icon: 'bx bx-check-circle',
+                            msg: result.message_content
+                        });
+                        $('.modalDetailAbsenMasuk').modal('hide');
+                    } else {
+                        Lobibox.notify('error', {
+                            pauseDelayOnHover: true,
+                            continueDelayOnInactiveTab: false,
+                            position: 'top right',
+                            icon: 'bx bx-x-circle',
+                            msg: result.message_content
+                        });
+                    }
+                },
+                error: function(request, status, error) {
+                    Lobibox.notify('error', {
+                        pauseDelayOnHover: true,
+                        continueDelayOnInactiveTab: false,
+                        position: 'top right',
+                        icon: 'bx bx-x-circle',
+                        msg: error
+                    });
                 }
             });
         });

@@ -23,6 +23,11 @@ class FinPro extends Model
         'work_code',
     ];
 
+    public function biodata_karyawan()
+    {
+        return $this->belongsTo(\App\Models\BiodataKaryawan::class, 'pin','pin');
+    }
+
     // public function itic_departemen()
     // {
     //     return $this->belongsTo(\App\Models\LogPosisi::class, 'nik','nik');

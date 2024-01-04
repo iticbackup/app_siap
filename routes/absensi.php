@@ -17,6 +17,8 @@ Route::prefix('absensi')->group(function () {
     Route::group(['middleware' => ['auth_absensi']], function() {
         Route::get('home', [App\Http\Controllers\Absensi\AbsensiController::class, 'index'])->name('absensi.home');
         Route::get('fin_tes', [App\Http\Controllers\Absensi\AbsensiController::class, 'fin_tes']);
+        Route::get('absensi_masuk/{scan_date}/{pin}', [App\Http\Controllers\Absensi\AbsensiController::class, 'detail_jam_masuk'])->name('absensi.detail_jam_masuk');
+        Route::post('absensi_masuk/simpan', [App\Http\Controllers\Absensi\AbsensiController::class, 'detail_jam_masuk_simpan'])->name('absensi.detail_jam_masuk_simpan');
         Route::get('jam_masuk/{date_live}/{pin}/{inout}', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_nofinger_jam_masuk_absensi'])->name('absensi.input_modal_nofinger_jam_absensi');
         Route::post('jam_masuk/no_finger/simpan', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_nofinger_jam_masuk_simpan'])->name('absensi.input_modal_nofinger_jam_masuk_simpan');
         Route::get('jam_masuk/edit/{att_rec}', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_edit_nofinger_jam_masuk_absensi'])->name('absensi.input_modal_edit_nofinger_jam_masuk_absensi');

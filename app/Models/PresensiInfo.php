@@ -9,8 +9,10 @@ class PresensiInfo extends Model
 {
     use HasFactory;
     protected $connection= 'absensi';
+    protected $primaryKey = 'att_rec';
     public $table = 'att_presensi_info';
     public $timestamps = false;
+    public $incrementing = false;
     // public $table = 'biodata_karyawan';
     // protected $dates = ['deleted_at'];
     public $fillable = [
@@ -20,4 +22,9 @@ class PresensiInfo extends Model
         'status',
         'keterangan',
     ];
+
+    public function biodata_karyawan()
+    {
+        return $this->belongsTo(\App\Models\BiodataKaryawan::class, 'pin','pin');
+    }
 }
