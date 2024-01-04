@@ -51,7 +51,7 @@ class PerubahanDataFileManagerController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            if (auth()->user()->nik == '0000000' || auth()->user()->nik == '1207514' || auth()->user()->nik == '1711952'){
+            if (auth()->user()->nik == '0000000' || auth()->user()->nik == '1207514' || auth()->user()->nik == '1711952' || auth()->user()->nik == '2007275'){
                 $data = $this->file_manager_perubahan_data->all();
             }else{
                 $departemen_user = $this->departemen_user->where('nik',auth()->user()->nik)->first();
