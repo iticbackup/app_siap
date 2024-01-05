@@ -19,6 +19,7 @@ class PresensiInfo extends Model
         'att_id',
         'scan_date',
         'pin',
+        'inoutmode',
         'status',
         'keterangan',
     ];
@@ -26,5 +27,10 @@ class PresensiInfo extends Model
     public function biodata_karyawan()
     {
         return $this->belongsTo(\App\Models\BiodataKaryawan::class, 'pin','pin');
+    }
+
+    public function presensi_status()
+    {
+        return $this->belongsTo(\App\Models\PresensiStatus::class, 'status');
     }
 }

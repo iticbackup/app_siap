@@ -11,8 +11,10 @@
 @section('content')
     <div class="page-content">
         @include('absensi.home.modal_detail_absen_masuk')
+        @include('absensi.home.modal_detail_absen_keluar')
+
         @include('absensi.home.modal_jam_non_absen_masuk')
-        @include('absensi.home.modal_jam_edit_non_absen_masuk')
+        @include('absensi.home.modal_jam_non_absen_keluar')
         <div class="col">
             <div class="card">
                 <div class="card-body">
@@ -29,7 +31,8 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table id="datatables" class="table table-striped table-bordered dataTable mb-0">
+                        {{-- <table id="datatables" class="table table-striped table-bordered dataTable mb-0"> --}}
+                        <table class="table table-striped table-bordered dataTable mb-0">
                             <thead>
                                 <tr>
                                     {{-- <th class="text-center">No</th> --}}
@@ -49,6 +52,85 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($biodata_karyawans as $biodata_karyawan)
+                                @php
+                                    $cek_status_kerja = \App\Models\IticDepartemen::where('id_departemen',$biodata_karyawan->satuan_kerja)->first();
+                                    // dd($cek_status_kerja);
+                                    if (empty($cek_satuan_kerja)) {
+                                        $satuan_kerja = '-';
+                                    }else{
+                                        if ($cek_satuan_kerja->nama_departemen >= 1) {
+                                            $satuan_kerja = $cek_satuan_kerja->nama_unit;
+                                        }else{
+                                            $satuan_kerja = $cek_satuan_kerja->nama_departemen;
+                                        }
+                                    }
+
+                                    $cek_posisi = \App\Models\EmpJabatan::where('id_jabatan',$biodata_karyawan->id_posisi)->first();
+                                    if (empty($cek_posisi)) {
+                                        $posisi = '-';
+                                    }else{
+                                        $posisi = $cek_posisi->nama_jabatan;
+                                    }
+                                @endphp
+                                    <tr>
+                                        <td class="text-center">{{ $biodata_karyawan->nik }}</td>
+                                        <td class="text-center">{{ $biodata_karyawan->nama }}</td>
+                                        <td class="text-center">{{ $satuan_kerja }}</td>
+                                        <td class="text-center">{{ $posisi }}</td>
+                                        @php
+                                        $date_live = \Carbon\Carbon::now()->format('Y-m-d');
+                                        $mesin_finger_1 = \App\Models\FinPro::where('scan_date','LIKE','%'.$date_live.'%')
+                                                                            ->where('pin',$biodata_karyawan->pin)
+                                                                            ->where('inoutmode',1)
+                                                                            ->first();
+
+                                        if (empty($mesin_finger_1)) {
+                                            $inoutmode = 1;
+                                            $presensi_info = \App\Models\PresensiInfo::where('scan_date','LIKE','%'.$date_live.'%')
+                                                                                    ->where('pin',$biodata_karyawan->pin)
+                                                                                    ->where('inoutmode',$inoutmode)
+                                                                                    ->first();
+                                            if (empty($presensi_info)) {
+                                                $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$date_live.'`,`'.$biodata_karyawan->pin.'`,`'.$inoutmode.'`)"><i class="bx bxs-plus-circle bx-sm bx-tada text-success"></i></a>';
+                                            }else{
+                                                if ($presensi_info->status == 4) {
+                                                    $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$date_live.'`,`'.$biodata_karyawan->pin.'`,`'.$inoutmode.'`)" style="color: red">Sakit</a>';
+                                                }elseif($presensi_info->status == 7){
+                                                    // $jam_masuk = 'Absen';
+                                                    $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$date_live.'`,`'.$biodata_karyawan->pin.'`,`'.$inoutmode.'`)" style="color: purple">Absen</a>';
+                                                }elseif($presensi_info->status == 13){
+                                                    $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$date_live.'`,`'.$biodata_karyawan->pin.'`,`'.$inoutmode.'`)" style="color: orange">Cuti</a>';
+                                                    // $jam_masuk = 'Cuti';
+                                                }
+                                                else{
+                                                    $jam_masuk = '<a type="button" onclick="detail_edit_non_absensi_jam_masuk(`'.$presensi_info->att_rec.'`)">'.$presensi_info->scan_date.'</a>';
+                                                }
+                                            }
+                                        }else{
+                                            $inoutmode = 1;
+                                            $absen_masuk = \App\Models\PresensiInfo::with('presensi_status')
+                                                                        ->where('scan_date','LIKE','%'.$date_live.'%')
+                                                                        ->where('pin',$biodata_karyawan->pin)
+                                                                        ->where('inoutmode',$inoutmode)
+                                                                        // ->orderBy('scan_date','asc')
+                                                                        ->first();
+                                                                        // dd($absen_masuk);
+                                            if (empty($absen_masuk)) {
+                                                $date_jam_masuk = \Carbon\Carbon::create($mesin_finger_1->scan_date)->format('H:i');
+                                                $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`'.$mesin_finger_1->scan_date.'`,`'.$mesin_finger_1->pin.'`,`'.$mesin_finger_1->inoutmode.'`)" style="color: blue">'.$date_jam_masuk.'</a>';
+                                            }else{
+                                                $date_jam_masuk = \Carbon\Carbon::create($mesin_finger_1->scan_date)->format('H:i');
+                                                $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`'.$mesin_finger_1->scan_date.'`,`'.$mesin_finger_1->pin.'`,`'.$mesin_finger_1->inoutmode.'`)" style="color: blue">'.$date_jam_masuk.' ('.$absen_masuk->presensi_status->status_info.')</a>';
+                                            }
+                                        }
+                                        @endphp
+                                        <td class="text-center">{!! $jam_masuk !!}</td>
+                                        @php
+                                            
+                                        @endphp
+                                    </tr>
+                                @endforeach
                                 {{-- @foreach ($karyawans as $karyawan)
                             @php
                                 $cek_satuan_kerja = \App\Models\IticDepartemen::where('id_departemen',$karyawan->satuan_kerja)->first();
@@ -333,77 +415,77 @@
             var formattedString = dateString.replace(", ", " - ");
             timeDisplay.innerHTML = formattedString;
         }
-
         setInterval(refreshTime, 1000);
-        var table = $('#datatables').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{ route('absensi.home') }}",
-            columns: [{
-                    data: 'nik',
-                    name: 'nik'
-                },
-                {
-                    data: 'nama',
-                    name: 'nama'
-                },
-                {
-                    data: 'departemen',
-                    name: 'departemen'
-                },
-                {
-                    data: 'posisi',
-                    name: 'posisi'
-                },
-                {
-                    data: 'jam_masuk',
-                    name: 'jam_masuk'
-                },
-                {
-                    data: 'jam_pulang',
-                    name: 'jam_pulang'
-                },
-                {
-                    data: 'total_jam',
-                    name: 'total_jam'
-                },
-                // {
-                //     data: 'penyelenggara',
-                //     name: 'penyelenggara'
-                // },
-                // {
-                //     data: 'jenis',
-                //     name: 'jenis'
-                // },
-                // {
-                //     data: 'status',
-                //     name: 'status'
-                // },
-                // {
-                //     data: 'created_at',
-                //     name: 'created_at'
-                // },
-                // {
-                //     data: 'action',
-                //     name: 'action',
-                //     orderable: false,
-                //     searchable: false
-                // },
-            ],
-            columnDefs: [
-                // { className: 'text-right', targets: [7, 10, 11, 14, 16] },
-                {
-                    className: 'text-center',
-                    targets: [0, 2, 3, 4, 5, 6]
-                },
-            ],
-            order: [
-                [2, 'asc']
-            ]
-        });
+
+        // var table = $('#datatables').DataTable({
+        //     processing: true,
+        //     serverSide: true,
+        //     ajax: "{{ route('absensi.home') }}",
+        //     columns: [{
+        //             data: 'nik',
+        //             name: 'nik'
+        //         },
+        //         {
+        //             data: 'nama',
+        //             name: 'nama'
+        //         },
+        //         {
+        //             data: 'departemen',
+        //             name: 'departemen'
+        //         },
+        //         {
+        //             data: 'posisi',
+        //             name: 'posisi'
+        //         },
+        //         {
+        //             data: 'jam_masuk',
+        //             name: 'jam_masuk'
+        //         },
+        //         {
+        //             data: 'jam_pulang',
+        //             name: 'jam_pulang'
+        //         },
+        //         {
+        //             data: 'total_jam',
+        //             name: 'total_jam'
+        //         },
+        //         // {
+        //         //     data: 'penyelenggara',
+        //         //     name: 'penyelenggara'
+        //         // },
+        //         // {
+        //         //     data: 'jenis',
+        //         //     name: 'jenis'
+        //         // },
+        //         // {
+        //         //     data: 'status',
+        //         //     name: 'status'
+        //         // },
+        //         // {
+        //         //     data: 'created_at',
+        //         //     name: 'created_at'
+        //         // },
+        //         // {
+        //         //     data: 'action',
+        //         //     name: 'action',
+        //         //     orderable: false,
+        //         //     searchable: false
+        //         // },
+        //     ],
+        //     columnDefs: [
+        //         // { className: 'text-right', targets: [7, 10, 11, 14, 16] },
+        //         {
+        //             className: 'text-center',
+        //             targets: [0, 2, 3, 4, 5, 6]
+        //         },
+        //     ],
+        //     order: [
+        //         [2, 'asc']
+        //     ]
+        // });
 
         function reload() {
-            table.ajax.reload(null, false);
+            // table.ajax.reload(null, false);
             // Lobibox.notify('success', {
             //     pauseDelayOnHover: true,
             //     continueDelayOnInactiveTab: false,
@@ -413,12 +495,12 @@
             // });
         };
 
-        function detail_absensi_jam_masuk(scan_date,pin){
+        function detail_absensi_jam_masuk(scan_date,pin,inoutmode){
             // alert(date_live+' '+pin);
             // $('.modalBuatJamMasuk').modal('show');
             $.ajax({
                 type: 'GET',
-                url: "{{ url('absensi/absensi_masuk') }}"+'/'+scan_date+'/'+pin,
+                url: "{{ url('absensi/absensi_masuk') }}"+'/'+scan_date+'/'+pin+'/'+inoutmode,
                 contentType: "application/json;  charset=utf-8",
                 cache: false,
                 success: (result) => {
@@ -428,6 +510,7 @@
                         document.getElementById('detail_masuk_nama_karyawan').innerHTML = result.biodata_karyawan.nama;
                         document.getElementById('detail_masuk_tanggal_masuk').innerHTML = result.data.scan_date;
                         $('#detail_masuk_pin').val(result.data.pin);
+                        $('#detail_masuk_inoutmode').val(result.data.inoutmode);
                         $('#detail_masuk_tanggal_masuk').val(result.data.scan_date);
                         $('#detail_masuk_jam_masuk_status').val(result.data.status);
                         $('#detail_masuk_keterangan_jam_masuk').val(result.data.keterangan);
@@ -463,26 +546,129 @@
             });
         }
 
-        function detail_non_absen_jam_masuk(date_live,pin,inout){
+        function detail_absensi_jam_keluar(scan_date,pin,inoutmode){
             // alert(date_live+' '+pin);
             // $('.modalBuatJamMasuk').modal('show');
             $.ajax({
                 type: 'GET',
-                url: "{{ url('absensi/jam_masuk') }}"+'/'+date_live+'/'+pin+'/'+inout,
+                url: "{{ url('absensi/absensi_keluar') }}"+'/'+scan_date+'/'+pin+'/'+inoutmode,
+                contentType: "application/json;  charset=utf-8",
+                cache: false,
+                success: (result) => {
+                    if (result.success == true) {
+                        // alert('success');
+                        document.getElementById('detail_keluar_nik').innerHTML = result.biodata_karyawan.nik;
+                        document.getElementById('detail_keluar_nama_karyawan').innerHTML = result.biodata_karyawan.nama;
+                        document.getElementById('detail_keluar_tanggal_keluar').innerHTML = result.data.scan_date;
+                        $('#detail_keluar_pin').val(result.data.pin);
+                        $('#detail_keluar_inoutmode').val(result.data.inoutmode);
+                        $('#detail_keluar_tanggal_keluar').val(result.data.scan_date);
+                        $('#detail_keluar_jam_keluar_status').val(result.data.status);
+                        $('#detail_keluar_keterangan_jam_keluar').val(result.data.keterangan);
+                        
+                        $('#detail_keluar_penyesuaian_masuk_jam_keluar_jam').val(result.data.penyesuaian_masuk_jam);
+                        $('#detail_keluar_penyesuaian_masuk_jam_keluar_menit').val(result.data.penyesuaian_masuk_menit);
+                        $('#detail_keluar_penyesuaian_istirahat_jam_keluar_jam').val(result.data.penyesuaian_istirahat_jam);
+                        $('#detail_keluar_penyesuaian_istirahat_jam_keluar_menit').val(result.data.penyesuaian_istirahat_menit);
+                        $('#detail_keluar_penyesuaian_pulang_jam_keluar_jam').val(result.data.penyesuaian_pulang_jam);
+                        $('#detail_keluar_penyesuaian_pulang_jam_keluar_menit').val(result.data.penyesuaian_pulang_menit);
+                        // // document.getElementById('detail_masuk_tanggal_masuk').innerHTML = result.data.scan_date;
+                        $('.modalDetailAbsenKeluar').modal('show');
+                    } else {
+                        // Lobibox.notify('error', {
+                        //     pauseDelayOnHover: true,
+                        //     continueDelayOnInactiveTab: false,
+                        //     position: 'top right',
+                        //     icon: 'bx bx-x-circle',
+                        //     msg: result.message_content
+                        // });
+                        // document.getElementById('detail_masuk_nik').innerHTML = result.biodata_karyawan.nik;
+                        // document.getElementById('detail_masuk_nama_karyawan').innerHTML = result.biodata_karyawan.nama;
+                        // document.getElementById('detail_masuk_tanggal_masuk').innerHTML = result.data.scan_date;
+                        // $('#detail_masuk_pin').val(result.data.pin);
+                        // $('#detail_masuk_tanggal_masuk').val(result.data.scan_date);
+                        // // document.getElementById('detail_masuk_tanggal_masuk').innerHTML = result.data.scan_date;
+                        // $('.modalDetailAbsenMasuk').modal('show');
+                    }
+                },
+                error: function(request, status, error) {
+                    Lobibox.notify('error', {
+                        pauseDelayOnHover: true,
+                        continueDelayOnInactiveTab: false,
+                        position: 'top right',
+                        icon: 'bx bx-x-circle',
+                        msg: error
+                    });
+                }
+            });
+        }
+
+        function detail_non_absen_jam_masuk(date_live,pin,inoutmode){
+            // alert(date_live+' '+pin);
+            // $('.modalBuatJamMasuk').modal('show');
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('absensi/jam_masuk') }}"+'/'+date_live+'/'+pin+'/'+inoutmode,
                 contentType: "application/json;  charset=utf-8",
                 cache: false,
                 success: (result) => {
                     if (result.success == true) {
                         // alert('success');
                         $('#pin_non_absen_masuk').val(result.data.pin);
+                        $('#inoutmode_non_absen_masuk').val(result.inoutmode);
                         document.getElementById('jam_masuk_nik').innerHTML = result.data.nik
                         document.getElementById('jam_masuk_nama_karyawan').innerHTML = result.data.nama
                         $('#non_absen_masuk_jam_masuk_tanggal').val(result.tanggal);
-                        $('.modalBuatJamMasukNonAbsen').modal('show');
+                        $('#jam_non_masuk').val(result.jam);
+                        $('#menit_non_masuk').val(result.menit);
+                        $('#detik_non_masuk').val(result.detik);
+                        $('#status_non_absen_masuk').val(result.status);
+                        $('#penyesuaian_masuk_jam_masuk_jam_non_absen').val(result.penyesuaian_masuk_jam);
+                        $('#penyesuaian_masuk_jam_masuk_menit_non_absen').val(result.penyesuaian_masuk_menit);
+                        $('#penyesuaian_istirahat_jam_masuk_jam_non_absen').val(result.penyesuaian_istirahat_jam);
+                        $('#penyesuaian_istirahat_jam_masuk_menit_non_absen').val(result.penyesuaian_istirahat_menit);
+                        $('#penyesuaian_pulang_jam_masuk_jam_non_absen').val(result.penyesuaian_pulang_jam);
+                        $('#penyesuaian_pulang_jam_masuk_menit_non_absen').val(result.penyesuaian_pulang_menit);
+                        $('#jam_masuk_keterangan_non_absen').val(result.keterangan);
+                        $('.modalJamMasukNonAbsen').modal('show');
                     } else {
-                        // alert('not success');
-                        // document.getElementById('jam_masuk_nik').innerHTML = result.data.nik
-                        // $('.modalBuatJamMasukNonAbsen').modal('show');
+                    }
+                },
+                error: function(request, status, error) {
+
+                }
+            });
+        }
+
+        function detail_non_absen_jam_keluar(date_live,pin,inoutmode){
+            // alert(date_live+' '+pin);
+            // $('.modalBuatJamMasuk').modal('show');
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('absensi/jam_pulang') }}"+'/'+date_live+'/'+pin+'/'+inoutmode,
+                contentType: "application/json;  charset=utf-8",
+                cache: false,
+                success: (result) => {
+                    if (result.success == true) {
+                        // alert('success');
+                        $('#pin_non_absen_keluar').val(result.data.pin);
+                        $('#inoutmode_non_absen_keluar').val(result.inoutmode);
+                        document.getElementById('jam_keluar_nik').innerHTML = result.data.nik
+                        document.getElementById('jam_keluar_nama_karyawan').innerHTML = result.data.nama
+                        $('#non_absen_keluar_jam_keluar_tanggal').val(result.tanggal);
+                        $('#jam_non_keluar').val(result.jam);
+                        $('#menit_non_keluar').val(result.menit);
+                        $('#detik_non_keluar').val(result.detik);
+                        $('#status_non_absen_keluar').val(result.status);
+                        $('#penyesuaian_masuk_jam_keluar_jam_non_absen').val(result.penyesuaian_masuk_jam);
+                        $('#penyesuaian_masuk_jam_keluar_menit_non_absen').val(result.penyesuaian_masuk_menit);
+                        $('#penyesuaian_istirahat_jam_keluar_jam_non_absen').val(result.penyesuaian_istirahat_jam);
+                        $('#penyesuaian_istirahat_jam_keluar_menit_non_absen').val(result.penyesuaian_istirahat_menit);
+                        $('#penyesuaian_pulang_jam_keluar_jam_non_absen').val(result.penyesuaian_pulang_jam);
+                        $('#penyesuaian_pulang_jam_keluar_menit_non_absen').val(result.penyesuaian_pulang_menit);
+                        $('#jam_keluar_keterangan_non_absen').val(result.keterangan);
+                        $('.modalJamPulangNonAbsen').modal('show');
+                    } else {
                     }
                 },
                 error: function(request, status, error) {
@@ -544,36 +730,44 @@
                 },
                 success: (result) => {
                     if (result.success != false) {
-                        alert('Berhasil Disimpan');
-                        // iziToast.success({
-                        //     title: result.message_title,
-                        //     message: result.message_content
-                        // });
+                        Lobibox.notify('success', {
+                            pauseDelayOnHover: true,
+                            continueDelayOnInactiveTab: false,
+                            position: 'top right',
+                            icon: 'bx bx-check-circle',
+                            msg: result.message_content
+                        });
+                        // table.ajax.reload(null, false);
+                        $('.modalJamMasukNonAbsen').modal('hide');
                     } else {
-                        alert('Gagal Disimpan');
-                        // iziToast.error({
-                        //     title: result.success,
-                        //     message: result.error
-                        // });
+                        Lobibox.notify('error', {
+                            pauseDelayOnHover: true,
+                            continueDelayOnInactiveTab: false,
+                            position: 'top right',
+                            icon: 'bx bx-x-circle',
+                            msg: result.message_content
+                        });
                     }
                 },
                 error: function(request, status, error) {
-                    // iziToast.error({
-                    //     title: 'Error',
-                    //     message: error,
-                    // });
-                    alert(error);
+                    Lobibox.notify('error', {
+                        pauseDelayOnHover: true,
+                        continueDelayOnInactiveTab: false,
+                        position: 'top right',
+                        icon: 'bx bx-x-circle',
+                        msg: error
+                    });
                 }
             });
         });
 
-        $('#form-edit-jam-masuk-non-absen').submit(function(e) {
+        $('#form-simpan-jam-keluar-non-absen').submit(function(e) {
             e.preventDefault();
             let formData = new FormData(this);
             // $('#image-input-error').text('');
             $.ajax({
                 type: 'POST',
-                url: "{{ route('absensi.input_modal_edit_nofinger_jam_masuk_update') }}",
+                url: "{{ route('absensi.input_modal_nofinger_jam_pulang_simpan') }}",
                 data: formData,
                 contentType: false,
                 processData: false,
@@ -582,7 +776,6 @@
                 },
                 success: (result) => {
                     if (result.success != false) {
-                        // alert(result.message_content);
                         Lobibox.notify('success', {
                             pauseDelayOnHover: true,
                             continueDelayOnInactiveTab: false,
@@ -590,21 +783,26 @@
                             icon: 'bx bx-check-circle',
                             msg: result.message_content
                         });
-                        $('.modalEditJamMasukNonAbsen').modal('hide');
+                        // table.ajax.reload(null, false);
+                        $('.modalJamPulangNonAbsen').modal('hide');
                     } else {
-                        alert('Gagal Disimpan');
-                        // iziToast.error({
-                        //     title: result.success,
-                        //     message: result.error
-                        // });
+                        Lobibox.notify('error', {
+                            pauseDelayOnHover: true,
+                            continueDelayOnInactiveTab: false,
+                            position: 'top right',
+                            icon: 'bx bx-x-circle',
+                            msg: result.message_content
+                        });
                     }
                 },
                 error: function(request, status, error) {
-                    // iziToast.error({
-                    //     title: 'Error',
-                    //     message: error,
-                    // });
-                    alert(error);
+                    Lobibox.notify('error', {
+                        pauseDelayOnHover: true,
+                        continueDelayOnInactiveTab: false,
+                        position: 'top right',
+                        icon: 'bx bx-x-circle',
+                        msg: error
+                    });
                 }
             });
         });
@@ -632,7 +830,55 @@
                             icon: 'bx bx-check-circle',
                             msg: result.message_content
                         });
+                        // table.ajax.reload(null, false);
                         $('.modalDetailAbsenMasuk').modal('hide');
+                    } else {
+                        Lobibox.notify('error', {
+                            pauseDelayOnHover: true,
+                            continueDelayOnInactiveTab: false,
+                            position: 'top right',
+                            icon: 'bx bx-x-circle',
+                            msg: result.message_content
+                        });
+                    }
+                },
+                error: function(request, status, error) {
+                    Lobibox.notify('error', {
+                        pauseDelayOnHover: true,
+                        continueDelayOnInactiveTab: false,
+                        position: 'top right',
+                        icon: 'bx bx-x-circle',
+                        msg: error
+                    });
+                }
+            });
+        });
+        
+        $('#form-simpan-jam-keluar-detail_keluar').submit(function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            // $('#image-input-error').text('');
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('absensi.detail_jam_keluar_simpan') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function() {
+                    // $('.modalLoading').modal('show');
+                },
+                success: (result) => {
+                    if (result.success != false) {
+                        // alert(result.message_content);
+                        Lobibox.notify('success', {
+                            pauseDelayOnHover: true,
+                            continueDelayOnInactiveTab: false,
+                            position: 'top right',
+                            icon: 'bx bx-check-circle',
+                            msg: result.message_content
+                        });
+                        // table.ajax.reload(null, false);
+                        $('.modalDetailAbsenKeluar').modal('hide');
                     } else {
                         Lobibox.notify('error', {
                             pauseDelayOnHover: true,

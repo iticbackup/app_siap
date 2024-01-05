@@ -1,32 +1,32 @@
-<div class="modal fade modalJamMasukNonAbsen" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade modalJamPulangNonAbsen" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title m-0" id="exampleModalCenterTitle">Buat Jam Masuk</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="form-simpan-jam-masuk-non-absen" method="post">
+            <form id="form-simpan-jam-keluar-non-absen" method="post">
                 @csrf
-                <input type="hidden" name="inoutmode_non_absen_masuk" id="inoutmode_non_absen_masuk">
-                <input type="hidden" name="pin_non_absen_masuk" id="pin_non_absen_masuk">
+                <input type="hidden" name="inoutmode_non_absen_keluar" id="inoutmode_non_absen_keluar">
+                <input type="hidden" name="pin_non_absen_keluar" id="pin_non_absen_keluar">
             <div class="modal-body">
                 <table class="table">
                     <thead>
                         <tr>
                             <td>NIK</td>
                             <td>:</td>
-                            <td id="jam_masuk_nik"></td>
+                            <td id="jam_keluar_nik"></td>
                         </tr>
                         <tr>
                             <td>Nama Karyawan</td>
                             <td>:</td>
-                            <td id="jam_masuk_nama_karyawan"></td>
+                            <td id="jam_keluar_nama_karyawan"></td>
                         </tr>
                         <tr>
                             <td>Tanggal</td>
                             <td>:</td>
                             <td>
-                                <input type="text" name="tanggal_non_absen_masuk" readonly class="form-control" id="non_absen_masuk_jam_masuk_tanggal">
+                                <input type="text" name="tanggal_non_absen_keluar" readonly class="form-control" id="non_absen_keluar_jam_keluar_tanggal">
                             </td>
                         </tr>
                         <tr>
@@ -34,7 +34,7 @@
                             <td>:</td>
                             <td style="vertical-align: middle">
                                 <div class="input-group">
-                                    <select name="jam_non_absen_masuk" class="form-control" id="jam_non_masuk">
+                                    <select name="jam_non_absen_keluar" class="form-control" id="jam_non_keluar">
                                         @for ($i = 0; $i <= 23; $i++)
                                         <?php 
                                         if ($i<10) {
@@ -49,7 +49,7 @@
                                         @endfor
                                     </select>
                                     <div style="margin-left: 2.5%; margin-right: 2.5%">:</div>
-                                    <select name="menit_non_absen_masuk" class="form-control" id="menit_non_masuk">
+                                    <select name="menit_non_absen_keluar" class="form-control" id="menit_non_keluar">
                                         @for ($i = 0; $i <= 59; $i++)
                                         <?php 
                                         if ($i<10) {
@@ -62,7 +62,7 @@
                                         @endfor
                                     </select>
                                     <div style="margin-left: 2.5%; margin-right: 2.5%">:</div>
-                                    <select name="detik_non_absen_masuk" class="form-control" id="detik_non_masuk">
+                                    <select name="detik_non_absen_keluar" class="form-control" id="detik_non_keluar">
                                         @for ($i = 0; $i <= 59; $i++)
                                         <?php 
                                         if ($i<10) {
@@ -81,7 +81,7 @@
                             <td style="vertical-align: middle">Status</td>
                             <td style="vertical-align: middle">:</td>
                             <td style="vertical-align: middle">
-                                <select name="status_non_absen_masuk" class="form-control" id="status_non_absen_masuk">
+                                <select name="status_non_absen_keluar" class="form-control" id="status_non_absen_keluar">
                                     <option value="">-- Pilih Status --</option>
                                     @foreach ($status_absensis as $status_absensi)
                                     <option value="{{ $status_absensi->status_id }}">{{ $status_absensi->status_info }}</option>
@@ -94,9 +94,9 @@
                             <td style="vertical-align: middle">:</td>
                             <td style="vertical-align: middle">
                                 <div class="input-group">
-                                    <input type="text" name="penyesuaian_masuk_jam_masuk_jam_non_absen" class="form-control" placeholder="Jam" id="penyesuaian_masuk_jam_masuk_jam_non_absen" autocomplete="false">
+                                    <input type="text" name="penyesuaian_masuk_jam_keluar_jam_non_absen" class="form-control" placeholder="Jam" id="penyesuaian_masuk_jam_keluar_jam_non_absen" autocomplete="false">
                                     &nbsp; : &nbsp;
-                                    <input type="text" name="penyesuaian_masuk_jam_masuk_menit_non_absen" class="form-control" placeholder="Menit" id="penyesuaian_masuk_jam_masuk_menit_non_absen" autocomplete="false">
+                                    <input type="text" name="penyesuaian_masuk_jam_keluar_menit_non_absen" class="form-control" placeholder="Menit" id="penyesuaian_masuk_jam_keluar_menit_non_absen" autocomplete="false">
                                 </div>
                             </td>
                         </tr>
@@ -105,9 +105,9 @@
                             <td style="vertical-align: middle">:</td>
                             <td style="vertical-align: middle">
                                 <div class="input-group">
-                                    <input type="text" name="penyesuaian_istirahat_jam_masuk_jam_non_absen" class="form-control" placeholder="Jam" id="penyesuaian_istirahat_jam_masuk_jam_non_absen" autocomplete="false">
+                                    <input type="text" name="penyesuaian_istirahat_jam_keluar_jam_non_absen" class="form-control" placeholder="Jam" id="penyesuaian_istirahat_jam_keluar_jam_non_absen" autocomplete="false">
                                     &nbsp; : &nbsp;
-                                    <input type="text" name="penyesuaian_istirahat_jam_masuk_menit_non_absen" class="form-control" placeholder="Menit" id="penyesuaian_istirahat_jam_masuk_menit_non_absen" autocomplete="false">
+                                    <input type="text" name="penyesuaian_istirahat_jam_keluar_menit_non_absen" class="form-control" placeholder="Menit" id="penyesuaian_istirahat_jam_keluar_menit_non_absen" autocomplete="false">
                                 </div>
                             </td>
                         </tr>
@@ -116,9 +116,9 @@
                             <td style="vertical-align: middle">:</td>
                             <td style="vertical-align: middle">
                                 <div class="input-group">
-                                    <input type="text" name="penyesuaian_pulang_jam_masuk_jam_non_absen" class="form-control" placeholder="Jam" id="penyesuaian_pulang_jam_masuk_jam_non_absen" autocomplete="false">
+                                    <input type="text" name="penyesuaian_pulang_jam_keluar_jam_non_absen" class="form-control" placeholder="Jam" id="penyesuaian_pulang_jam_keluar_jam_non_absen" autocomplete="false">
                                     &nbsp; : &nbsp;
-                                    <input type="text" name="penyesuaian_pulang_jam_masuk_menit_non_absen" class="form-control" placeholder="Menit" id="penyesuaian_pulang_jam_masuk_menit_non_absen" autocomplete="false">
+                                    <input type="text" name="penyesuaian_pulang_jam_keluar_menit_non_absen" class="form-control" placeholder="Menit" id="penyesuaian_pulang_jam_keluar_menit_non_absen" autocomplete="false">
                                 </div>
                             </td>
                         </tr>
@@ -126,7 +126,7 @@
                             <td style="vertical-align: middle">Keterangan</td>
                             <td style="vertical-align: middle">:</td>
                             <td>
-                                <textarea name="keterangan_jam_masuk_non_absen" class="form-control" id="jam_masuk_keterangan_non_absen" cols="30" rows="5"></textarea>
+                                <textarea name="keterangan_jam_keluar_non_absen" class="form-control" id="jam_keluar_keterangan_non_absen" cols="30" rows="5"></textarea>
                             </td>
                         </tr>
                     </thead>
