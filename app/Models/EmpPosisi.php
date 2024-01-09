@@ -15,7 +15,8 @@ class EmpPosisi extends Model
     // public $table = 'biodata_karyawan';
     // protected $dates = ['deleted_at'];
     public $fillable = [
-        'id_jabatan',
+        'id_posisi',
+        'id_level',
         'nama_jabatan',
     ];
 

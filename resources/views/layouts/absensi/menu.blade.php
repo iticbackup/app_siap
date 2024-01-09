@@ -25,6 +25,27 @@
             <div class="menu-title">Dashboard</div>
         </a>
     </li>
+    <li>
+        <a href="javascript:void()" class="has-arrow">
+            <div class="parent-icon"><i class='bx bx-file'></i>
+            </div>
+            <div class="menu-title">Presensi</div>
+        </a>
+    </li>
+    <li class="active">
+        <a href="{{ route('ijin_keluar_masuk') }}" class="has-arrow">
+            <div class="parent-icon"><i class='bx bx-file'></i>
+            </div>
+            <div class="menu-title">Ijin Keluar Masuk</div>
+        </a>
+    </li>
+    <li>
+        <a href="{{ route('ijin_terlambat') }}" class="has-arrow">
+            <div class="parent-icon"><i class='bx bx-file'></i>
+            </div>
+            <div class="menu-title">Ijin / Terlambat</div>
+        </a>
+    </li>
     {{-- <li>
         <a href="javascript:;" class="has-arrow">
             <div class="parent-icon"><i class="bx bx-category"></i>

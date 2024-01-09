@@ -15,7 +15,43 @@
 
         @include('absensi.home.modal_jam_non_absen_masuk')
         @include('absensi.home.modal_jam_non_absen_keluar')
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
+
+        @if ($message = Session::get('error'))
+            <div class="alert alert-danger alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
+
+        @if ($message = Session::get('warning'))
+            <div class="alert alert-warning alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
+
+        @if ($message = Session::get('info'))
+            <div class="alert alert-info alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
         <div class="col">
+            <div class="row row-cols-1 row-cols-lg-3">
+                <div class="col-12 col-lg-12">
+                    <div class="card radius-10">
+                        <div class="card-body">
+                            <div id="chart13"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card">
                 <div class="card-body">
                     {{-- <div>
@@ -26,8 +62,16 @@
                             <h4 class="card-title">Daftar Hadir Karyawan - Time <span id="time"></span></h4>
                         </div>
                         <div class="col-auto">
-                            <button class="btn btn-outline-primary" onclick="reload()"><i
-                                    class="bx bxs-refresh bx-sm bx-tada"></i> Reload Data</button>
+                            <form action="{{ route('absensi.search_name') }}" method="get">
+                                <div class="input-group">
+                                    <input type="search" name="cari" class="form-control" value="{{ old('cari') }}"
+                                        placeholder="Search..." id="">
+                                    <button class="btn btn-outline-primary" type="submit"><i
+                                            class="bx bxs-search bx-sm bx-tada"></i> Cari</button>
+                                </div>
+                            </form>
+                            {{-- <button class="btn btn-outline-primary" onclick="reload()"><i
+                                    class="bx bxs-refresh bx-sm bx-tada"></i> Reload Data</button> --}}
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -52,83 +96,172 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($biodata_karyawans as $biodata_karyawan)
-                                @php
-                                    $cek_status_kerja = \App\Models\IticDepartemen::where('id_departemen',$biodata_karyawan->satuan_kerja)->first();
-                                    // dd($cek_status_kerja);
-                                    if (empty($cek_satuan_kerja)) {
-                                        $satuan_kerja = '-';
-                                    }else{
-                                        if ($cek_satuan_kerja->nama_departemen >= 1) {
-                                            $satuan_kerja = $cek_satuan_kerja->nama_unit;
-                                        }else{
-                                            $satuan_kerja = $cek_satuan_kerja->nama_departemen;
-                                        }
-                                    }
+                                @foreach ($biodata_karyawans as $key => $biodata_karyawan)
+                                    @php
+                                        // $cek_status_kerja = \App\Models\IticDepartemen::where('id_departemen',$biodata_karyawan->satuan_kerja)->first();
+                                        // // dd($cek_status_kerja);
+                                        // if (empty($cek_satuan_kerja)) {
+                                        //     $satuan_kerja = '-';
+                                        // }else{
+                                        //     if ($cek_satuan_kerja->nama_departemen >= 1) {
+                                        //         $satuan_kerja = $cek_satuan_kerja->nama_unit;
+                                        //     }else{
+                                        //         $satuan_kerja = $cek_satuan_kerja->nama_departemen;
+                                        //     }
+                                        // }
 
-                                    $cek_posisi = \App\Models\EmpJabatan::where('id_jabatan',$biodata_karyawan->id_posisi)->first();
-                                    if (empty($cek_posisi)) {
-                                        $posisi = '-';
-                                    }else{
-                                        $posisi = $cek_posisi->nama_jabatan;
-                                    }
-                                @endphp
+                                        // $cek_posisi = \App\Models\EmpPosisi::where('id_posisi',$biodata_karyawan->id_posisi)->first();
+                                        // // dd($cek_posisi);
+                                        // if (empty($cek_posisi)) {
+                                        //     $posisi = '-';
+                                        // }else{
+                                        //     $posisi = $cek_posisi->nama_jabatan;
+                                        // }
+                                        $cek_status_kerja = \App\Models\IticDepartemen::where('id_departemen', $biodata_karyawan->satuan_kerja)->first();
+                                        // dd($cek_status_kerja);
+                                        if (empty($cek_status_kerja)) {
+                                            $satuan_kerja = '-';
+                                        } else {
+                                            if ($cek_status_kerja->nama_departemen >= 1) {
+                                                $satuan_kerja = $cek_status_kerja->nama_unit;
+                                            } else {
+                                                $satuan_kerja = $cek_status_kerja->nama_departemen;
+                                            }
+                                        }
+
+                                        $cek_posisi = \App\Models\EmpPosisi::where('id_posisi', $biodata_karyawan->id_posisi)->first();
+                                        // dd($cek_posisi);
+                                        if (empty($cek_posisi)) {
+                                            $posisi = '-';
+                                        } else {
+                                            $posisi = $cek_posisi->nama_posisi;
+                                        }
+                                    @endphp
                                     <tr>
+                                        {{-- <td>{{ $key+1 }}</td> --}}
                                         <td class="text-center">{{ $biodata_karyawan->nik }}</td>
                                         <td class="text-center">{{ $biodata_karyawan->nama }}</td>
+                                        {{-- <td class="text-center">{{ $satuan_kerja }}</td> --}}
+                                        {{-- <td class="text-center"></td> --}}
                                         <td class="text-center">{{ $satuan_kerja }}</td>
                                         <td class="text-center">{{ $posisi }}</td>
+                                        {{-- <td class="text-center">{{ $posisi }}</td> --}}
                                         @php
-                                        $date_live = \Carbon\Carbon::now()->format('Y-m-d');
-                                        $mesin_finger_1 = \App\Models\FinPro::where('scan_date','LIKE','%'.$date_live.'%')
-                                                                            ->where('pin',$biodata_karyawan->pin)
-                                                                            ->where('inoutmode',1)
-                                                                            ->first();
+                                            $date_live = \Carbon\Carbon::now()->format('Y-m-d');
+                                            $mesin_finger_1 = \App\Models\FinPro::where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                ->where('pin', $biodata_karyawan->pin)
+                                                ->where('inoutmode', 1)
+                                                ->first();
 
-                                        if (empty($mesin_finger_1)) {
-                                            $inoutmode = 1;
-                                            $presensi_info = \App\Models\PresensiInfo::where('scan_date','LIKE','%'.$date_live.'%')
-                                                                                    ->where('pin',$biodata_karyawan->pin)
-                                                                                    ->where('inoutmode',$inoutmode)
-                                                                                    ->first();
-                                            if (empty($presensi_info)) {
-                                                $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$date_live.'`,`'.$biodata_karyawan->pin.'`,`'.$inoutmode.'`)"><i class="bx bxs-plus-circle bx-sm bx-tada text-success"></i></a>';
-                                            }else{
-                                                if ($presensi_info->status == 4) {
-                                                    $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$date_live.'`,`'.$biodata_karyawan->pin.'`,`'.$inoutmode.'`)" style="color: red">Sakit</a>';
-                                                }elseif($presensi_info->status == 7){
-                                                    // $jam_masuk = 'Absen';
-                                                    $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$date_live.'`,`'.$biodata_karyawan->pin.'`,`'.$inoutmode.'`)" style="color: purple">Absen</a>';
-                                                }elseif($presensi_info->status == 13){
-                                                    $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$date_live.'`,`'.$biodata_karyawan->pin.'`,`'.$inoutmode.'`)" style="color: orange">Cuti</a>';
-                                                    // $jam_masuk = 'Cuti';
+                                            if (empty($mesin_finger_1)) {
+                                                $inoutmode = 1;
+                                                $presensi_info = \App\Models\PresensiInfo::where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                    ->where('pin', $biodata_karyawan->pin)
+                                                    ->where('inoutmode', $inoutmode)
+                                                    ->first();
+                                                if (empty($presensi_info)) {
+                                                    $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . $inoutmode . '`)"><i class="bx bxs-plus-circle bx-sm bx-tada text-success"></i></a>';
+                                                    // $jam_masuk_time = 0;
+                                                } else {
+                                                    if ($presensi_info->status == 4) {
+                                                        $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . $inoutmode . '`)" style="color: red">Sakit</a>';
+                                                        // $jam_masuk_time = 0;
+                                                    } elseif ($presensi_info->status == 7) {
+                                                        // $jam_masuk = 'Absen';
+                                                        $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . $inoutmode . '`)" style="color: purple">Absen</a>';
+                                                    } elseif ($presensi_info->status == 13) {
+                                                        $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . $inoutmode . '`)" style="color: orange">Cuti</a>';
+                                                        // $jam_masuk = 'Cuti';
+                                                    } else {
+                                                        // $jam_masuk = '<a type="button" onclick="detail_edit_non_absensi_jam_masuk(`'.$presensi_info->att_rec.'`)">'.$presensi_info->scan_date.'</a>';
+                                                    }
                                                 }
-                                                else{
-                                                    $jam_masuk = '<a type="button" onclick="detail_edit_non_absensi_jam_masuk(`'.$presensi_info->att_rec.'`)">'.$presensi_info->scan_date.'</a>';
+                                            } else {
+                                                $inoutmode = 1;
+                                                $absen_masuk = \App\Models\PresensiInfo::with('presensi_status')
+                                                    ->where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                    ->where('pin', $biodata_karyawan->pin)
+                                                    ->where('inoutmode', $inoutmode)
+                                                    // ->orderBy('scan_date','asc')
+                                                    ->first();
+                                                // dd($absen_masuk);
+                                                if (empty($absen_masuk)) {
+                                                    $date_jam_masuk = \Carbon\Carbon::create($mesin_finger_1->scan_date)->format('H:i');
+                                                    $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`' . $mesin_finger_1->scan_date . '`,`' . $mesin_finger_1->pin . '`,`' . $mesin_finger_1->inoutmode . '`)" style="color: blue">' . $date_jam_masuk . '</a>';
+                                                } else {
+                                                    $date_jam_masuk = \Carbon\Carbon::create($mesin_finger_1->scan_date)->format('H:i');
+                                                    $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`' . $mesin_finger_1->scan_date . '`,`' . $mesin_finger_1->pin . '`,`' . $mesin_finger_1->inoutmode . '`)" style="color: blue">' . $date_jam_masuk . ' (' . $absen_masuk->presensi_status->status_info . ')</a>';
                                                 }
                                             }
-                                        }else{
-                                            $inoutmode = 1;
-                                            $absen_masuk = \App\Models\PresensiInfo::with('presensi_status')
-                                                                        ->where('scan_date','LIKE','%'.$date_live.'%')
-                                                                        ->where('pin',$biodata_karyawan->pin)
-                                                                        ->where('inoutmode',$inoutmode)
-                                                                        // ->orderBy('scan_date','asc')
-                                                                        ->first();
-                                                                        // dd($absen_masuk);
-                                            if (empty($absen_masuk)) {
-                                                $date_jam_masuk = \Carbon\Carbon::create($mesin_finger_1->scan_date)->format('H:i');
-                                                $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`'.$mesin_finger_1->scan_date.'`,`'.$mesin_finger_1->pin.'`,`'.$mesin_finger_1->inoutmode.'`)" style="color: blue">'.$date_jam_masuk.'</a>';
-                                            }else{
-                                                $date_jam_masuk = \Carbon\Carbon::create($mesin_finger_1->scan_date)->format('H:i');
-                                                $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`'.$mesin_finger_1->scan_date.'`,`'.$mesin_finger_1->pin.'`,`'.$mesin_finger_1->inoutmode.'`)" style="color: blue">'.$date_jam_masuk.' ('.$absen_masuk->presensi_status->status_info.')</a>';
-                                            }
-                                        }
                                         @endphp
                                         <td class="text-center">{!! $jam_masuk !!}</td>
                                         @php
-                                            
+                                            $mesin_finger_2 = \App\Models\FinPro::where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                ->where('pin', $biodata_karyawan->pin)
+                                                ->where('inoutmode', 2)
+                                                ->first();
+                                            if (empty($mesin_finger_2)) {
+                                                $inoutmode_2 = 2;
+                                                $presensi_info_2 = \App\Models\PresensiInfo::where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                    ->where('pin', $biodata_karyawan->pin)
+                                                    ->where('inoutmode', $inoutmode_2)
+                                                    // ->orderBy('scan_date','asc')
+                                                    ->first();
+                                                if (empty($presensi_info_2)) {
+                                                    $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . $inoutmode_2 . '`)"><i class="bx bxs-plus-circle bx-sm bx-tada text-success"></i></a>';
+                                                } else {
+                                                    if ($presensi_info->status == 4) {
+                                                        $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . $inoutmode_2 . '`)" style="color: red">Sakit</a>';
+                                                    } elseif ($presensi_info->status == 7) {
+                                                        $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . $inoutmode_2 . '`)" style="color: purple">Absen</a>';
+                                                        // $jam_keluar = 'Absen';
+                                                    } elseif ($presensi_info->status == 13) {
+                                                        $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . $inoutmode_2 . '`)" style="color: orange">Cuti</a>';
+                                                        // $jam_keluar = 'Cuti';
+                                                    } else {
+                                                        // $jam_masuk = $presensi_info->scan_date;
+                                                        // $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`'.$date_live.'`,`'.$biodata_karyawan->pin.'`,`'.$inoutmode_2.'`)">'.$presensi_info_2->scan_date.'</a>';
+                                                    }
+                                                }
+                                            } else {
+                                                $inoutmode_2 = 2;
+                                                $absen_keluar = \App\Models\PresensiInfo::with('presensi_status')
+                                                    ->where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                    ->where('pin', $biodata_karyawan->pin)
+                                                    ->where('inoutmode', $inoutmode_2)
+                                                    // ->orderBy('scan_date','asc')
+                                                    ->first();
+                                                if (empty($absen_keluar)) {
+                                                    $date_jam_keluar = \Carbon\Carbon::create($mesin_finger_2->scan_date)->format('H:i');
+                                                    $jam_keluar = '<a type="button" onclick="detail_absensi_jam_keluar(`' . $mesin_finger_2->scan_date . '`,`' . $mesin_finger_2->pin . '`,`' . $mesin_finger_2->inoutmode . '`)" style="color: blue">' . $date_jam_keluar . '</a>';
+                                                } else {
+                                                    $date_jam_keluar = \Carbon\Carbon::create($mesin_finger_2->scan_date)->format('H:i');
+                                                    $jam_keluar = '<a type="button" onclick="detail_absensi_jam_keluar(`' . $mesin_finger_2->scan_date . '`,`' . $mesin_finger_2->pin . '`,`' . $mesin_finger_2->inoutmode . '`)" style="color: red">' . $date_jam_keluar . ' (' . $absen_keluar->presensi_status->status_info . ')</a>';
+                                                }
+                                            }
                                         @endphp
+                                        <td class="text-center">{!! $jam_keluar !!}</td>
+                                        {{-- @php
+                                            $awal = strtotime($jam_masuk);
+                                            $akhir = strtotime($jam_keluar);
+                                            $diff  = $akhir - $awal;
+                                            // dd($awal);
+
+                                            $jam   = floor($diff / (60 * 60));
+                                            $menit = $diff - ( $jam * (60 * 60) );
+                                            $detik = $diff % 60;
+
+                                            $selisih_jam = ($jam-1).':'.floor($menit/60);
+
+                                            if ($awal == 0  && $akhir == 0) {
+                                                $total_jam = 0;
+                                            }elseif($awal > 0 && $akhir == 0){
+                                                $total_jam = 0;
+                                            }else{
+                                                $total_jam = $selisih_jam;
+                                            }
+                                        @endphp --}}
+                                        <td></td>
                                     </tr>
                                 @endforeach
                                 {{-- @foreach ($karyawans as $karyawan)
@@ -163,7 +296,13 @@
                                 </tr>
                             @endforeach --}}
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="7"><b>Note:</b> Presensi ini hanya digunakan untuk absen hari ini.</td>
+                                </tr>
+                            </tfoot>
                         </table>
+                        {{ $biodata_karyawans->links('vendor.pagination.template1.default') }}
                     </div>
                     {{-- {{ $karyawans->links() }} --}}
                     {{-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>	<a href="javascript:;" class="btn btn-primary">Go somewhere</a> --}}
@@ -397,8 +536,14 @@
     <script src="{{ $asset }}/assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/lobipanel/1.0.6/js/lobipanel.min.js" integrity="sha512-87ZExUcqiYtb95dZZDnehfTeEhUUsvmm5BILx99vEjFXjdn0hJtZo//oFwp8l7AV0F01Md817fVCl1ahn3QSNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
     <script src="{{ $asset }}/assets/plugins/notifications/js/lobibox.min.js"></script>
-	<script src="{{ $asset }}/assets/plugins/notifications/js/notifications.min.js"></script>
+    <script src="{{ $asset }}/assets/plugins/notifications/js/notifications.min.js"></script>
     <script src="{{ $asset }}/assets/plugins/notifications/js/notification-custom-script.js"></script>
+    <script src="{{ $asset }}/assets/plugins/highcharts/js/highcharts.js"></script>
+    {{-- <script src="{{ $asset }}/assets/plugins/highcharts/js/exporting.js"></script> --}}
+    {{-- <script src="{{ $asset }}/assets/plugins/highcharts/js/variable-pie.js"></script> --}}
+    {{-- <script src="{{ $asset }}/assets/plugins/highcharts/js/export-data.js"></script> --}}
+    {{-- <script src="{{ $asset }}/assets/plugins/highcharts/js/accessibility.js"></script> --}}
+    {{-- <script src="{{ $asset }}/assets/plugins/apexcharts-bundle/js/apexcharts.min.js"></script> --}}
     <script>
         $.ajaxSetup({
             headers: {
@@ -495,32 +640,39 @@
             // });
         };
 
-        function detail_absensi_jam_masuk(scan_date,pin,inoutmode){
+        function detail_absensi_jam_masuk(scan_date, pin, inoutmode) {
             // alert(date_live+' '+pin);
             // $('.modalBuatJamMasuk').modal('show');
             $.ajax({
                 type: 'GET',
-                url: "{{ url('absensi/absensi_masuk') }}"+'/'+scan_date+'/'+pin+'/'+inoutmode,
+                url: "{{ url('absensi/absensi_masuk') }}" + '/' + scan_date + '/' + pin + '/' + inoutmode,
                 contentType: "application/json;  charset=utf-8",
                 cache: false,
                 success: (result) => {
                     if (result.success == true) {
                         // alert('test');
                         document.getElementById('detail_masuk_nik').innerHTML = result.biodata_karyawan.nik;
-                        document.getElementById('detail_masuk_nama_karyawan').innerHTML = result.biodata_karyawan.nama;
+                        document.getElementById('detail_masuk_nama_karyawan').innerHTML = result
+                            .biodata_karyawan.nama;
                         document.getElementById('detail_masuk_tanggal_masuk').innerHTML = result.data.scan_date;
                         $('#detail_masuk_pin').val(result.data.pin);
                         $('#detail_masuk_inoutmode').val(result.data.inoutmode);
                         $('#detail_masuk_tanggal_masuk').val(result.data.scan_date);
                         $('#detail_masuk_jam_masuk_status').val(result.data.status);
                         $('#detail_masuk_keterangan_jam_masuk').val(result.data.keterangan);
-                        
-                        $('#detail_masuk_penyesuaian_masuk_jam_masuk_jam').val(result.data.penyesuaian_masuk_jam);
-                        $('#detail_masuk_penyesuaian_masuk_jam_masuk_menit').val(result.data.penyesuaian_masuk_menit);
-                        $('#detail_masuk_penyesuaian_istirahat_jam_masuk_jam').val(result.data.penyesuaian_istirahat_jam);
-                        $('#detail_masuk_penyesuaian_istirahat_jam_masuk_menit').val(result.data.penyesuaian_istirahat_menit);
-                        $('#detail_masuk_penyesuaian_pulang_jam_masuk_jam').val(result.data.penyesuaian_pulang_jam);
-                        $('#detail_masuk_penyesuaian_pulang_jam_masuk_menit').val(result.data.penyesuaian_pulang_menit);
+
+                        $('#detail_masuk_penyesuaian_masuk_jam_masuk_jam').val(result.data
+                            .penyesuaian_masuk_jam);
+                        $('#detail_masuk_penyesuaian_masuk_jam_masuk_menit').val(result.data
+                            .penyesuaian_masuk_menit);
+                        $('#detail_masuk_penyesuaian_istirahat_jam_masuk_jam').val(result.data
+                            .penyesuaian_istirahat_jam);
+                        $('#detail_masuk_penyesuaian_istirahat_jam_masuk_menit').val(result.data
+                            .penyesuaian_istirahat_menit);
+                        $('#detail_masuk_penyesuaian_pulang_jam_masuk_jam').val(result.data
+                            .penyesuaian_pulang_jam);
+                        $('#detail_masuk_penyesuaian_pulang_jam_masuk_menit').val(result.data
+                            .penyesuaian_pulang_menit);
                         // document.getElementById('detail_masuk_tanggal_masuk').innerHTML = result.data.scan_date;
                         $('.modalDetailAbsenMasuk').modal('show');
                     } else {
@@ -532,7 +684,8 @@
                         //     msg: result.message_content
                         // });
                         document.getElementById('detail_masuk_nik').innerHTML = result.biodata_karyawan.nik;
-                        document.getElementById('detail_masuk_nama_karyawan').innerHTML = result.biodata_karyawan.nama;
+                        document.getElementById('detail_masuk_nama_karyawan').innerHTML = result
+                            .biodata_karyawan.nama;
                         document.getElementById('detail_masuk_tanggal_masuk').innerHTML = result.data.scan_date;
                         $('#detail_masuk_pin').val(result.data.pin);
                         $('#detail_masuk_tanggal_masuk').val(result.data.scan_date);
@@ -546,32 +699,40 @@
             });
         }
 
-        function detail_absensi_jam_keluar(scan_date,pin,inoutmode){
+        function detail_absensi_jam_keluar(scan_date, pin, inoutmode) {
             // alert(date_live+' '+pin);
             // $('.modalBuatJamMasuk').modal('show');
             $.ajax({
                 type: 'GET',
-                url: "{{ url('absensi/absensi_keluar') }}"+'/'+scan_date+'/'+pin+'/'+inoutmode,
+                url: "{{ url('absensi/absensi_keluar') }}" + '/' + scan_date + '/' + pin + '/' + inoutmode,
                 contentType: "application/json;  charset=utf-8",
                 cache: false,
                 success: (result) => {
                     if (result.success == true) {
                         // alert('success');
                         document.getElementById('detail_keluar_nik').innerHTML = result.biodata_karyawan.nik;
-                        document.getElementById('detail_keluar_nama_karyawan').innerHTML = result.biodata_karyawan.nama;
-                        document.getElementById('detail_keluar_tanggal_keluar').innerHTML = result.data.scan_date;
+                        document.getElementById('detail_keluar_nama_karyawan').innerHTML = result
+                            .biodata_karyawan.nama;
+                        document.getElementById('detail_keluar_tanggal_keluar').innerHTML = result.data
+                            .scan_date;
                         $('#detail_keluar_pin').val(result.data.pin);
                         $('#detail_keluar_inoutmode').val(result.data.inoutmode);
                         $('#detail_keluar_tanggal_keluar').val(result.data.scan_date);
                         $('#detail_keluar_jam_keluar_status').val(result.data.status);
                         $('#detail_keluar_keterangan_jam_keluar').val(result.data.keterangan);
-                        
-                        $('#detail_keluar_penyesuaian_masuk_jam_keluar_jam').val(result.data.penyesuaian_masuk_jam);
-                        $('#detail_keluar_penyesuaian_masuk_jam_keluar_menit').val(result.data.penyesuaian_masuk_menit);
-                        $('#detail_keluar_penyesuaian_istirahat_jam_keluar_jam').val(result.data.penyesuaian_istirahat_jam);
-                        $('#detail_keluar_penyesuaian_istirahat_jam_keluar_menit').val(result.data.penyesuaian_istirahat_menit);
-                        $('#detail_keluar_penyesuaian_pulang_jam_keluar_jam').val(result.data.penyesuaian_pulang_jam);
-                        $('#detail_keluar_penyesuaian_pulang_jam_keluar_menit').val(result.data.penyesuaian_pulang_menit);
+
+                        $('#detail_keluar_penyesuaian_masuk_jam_keluar_jam').val(result.data
+                            .penyesuaian_masuk_jam);
+                        $('#detail_keluar_penyesuaian_masuk_jam_keluar_menit').val(result.data
+                            .penyesuaian_masuk_menit);
+                        $('#detail_keluar_penyesuaian_istirahat_jam_keluar_jam').val(result.data
+                            .penyesuaian_istirahat_jam);
+                        $('#detail_keluar_penyesuaian_istirahat_jam_keluar_menit').val(result.data
+                            .penyesuaian_istirahat_menit);
+                        $('#detail_keluar_penyesuaian_pulang_jam_keluar_jam').val(result.data
+                            .penyesuaian_pulang_jam);
+                        $('#detail_keluar_penyesuaian_pulang_jam_keluar_menit').val(result.data
+                            .penyesuaian_pulang_menit);
                         // // document.getElementById('detail_masuk_tanggal_masuk').innerHTML = result.data.scan_date;
                         $('.modalDetailAbsenKeluar').modal('show');
                     } else {
@@ -603,12 +764,12 @@
             });
         }
 
-        function detail_non_absen_jam_masuk(date_live,pin,inoutmode){
+        function detail_non_absen_jam_masuk(date_live, pin, inoutmode) {
             // alert(date_live+' '+pin);
             // $('.modalBuatJamMasuk').modal('show');
             $.ajax({
                 type: 'GET',
-                url: "{{ url('absensi/jam_masuk') }}"+'/'+date_live+'/'+pin+'/'+inoutmode,
+                url: "{{ url('absensi/jam_masuk') }}" + '/' + date_live + '/' + pin + '/' + inoutmode,
                 contentType: "application/json;  charset=utf-8",
                 cache: false,
                 success: (result) => {
@@ -625,14 +786,15 @@
                         $('#status_non_absen_masuk').val(result.status);
                         $('#penyesuaian_masuk_jam_masuk_jam_non_absen').val(result.penyesuaian_masuk_jam);
                         $('#penyesuaian_masuk_jam_masuk_menit_non_absen').val(result.penyesuaian_masuk_menit);
-                        $('#penyesuaian_istirahat_jam_masuk_jam_non_absen').val(result.penyesuaian_istirahat_jam);
-                        $('#penyesuaian_istirahat_jam_masuk_menit_non_absen').val(result.penyesuaian_istirahat_menit);
+                        $('#penyesuaian_istirahat_jam_masuk_jam_non_absen').val(result
+                            .penyesuaian_istirahat_jam);
+                        $('#penyesuaian_istirahat_jam_masuk_menit_non_absen').val(result
+                            .penyesuaian_istirahat_menit);
                         $('#penyesuaian_pulang_jam_masuk_jam_non_absen').val(result.penyesuaian_pulang_jam);
                         $('#penyesuaian_pulang_jam_masuk_menit_non_absen').val(result.penyesuaian_pulang_menit);
                         $('#jam_masuk_keterangan_non_absen').val(result.keterangan);
                         $('.modalJamMasukNonAbsen').modal('show');
-                    } else {
-                    }
+                    } else {}
                 },
                 error: function(request, status, error) {
 
@@ -640,12 +802,12 @@
             });
         }
 
-        function detail_non_absen_jam_keluar(date_live,pin,inoutmode){
+        function detail_non_absen_jam_keluar(date_live, pin, inoutmode) {
             // alert(date_live+' '+pin);
             // $('.modalBuatJamMasuk').modal('show');
             $.ajax({
                 type: 'GET',
-                url: "{{ url('absensi/jam_pulang') }}"+'/'+date_live+'/'+pin+'/'+inoutmode,
+                url: "{{ url('absensi/jam_pulang') }}" + '/' + date_live + '/' + pin + '/' + inoutmode,
                 contentType: "application/json;  charset=utf-8",
                 cache: false,
                 success: (result) => {
@@ -662,14 +824,16 @@
                         $('#status_non_absen_keluar').val(result.status);
                         $('#penyesuaian_masuk_jam_keluar_jam_non_absen').val(result.penyesuaian_masuk_jam);
                         $('#penyesuaian_masuk_jam_keluar_menit_non_absen').val(result.penyesuaian_masuk_menit);
-                        $('#penyesuaian_istirahat_jam_keluar_jam_non_absen').val(result.penyesuaian_istirahat_jam);
-                        $('#penyesuaian_istirahat_jam_keluar_menit_non_absen').val(result.penyesuaian_istirahat_menit);
+                        $('#penyesuaian_istirahat_jam_keluar_jam_non_absen').val(result
+                            .penyesuaian_istirahat_jam);
+                        $('#penyesuaian_istirahat_jam_keluar_menit_non_absen').val(result
+                            .penyesuaian_istirahat_menit);
                         $('#penyesuaian_pulang_jam_keluar_jam_non_absen').val(result.penyesuaian_pulang_jam);
-                        $('#penyesuaian_pulang_jam_keluar_menit_non_absen').val(result.penyesuaian_pulang_menit);
+                        $('#penyesuaian_pulang_jam_keluar_menit_non_absen').val(result
+                            .penyesuaian_pulang_menit);
                         $('#jam_keluar_keterangan_non_absen').val(result.keterangan);
                         $('.modalJamPulangNonAbsen').modal('show');
-                    } else {
-                    }
+                    } else {}
                 },
                 error: function(request, status, error) {
 
@@ -677,11 +841,10 @@
             });
         }
 
-        function detail_edit_non_absensi_jam_masuk(att_rec)
-        {
+        function detail_edit_non_absensi_jam_masuk(att_rec) {
             $.ajax({
                 type: 'GET',
-                url: "{{ url('absensi/jam_masuk/edit') }}"+'/'+att_rec,
+                url: "{{ url('absensi/jam_masuk/edit') }}" + '/' + att_rec,
                 contentType: "application/json;  charset=utf-8",
                 cache: false,
                 success: (result) => {
@@ -694,12 +857,18 @@
                         $('#edit_non_absen_masuk_jam_masuk_tanggal').val(result.date);
                         $('#edit_non_absen_masuk_jam_masuk_waktu').val(result.time);
                         $('#edit_non_absen_masuk_jam_masuk_status').val(result.status);
-                        $('#edit_penyesuaian_masuk_jam_masuk_jam_non_absen').val(result.penyesuaian_jam_masuk_jam);
-                        $('#edit_penyesuaian_masuk_jam_masuk_menit_non_absen').val(result.penyesuaian_jam_masuk_menit);
-                        $('#edit_penyesuaian_istirahat_jam_masuk_jam_non_absen').val(result.penyesuaian_istirahat_jam_masuk_jam);
-                        $('#edit_penyesuaian_istirahat_jam_masuk_menit_non_absen').val(result.penyesuaian_istirahat_jam_masuk_menit);
-                        $('#edit_penyesuaian_pulang_jam_masuk_jam_non_absen').val(result.penyesuaian_pulang_jam_masuk_jam);
-                        $('#edit_penyesuaian_pulang_jam_masuk_menit_non_absen').val(result.penyesuaian_pulang_jam_menit_menit);
+                        $('#edit_penyesuaian_masuk_jam_masuk_jam_non_absen').val(result
+                            .penyesuaian_jam_masuk_jam);
+                        $('#edit_penyesuaian_masuk_jam_masuk_menit_non_absen').val(result
+                            .penyesuaian_jam_masuk_menit);
+                        $('#edit_penyesuaian_istirahat_jam_masuk_jam_non_absen').val(result
+                            .penyesuaian_istirahat_jam_masuk_jam);
+                        $('#edit_penyesuaian_istirahat_jam_masuk_menit_non_absen').val(result
+                            .penyesuaian_istirahat_jam_masuk_menit);
+                        $('#edit_penyesuaian_pulang_jam_masuk_jam_non_absen').val(result
+                            .penyesuaian_pulang_jam_masuk_jam);
+                        $('#edit_penyesuaian_pulang_jam_masuk_menit_non_absen').val(result
+                            .penyesuaian_pulang_jam_menit_menit);
                         $('#edit_jam_masuk_keterangan_non_absen').val(result.keterangan);
                         $('.modalEditJamMasukNonAbsen').modal('show');
                     } else {
@@ -738,6 +907,7 @@
                             msg: result.message_content
                         });
                         // table.ajax.reload(null, false);
+                        location.reload();
                         $('.modalJamMasukNonAbsen').modal('hide');
                     } else {
                         Lobibox.notify('error', {
@@ -784,6 +954,7 @@
                             msg: result.message_content
                         });
                         // table.ajax.reload(null, false);
+                        location.reload();
                         $('.modalJamPulangNonAbsen').modal('hide');
                     } else {
                         Lobibox.notify('error', {
@@ -806,7 +977,7 @@
                 }
             });
         });
-        
+
         $('#form-simpan-jam-masuk-detail_masuk').submit(function(e) {
             e.preventDefault();
             let formData = new FormData(this);
@@ -831,6 +1002,7 @@
                             msg: result.message_content
                         });
                         // table.ajax.reload(null, false);
+                        location.reload();
                         $('.modalDetailAbsenMasuk').modal('hide');
                     } else {
                         Lobibox.notify('error', {
@@ -853,7 +1025,7 @@
                 }
             });
         });
-        
+
         $('#form-simpan-jam-keluar-detail_keluar').submit(function(e) {
             e.preventDefault();
             let formData = new FormData(this);
@@ -878,6 +1050,7 @@
                             msg: result.message_content
                         });
                         // table.ajax.reload(null, false);
+                        location.reload();
                         $('.modalDetailAbsenKeluar').modal('hide');
                     } else {
                         Lobibox.notify('error', {
@@ -899,6 +1072,72 @@
                     });
                 }
             });
+        });
+    </script>
+    <script>
+        Highcharts.chart('chart13', {
+            chart: {
+                zoomType: 'xy',
+                styledMode: true
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: 'Progress Absensi Periode ' + new Date().getFullYear()
+            },
+            xAxis: [{
+                categories: @json($periode),
+                crosshair: true
+            }],
+            yAxis: [{ // Primary yAxis
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                title: {
+                    text: 'Total Absensi',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                }
+            }, { // Secondary yAxis
+                title: {
+                    text: 'Total Absensi',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 120,
+                verticalAlign: 'top',
+                y: 100,
+                floating: true,
+                backgroundColor: Highcharts.defaultOptions.legend.backgroundColor ||
+                    'rgba(255,255,255,0.25)'
+            },
+            series: [{
+                name: 'Total Absensi',
+                type: 'column',
+                yAxis: 1,
+                data: @json($hasil),
+
+            }]
         });
     </script>
     {{-- <script src="{{ $asset }}/assets/plugins/highcharts/js/highcharts.js"></script>

@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\FinPro;
 use App\Models\BiodataKaryawan;
+use App\Models\DepartemenUser;
 use App\Models\IticDepartemen;
 use App\Models\EmpJabatan;
 use App\Models\EmpPosisi;
 use App\Models\PresensiInfo;
 use \Carbon\Carbon;
+use \Carbon\CarbonPeriod;
 use Validator;
 use DataTables;
 use DB;
@@ -205,18 +207,55 @@ class AbsensiController extends Controller
         //                     ->skipPaging()
         //                     ->toJson();
         // }
-
-        $data['biodata_karyawans'] = BiodataKaryawan::where(function($query) {
-                                                        return $query->where('nik','!=','1000001')
-                                                                    ->where('nik','!=','1000002')
-                                                                    ->where('nik','!=','1000003');
-                                                    })
-                                                    ->where('pin',1298)
-                                                    ->where('status_karyawan','!=','R')
-                                                    ->paginate(20);
-        $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
-        // dd($data);
-        return view('absensi.home.index',$data);
+        if (auth()->user()->nik == 0000000) {
+            $data['biodata_karyawans'] = BiodataKaryawan::where(function($query) {
+                                                            return $query->where('nik','!=','1000001')
+                                                                        ->where('nik','!=','1000002')
+                                                                        ->where('nik','!=','1000003');
+                                                        })
+                                                        // ->where('pin',1298)
+                                                        ->where('status_karyawan','!=','R')
+                                                        ->paginate(20);
+            $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
+            $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
+            $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
+            for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
+                $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
+                $total_absen_masuk = FinPro::where('scan_date','LIKE','%'.$i.'%')->where('inoutmode',1)->count();
+                // dd($total_absen_masuk);
+                $data['hasil'][] = $total_absen_masuk;
+            }
+            return view('absensi.home.index',$data);
+        }else{
+            $akses_departemen = DepartemenUser::whereIn('departemen_id',[3,4])->where('nik',auth()->user()->nik)->first();
+            // dd($akses_departemen);
+            if (empty($akses_departemen)) {
+                return redirect()->back()->with('error','Maaf Anda Tidak Bisa Akses Halaman Absensi');
+            }else{
+                if ($akses_departemen->nik == auth()->user()->nik) {
+                    $data['biodata_karyawans'] = BiodataKaryawan::where(function($query) {
+                                                                    return $query->where('nik','!=','1000001')
+                                                                                ->where('nik','!=','1000002')
+                                                                                ->where('nik','!=','1000003');
+                                                                })
+                                                                // ->where('pin',1298)
+                                                                ->where('status_karyawan','!=','R')
+                                                                ->paginate(20);
+                    $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
+                    $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
+                    $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
+                    for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
+                        $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
+                        $total_absen_masuk = FinPro::where('scan_date','LIKE','%'.$i.'%')->where('inoutmode',1)->count();
+                        // dd($total_absen_masuk);
+                        $data['hasil'][] = $total_absen_masuk;
+                    }
+                    return view('absensi.home.index',$data);
+                }else{
+                    return redirect()->back()->with('error','Maaf Anda Tidak Bisa Akses Halaman Absensi');
+                }
+            }
+        }
     }
 
     public function input_modal_nofinger_jam_masuk_absensi($date_live,$pin,$inoutmode)
@@ -1058,6 +1097,59 @@ class AbsensiController extends Controller
                 'error' => $validator->errors()->all()
             ]
         );
+    }
+
+    public function search_name(Request $request)
+    {
+        $data['biodata_karyawans'] = BiodataKaryawan::where(function($query) {
+                                                        return $query->where('nik','!=','1000001')
+                                                                    ->where('nik','!=','1000002')
+                                                                    ->where('nik','!=','1000003');
+                                                    })
+                                                    ->where('nik','LIKE','%'.$request->cari.'%')
+                                                    ->orWhere('nama','LIKE','%'.$request->cari.'%')
+                                                    ->where('status_karyawan','!=','R')
+                                                    ->paginate();
+        $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
+        // $data['total_absen_kemarin'] = FinPro::where('scan_date','LIKE','%'.Carbon::yesterday()->format('Y-m-d').'%')->where('inoutmode',1)->count();
+        // $data['total_absen_hari_ini'] = FinPro::where('scan_date','LIKE','%'.Carbon::today()->format('Y-m-d').'%')->where('inoutmode',1)->count();
+        // // dd($data);
+        // if ($data['total_absen_kemarin'] == $data['total_absen_hari_ini']) {
+        //     $data['persentase'] = '<small class="font-13">(0%)</small>';
+        // }elseif($data['total_absen_kemarin'] >= $data['total_absen_hari_ini']){
+        //     $hitung = ($data['total_absen_kemarin']/$data['total_absen_hari_ini'])*100;
+        //     $data['persentase'] = '<small class="text-success font-13">(+'.$hitung.'%)</small>';
+        // }elseif($data['total_absen_kemarin'] <= $data['total_absen_hari_ini']){
+        //     $hitung = ($data['total_absen_kemarin']/$data['total_absen_hari_ini'])*100;
+        //     $data['persentase'] = '<small class="text-danger font-13">(-'.$hitung.'%)</small>';
+        // }
+        $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
+        $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
+        for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
+            $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
+            $total_absen_masuk = FinPro::where('scan_date','LIKE','%'.$i.'%')->where('inoutmode',1)->count();
+            // dd($total_absen_masuk);
+            $data['hasil'][] = $total_absen_masuk;
+        }
+        // dd($data);
+        return view('absensi.home.index',$data);
+    }
+
+    public function absensi()
+    {
+        $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
+        $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
+        for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
+            $data[] = [
+                'name' => $i,
+                'y' => 5,
+                'drilldown' => $i
+            ];
+        }
+        return response()->json($data);
+        // return CarbonPeriod::between($start_year_now,$end_year_now);
+        // return Carbon::now()->startOfYear()->format('Y-m-d').' - '.Carbon::now()->endOfYear()->format('Y-m-d');
+        // $fin_pro = FinPro::where('scan_date','LIKE','%'.Carbon::now()->format('Y-m-d').'%')->where('inoutmode',1)->count();
     }
 
     public function fin_tes()
