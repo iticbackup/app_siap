@@ -78,8 +78,8 @@ class IjinKeluarMasukController extends Controller
         //                     ->rawColumns(['nama','action'])
         //                     ->make(true);
         // }
-        // $date_live = Carbon::now()->format('Y');
-        $date_live = 2023;
+        $date_live = Carbon::now()->format('Y');
+        // $date_live = 2023;
         $data['ijin_keluar_masuks'] = $this->ijin_keluar_masuk->with('biodata_karyawan')
                                             ->whereYear('tanggal_ijin',$date_live)
                                             ->orderBy('tanggal_ijin','desc')
