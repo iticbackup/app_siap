@@ -25,7 +25,7 @@ class IjinTerlambatController extends Controller
 
     public function index(){
         $date_live = Carbon::now()->format('Y');
-        $data['ijin_terlambats'] = $this->presensi_info->with('biodata_karyawan')
+        $data['ijin_terlambats'] = $this->presensi_info->with('biodata_karyawan','presensi_status')
                                             ->whereYear('scan_date',$date_live)
                                             ->orderBy('scan_date','desc')
                                             ->paginate(20);

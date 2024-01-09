@@ -53,6 +53,7 @@
                                 <tr>
                                     <th class="text-center">Nama</th>
                                     <th class="text-center">Tanggal</th>
+                                    <th class="text-center">Keterangan</th>
                                     <th class="text-center">Jam Datang</th>
                                     <th class="text-center">Action</th>
                                 </tr>
@@ -94,6 +95,13 @@
                                             <div class="card">
                                                 <div class="card-body">
                                                     {{ \Carbon\Carbon::create($ijin_terlambat->scan_date)->isoFormat('LL') }}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="vertical-align: middle" class="text-center">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    {{ $ijin_terlambat->presensi_status->status_info }}
                                                 </div>
                                             </div>
                                         </td>
