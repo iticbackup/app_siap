@@ -218,8 +218,8 @@ class IjinTerlambatController extends Controller
                                             ->where('nik','LIKE','%'.$request->cari.'%')
                                             ->orWhere('nama','LIKE','%'.$request->cari.'%')
                                             ->first();
-        $data['presensi_info'] = $this->presensi_info->where('pin',$biodata_karyawan->pin)
-                                            ->whereBetween('scan_date',[$request->cari_tanggal_awal, $request->cari_tanggal_akhir])
+        $data['ijin_terlambats'] = $this->presensi_info->where('pin',$biodata_karyawan->pin)
+                                            ->orWhereBetween('scan_date',[$request->cari_tanggal_awal, $request->cari_tanggal_akhir])
                                             ->paginate(20);
         $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
         return view('absensi.ijin_terlambat.index',$data);
