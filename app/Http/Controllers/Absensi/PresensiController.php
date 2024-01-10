@@ -29,4 +29,19 @@ class PresensiController extends Controller
         // dd($data);
         return view('absensi.presensi.index',$data);
     }
+
+    public function detail($nik){
+        // return $nik;
+        $data['biodata_karyawan'] = BiodataKaryawan::where('nik',$nik)->first();
+        if (empty($data['biodata_karyawan'])) {
+            return redirect()->back();
+        }
+        $start_month_now = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $end_month_now = Carbon::now()->endOfMonth()->format('Y-m-d');
+        // dd($end_month_now);
+        for ($i=$start_month_now; $i <= $end_month_now; $i++) { 
+            $data['weeks'][] = $i;
+        }
+        return view('absensi.presensi.detail',$data);
+    }
 }

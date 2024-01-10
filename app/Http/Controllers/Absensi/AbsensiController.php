@@ -258,6 +258,10 @@ class AbsensiController extends Controller
         }
     }
 
+    // public function detail($nik){
+    //     return $nik;
+    // }
+
     public function input_modal_nofinger_jam_masuk_absensi($date_live,$pin,$inoutmode)
     {
         $presensi_info = PresensiInfo::where('scan_date','LIKE','%'.$date_live.'%')

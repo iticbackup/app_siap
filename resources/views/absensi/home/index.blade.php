@@ -139,12 +139,12 @@
                                     @endphp
                                     <tr>
                                         {{-- <td>{{ $key+1 }}</td> --}}
-                                        <td class="text-center">{{ $biodata_karyawan->nik }}</td>
-                                        <td class="text-center">{{ $biodata_karyawan->nama }}</td>
+                                        <td class="text-center" style="vertical-align: middle">{{ $biodata_karyawan->nik }}</td>
+                                        <td class="text-center" style="vertical-align: middle">{{ $biodata_karyawan->nama }}</td>
                                         {{-- <td class="text-center">{{ $satuan_kerja }}</td> --}}
                                         {{-- <td class="text-center"></td> --}}
-                                        <td class="text-center">{{ $satuan_kerja }}</td>
-                                        <td class="text-center">{{ $posisi }}</td>
+                                        <td class="text-center" style="vertical-align: middle">{{ $satuan_kerja }}</td>
+                                        <td class="text-center" style="vertical-align: middle">{{ $posisi }}</td>
                                         {{-- <td class="text-center">{{ $posisi }}</td> --}}
                                         @php
                                             $date_live = \Carbon\Carbon::now()->format('Y-m-d');
@@ -206,7 +206,7 @@
                                                 }
                                             }
                                         @endphp
-                                        <td class="text-center">{!! $jam_masuk !!}</td>
+                                        <td class="text-center" style="vertical-align: middle">{!! $jam_masuk !!}</td>
                                         @php
                                             // $mesin_finger_2 = \App\Models\FinPro::where('scan_date', 'LIKE', '%' . $date_live . '%')
                                             //     ->where('pin', $biodata_karyawan->pin)
@@ -252,7 +252,7 @@
                                                 }
                                             }
                                         @endphp
-                                        <td class="text-center">{!! $jam_keluar !!}</td>
+                                        <td class="text-center" style="vertical-align: middle">{!! $jam_keluar !!}</td>
                                         {{-- @php
                                             $awal = strtotime($jam_masuk);
                                             $akhir = strtotime($jam_keluar);
