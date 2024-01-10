@@ -16,7 +16,7 @@
                         <h4 class="card-title">Presensi Karyawan</h4>
                     </div>
                     <div class="col-auto">
-                        <form action="{{ route('absensi.search_name') }}" method="get">
+                        <form action="{{ route('presensi.search') }}" method="get">
                             <div class="input-group">
                                 <div class="mb-3">
                                     <label for="">Cari NIK / Karyawan</label>

@@ -49,6 +49,7 @@ Route::prefix('absensi')->group(function () {
         });
         Route::prefix('presensi')->group(function () {
             Route::get('/', [App\Http\Controllers\Absensi\PresensiController::class, 'index'])->name('presensi');
+            Route::get('search', [App\Http\Controllers\Absensi\PresensiController::class, 'search'])->name('presensi.search');
             Route::get('detail/{nik}', [App\Http\Controllers\Absensi\PresensiController::class, 'detail'])->name('presensi.detail');
         });
         // Route::get('jam_masuk/edit/{att_rec}', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_edit_nofinger_jam_masuk_absensi'])->name('absensi.input_modal_edit_nofinger_jam_masuk_absensi');

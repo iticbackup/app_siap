@@ -44,4 +44,24 @@ class PresensiController extends Controller
         }
         return view('absensi.presensi.detail',$data);
     }
+
+    public function search(Request $request)
+    {
+        $start_month_now = Carbon::create($request->cari_tanggal_awal)->startOfMonth()->format('Y-m-d');
+        $end_month_now = Carbon::create($request->cari_tanggal_akhir)->endOfMonth()->format('Y-m-d');
+        for ($i=$start_month_now; $i <= $end_month_now; $i++) { 
+            $data['weeks'][] = $i;
+        }
+        $data['biodata_karyawans'] = BiodataKaryawan::where(function($query) {
+                                                        return $query->where('nik','!=','1000001')
+                                                                    ->where('nik','!=','1000002')
+                                                                    ->where('nik','!=','1000003');
+                                                    })
+                                                    ->where('nik','LIKE','%'.$request->cari.'%')
+                                                    ->orWhere('nama','LIKE','%'.$request->cari.'%')
+                                                    ->where('status_karyawan','!=','R')
+                                                    ->orderBy('satuan_kerja','asc')
+                                                    ->paginate(20);
+        return view('absensi.presensi.index',$data);
+    }
 }
