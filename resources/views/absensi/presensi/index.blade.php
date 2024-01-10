@@ -10,9 +10,9 @@
                     <table class="table table-striped table-bordered dataTable mb-0">
                         <thead>
                             <tr>
-                                <th class="text-center">Nama</th>
+                                <th class="text-center bg-warning bg-gradient">Nama</th>
                                 @foreach ($weeks as $week)
-                                <th class="text-center">{{ \Carbon\Carbon::create($week)->isoFormat('LL') }}</th>
+                                <th class="text-center bg-warning bg-gradient">{{ \Carbon\Carbon::create($week)->isoFormat('LL') }}</th>
                                 @endforeach
                             </tr>
                         </thead>
@@ -34,9 +34,25 @@
                                                                     ->where('scan_date','LIKE','%'.$week.'%')
                                                                     ->get();
                                 @endphp
-                                <td>
+                                <td style="vertical-align: middle" class="text-center">
                                     @foreach ($fin_pros as $fin_pro)
-                                        <div>1</div>
+                                        @if (\Carbon\Carbon::create($fin_pro->scan_date)->format('H:i') <= "11:59")
+                                        <div class="card radius-10 bg-success bg-gradient">
+                                            <div class="card-body">
+                                                <div class="text-white">Jam Masuk</div>
+                                                <div class="text-white" style="font-weight: bold">{{ \Carbon\Carbon::create($fin_pro->scan_date)->format('H:i') }}</div>
+                                            </div>
+                                        </div>
+                                        {{-- <div class="badge bg-success" style="font-size: 10pt">{{ \Carbon\Carbon::create($fin_pro->scan_date)->format('H:i') }}</div> --}}
+                                        @else
+                                        <div class="card radius-10 bg-success bg-gradient">
+                                            <div class="card-body">
+                                                <div class="text-white">Jam Pulang</div>
+                                                <div class="text-white" style="font-weight: bold">{{ \Carbon\Carbon::create($fin_pro->scan_date)->format('H:i') }}</div>
+                                            </div>
+                                        </div>
+                                        {{-- <div class="badge bg-success" style="font-size: 10pt">{{ \Carbon\Carbon::create($fin_pro->scan_date)->format('H:i') }}</div> --}}
+                                        @endif
                                     @endforeach
                                 </td>
                                 @endforeach
