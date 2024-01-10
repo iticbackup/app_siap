@@ -148,22 +148,24 @@
                                         {{-- <td class="text-center">{{ $posisi }}</td> --}}
                                         @php
                                             $date_live = \Carbon\Carbon::now()->format('Y-m-d');
-                                            if(\Carbon\Carbon::now()->format('H:i') <= '11:59'){
-                                                // $mesin_finger_1 = \App\Models\FinPro::where('scan_date', 'LIKE', '%' . $date_live . '%')
-                                                //     ->where('pin', $biodata_karyawan->pin)
-                                                //     ->where('inoutmode', 1)
-                                                //     ->first();
-                                                $mesin_finger_1 = \App\Models\FinPro::where('scan_date', 'LIKE', '%' . $date_live . '%')
-                                                    ->where('pin', $biodata_karyawan->pin)
-                                                    ->orderBy('scan_date','asc')
-                                                    ->first();
-                                            }elseif(\Carbon\Carbon::now()->format('H:i') >= '12:00'){
-                                                $mesin_finger_2 = \App\Models\FinPro::where('scan_date', 'LIKE', '%' . $date_live . '%')
-                                                ->where('pin', $biodata_karyawan->pin)
-                                                // ->where('inoutmode', 2)
-                                                ->orderBy('scan_date','desc')
-                                                ->first();
-                                            }
+                                            // if(\Carbon\Carbon::now()->format('H:i') <= '11:59'){
+                                            //     // $mesin_finger_1 = \App\Models\FinPro::where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                            //     //     ->where('pin', $biodata_karyawan->pin)
+                                            //     //     ->where('inoutmode', 1)
+                                            //     //     ->first();
+                                            // }elseif(\Carbon\Carbon::now()->format('H:i') >= '12:00'){
+                                            // }
+                                            $mesin_finger_1 = \App\Models\FinPro::where('scan_date', 'LIKE', '%'.$date_live.'%')
+                                                                                ->whereTime('scan_date','<=','11:59:59')
+                                                                                ->where('pin', $biodata_karyawan->pin)
+                                                                                ->orderBy('scan_date','asc')
+                                                                                ->first();
+                                            $mesin_finger_2 = \App\Models\FinPro::where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                                                ->whereTime('scan_date','>=','12:00:00')
+                                                                                ->where('pin', $biodata_karyawan->pin)
+                                                                                // ->where('inoutmode', 2)
+                                                                                ->orderBy('scan_date','desc')
+                                                                                ->first();
 
                                             if (empty($mesin_finger_1)) {
                                                 $inoutmode = 1;
