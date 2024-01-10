@@ -148,10 +148,22 @@
                                         {{-- <td class="text-center">{{ $posisi }}</td> --}}
                                         @php
                                             $date_live = \Carbon\Carbon::now()->format('Y-m-d');
-                                            $mesin_finger_1 = \App\Models\FinPro::where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                            if(\Carbon\Carbon::now()->format('H:i') <= '11:59'){
+                                                // $mesin_finger_1 = \App\Models\FinPro::where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                //     ->where('pin', $biodata_karyawan->pin)
+                                                //     ->where('inoutmode', 1)
+                                                //     ->first();
+                                                $mesin_finger_1 = \App\Models\FinPro::where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                    ->where('pin', $biodata_karyawan->pin)
+                                                    ->orderBy('scan_date','asc')
+                                                    ->first();
+                                            }elseif(\Carbon\Carbon::now()->format('H:i') >= '12:00'){
+                                                $mesin_finger_2 = \App\Models\FinPro::where('scan_date', 'LIKE', '%' . $date_live . '%')
                                                 ->where('pin', $biodata_karyawan->pin)
-                                                ->where('inoutmode', 1)
+                                                // ->where('inoutmode', 2)
+                                                ->orderBy('scan_date','desc')
                                                 ->first();
+                                            }
 
                                             if (empty($mesin_finger_1)) {
                                                 $inoutmode = 1;
@@ -196,10 +208,10 @@
                                         @endphp
                                         <td class="text-center">{!! $jam_masuk !!}</td>
                                         @php
-                                            $mesin_finger_2 = \App\Models\FinPro::where('scan_date', 'LIKE', '%' . $date_live . '%')
-                                                ->where('pin', $biodata_karyawan->pin)
-                                                ->where('inoutmode', 2)
-                                                ->first();
+                                            // $mesin_finger_2 = \App\Models\FinPro::where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                            //     ->where('pin', $biodata_karyawan->pin)
+                                            //     ->where('inoutmode', 2)
+                                            //     ->first();
                                             if (empty($mesin_finger_2)) {
                                                 $inoutmode_2 = 2;
                                                 $presensi_info_2 = \App\Models\PresensiInfo::where('scan_date', 'LIKE', '%' . $date_live . '%')

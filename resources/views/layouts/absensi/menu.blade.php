@@ -26,7 +26,7 @@
         </a>
     </li>
     <li>
-        <a href="javascript:void()" class="has-arrow">
+        <a href="{{ route('presensi') }}" class="has-arrow">
             <div class="parent-icon"><i class='bx bx-file'></i>
             </div>
             <div class="menu-title">Presensi</div>

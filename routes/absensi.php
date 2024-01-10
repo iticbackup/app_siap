@@ -46,6 +46,9 @@ Route::prefix('absensi')->group(function () {
             Route::post('update', [App\Http\Controllers\Absensi\IjinTerlambatController::class, 'update'])->name('ijin_terlambat.update');
             Route::get('{att_rec}/delete', [App\Http\Controllers\Absensi\IjinTerlambatController::class, 'delete'])->name('ijin_terlambat.delete');
         });
+        Route::prefix('presensi')->group(function () {
+            Route::get('/', [App\Http\Controllers\Absensi\PresensiController::class, 'index'])->name('presensi');
+        });
         // Route::get('jam_masuk/edit/{att_rec}', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_edit_nofinger_jam_masuk_absensi'])->name('absensi.input_modal_edit_nofinger_jam_masuk_absensi');
         // Route::post('jam_masuk/no_finger/update', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_edit_nofinger_jam_masuk_update'])->name('absensi.input_modal_edit_nofinger_jam_masuk_update');
         

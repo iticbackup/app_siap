@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use App\Models\DepartemenUser;
 use Auth;
 
 class LoginController extends Controller
@@ -44,11 +45,20 @@ class LoginController extends Controller
         if(auth()->attempt(array($fieldType => $input['username'], 'password' => $input['password'])))
         {
             auth()->logoutOtherDevices(request()->password);
-            return redirect()->route('absensi.home');
+            if (auth()->user()->nik == 0000000) {
+                return redirect()->route('absensi.home');
+            }else{
+                $akses_departemen = DepartemenUser::whereIn('departemen_id',[3,4])->where('nik',auth()->user()->nik)->first();
+                if (empty($akses_departemen)) {
+                    return redirect()->back()->with('error','Maaf Anda Tidak Bisa Akses Halaman Absensi');
+                }else{
+                    return redirect()->route('absensi.home');
+                }
+            }
             // return redirect()->intended();
         }else{
-            // return redirect()->route('login')
-            //     ->with('error','Username / Password Salah.');
+            return redirect()->route('absensi.login')
+                ->with('error','Username / Password Salah.');
         }
     }
 }
