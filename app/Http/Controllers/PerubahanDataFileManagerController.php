@@ -148,9 +148,9 @@ class PerubahanDataFileManagerController extends Controller
 
     public function buat_nomor_formulir_simpan(Request $request)
     {
-        $norut = \DB::table('file_manager_perubahan_data')->max('id');
+        $norut = \DB::table('file_manager_perubahan_data')->select('id')->orderBy('id','desc');
         // $norut = $this->file_manager_perubahan_data->max('id');
-        $input['id'] = $norut+1;
+        $input['id'] = $norut->id+1;
         $input['kode_formulir'] = 'FPD-'.Carbon::now()->format('dmY').$norut++;
         // dd('TRX-'.Carbon::now()->format('dmY').$norut++);
         $input['is_open'] = 'y';
