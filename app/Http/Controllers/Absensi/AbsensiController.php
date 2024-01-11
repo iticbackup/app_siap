@@ -221,7 +221,7 @@ class AbsensiController extends Controller
             $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
             for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
                 $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
-                $total_absen_masuk = FinPro::where('scan_date','LIKE','%'.$i.'%')->where('inoutmode',1)->count();
+                $total_absen_masuk = FinPro::where('scan_date','LIKE','%'.$i.'%')->whereTime('scan_date','<=','11:59')->count();
                 // dd($total_absen_masuk);
                 $data['hasil'][] = $total_absen_masuk;
             }
@@ -246,7 +246,7 @@ class AbsensiController extends Controller
                     $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
                     for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
                         $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
-                        $total_absen_masuk = FinPro::where('scan_date','LIKE','%'.$i.'%')->where('inoutmode',1)->count();
+                        $total_absen_masuk = FinPro::where('scan_date','LIKE','%'.$i.'%')->whereTime('scan_date','<=','11:59')->count();
                         // dd($total_absen_masuk);
                         $data['hasil'][] = $total_absen_masuk;
                     }

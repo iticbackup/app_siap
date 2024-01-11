@@ -10,8 +10,10 @@ class BiodataKaryawan extends Model
 {
     use HasFactory;
     protected $connection= 'emp';
+    protected $primaryKey = 'nik';
     public $table = 'biodata_karyawan';
     public $timestamps = false;
+    public $incrementing = false;
     // public $table = 'biodata_karyawan';
     // protected $dates = ['deleted_at'];
     public $fillable = [
@@ -39,6 +41,10 @@ class BiodataKaryawan extends Model
     // {
     //     return $this->belongsTo(\App\Models\IticDepartemen::class, '7');
     // }
+    public function hrga_biodata_karyawan()
+    {
+        return $this->belongsTo(\App\Models\HrgaBiodataKaryawan::class, 'nik','nik');
+    }
 
     public function log_posisi()
     {

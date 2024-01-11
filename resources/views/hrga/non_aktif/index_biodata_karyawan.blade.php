@@ -50,12 +50,12 @@
                         <thead>
                             <tr>
                                 <th class="text-center" style="width: 10%">#</th>
-                                <th class="text-center" style="width: 10%">Foto</th>
+                                {{-- <th class="text-center" style="width: 10%">Foto</th> --}}
                                 <th class="text-center" style="width: 10%">NIK</th>
-                                <th class="text-center">Nama Karyawan</th>
-                                <th class="text-center" style="width: 10%">No. Telpon</th>
-                                <th class="text-center" style="width: 10%">Status Kerja</th>
-                                <th class="text-center" style="width: 10%">Tanggal Resign</th>
+                                {{-- <th class="text-center">Nama Karyawan</th> --}}
+                                {{-- <th class="text-center" style="width: 10%">No. Telpon</th> --}}
+                                {{-- <th class="text-center" style="width: 10%">Status Kerja</th> --}}
+                                {{-- <th class="text-center" style="width: 10%">Tanggal Resign</th> --}}
                                 <th class="text-center" style="width: 20%">Action</th>
                             </tr>
                         </thead>
@@ -99,30 +99,30 @@
                     data: 'id',
                     name: 'id'
                 },
-                {
-                    data: 'foto_karyawan',
-                    name: 'foto_karyawan'
-                },
+                // {
+                //     data: 'foto_karyawan',
+                //     name: 'foto_karyawan'
+                // },
                 {
                     data: 'nik',
                     name: 'nik'
                 },
-                {
-                    data: 'nama_karyawan',
-                    name: 'nama_karyawan'
-                },
-                {
-                    data: 'no_telepon',
-                    name: 'no_telepon'
-                },
-                {
-                    data: 'status_kerja',
-                    name: 'status_kerja'
-                },
-                {
-                    data: 'status_karyawan_resign',
-                    name: 'status_karyawan_resign'
-                },
+                // {
+                //     data: 'nama_karyawan',
+                //     name: 'nama_karyawan'
+                // },
+                // {
+                //     data: 'no_telepon',
+                //     name: 'no_telepon'
+                // },
+                // {
+                //     data: 'status_kerja',
+                //     name: 'status_kerja'
+                // },
+                // {
+                //     data: 'status_karyawan_resign',
+                //     name: 'status_karyawan_resign'
+                // },
                 {
                     data: 'action',
                     name: 'action',
@@ -134,7 +134,7 @@
                 // { className: 'text-right', targets: [7, 10, 11, 14, 16] },
                 {
                     className: 'text-center',
-                    targets: [0,1,2,4,5,6,7]
+                    // targets: [0,1,2,4,5,6,7]
                 },
             ],
         });
