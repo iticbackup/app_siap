@@ -505,12 +505,14 @@
                     </div>
                     @if (request()->ip() == '::1' || 
                     // request()->ip() == '192.168.1.32' || 
+                    request()->ip() == '192.168.1.25' ||
                     request()->ip() == '192.168.1.28' ||
+                    request()->ip() == '192.168.1.29' ||
                     request()->ip() == '192.168.1.122' || 
                     request()->ip() == '192.168.1.123' || 
                     request()->ip() == '192.168.1.124'
                     )
-                    <div class="p-6">
+                    {{-- <div class="p-6">
                         <div class="flex items-center">
                             <svg class="svg-icon" viewBox="0 0 20 20" width="24" height="24" stroke="#ffffff">
                                 <path
@@ -520,6 +522,18 @@
                             <div class="ml-4 text-lg leading-7 font-semibold"><a href="http://192.168.1.2/payroll_ns2"
                                     class="underline text-gray-900 dark:text-white"
                                     style="text-decoration: none">Payroll v1.0</a></div>
+                        </div>
+                    </div> --}}
+                    <div class="p-6">
+                        <div class="flex items-center">
+                            <svg class="svg-icon" viewBox="0 0 20 20" width="24" height="24" stroke="#ffffff">
+                                <path
+                                    d="M17.431,2.156h-3.715c-0.228,0-0.413,0.186-0.413,0.413v6.973h-2.89V6.687c0-0.229-0.186-0.413-0.413-0.413H6.285c-0.228,0-0.413,0.184-0.413,0.413v6.388H2.569c-0.227,0-0.413,0.187-0.413,0.413v3.942c0,0.228,0.186,0.413,0.413,0.413h14.862c0.228,0,0.413-0.186,0.413-0.413V2.569C17.844,2.342,17.658,2.156,17.431,2.156 M5.872,17.019h-2.89v-3.117h2.89V17.019zM9.587,17.019h-2.89V7.1h2.89V17.019z M13.303,17.019h-2.89v-6.651h2.89V17.019z M17.019,17.019h-2.891V2.982h2.891V17.019z">
+                                </path>
+                            </svg>
+                            <div class="ml-4 text-lg leading-7 font-semibold"><a href="{{ route('absensi.login') }}"
+                                    class="underline text-gray-900 dark:text-white"
+                                    style="text-decoration: none">Absensi</a></div>
                         </div>
                     </div>
                     <div class="p-6">
