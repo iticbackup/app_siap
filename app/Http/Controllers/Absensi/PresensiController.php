@@ -8,6 +8,7 @@ use App\Models\BiodataKaryawan;
 use App\Models\IticDepartemen;
 use App\Models\FinPro;
 use \Carbon\Carbon;
+use PDF;
 
 class PresensiController extends Controller
 {
@@ -112,5 +113,30 @@ class PresensiController extends Controller
                                                     ->orderBy('satuan_kerja','asc')
                                                     ->paginate(20);
         return view('absensi.presensi.index',$data);
+    }
+
+    public function detail_print(Request $request, $nik)
+    {
+        $data['biodata_karyawan'] = BiodataKaryawan::where('nik',$nik)->first();
+        $cek_status_kerja = IticDepartemen::where('id_departemen', $data['biodata_karyawan']->satuan_kerja)->first();
+        
+        $start_month_now = Carbon::create($request->cetak_tahun,$request->cetak_bulan)->startOfMonth()->format('Y-m-d');
+        $end_month_now = Carbon::create($request->cetak_tahun,$request->cetak_bulan)->endOfMonth()->format('Y-m-d');
+        // dd($end_month_now);
+        for ($i=$start_month_now; $i <= $end_month_now; $i++) { 
+            $data['weeks'][] = $i;
+        }
+
+        if (empty($cek_status_kerja)) {
+            $data['satuan_kerja'] = '-';
+        } else {
+            if ($cek_status_kerja->nama_departemen >= 1) {
+                $data['satuan_kerja'] = $cek_status_kerja->nama_unit;
+            } else {
+                $data['satuan_kerja'] = $cek_status_kerja->nama_departemen;
+            }
+        }
+        $pdf = PDF::loadView('absensi.presensi.cetak_absensi', $data);
+        return $pdf->stream('Rekap Absensi Karyawan - ('.$data['biodata_karyawan']->nik.') '.$data['biodata_karyawan']->nama.' Periode '.Carbon::create($request->cetak_tahun, $request->cetak_bulan)->isoFormat('MMMM YYYY').'.pdf');
     }
 }

@@ -6,6 +6,7 @@
 @endsection
 @section('content')
     <div class="page-content">
+        @include('absensi.presensi.modalPrint')
         <div class="card">
             <div class="card-body">
                 <div class="row align-items-center" style="margin-bottom: 1%">
@@ -53,6 +54,9 @@
                                     </select>
                                     <button type="submit" class="btn btn-success"><i
                                             class="bx bxs-search bx-sm bx-tada"></i> Search</button>
+                                    <button type="button" onclick="cetak(`{{ $biodata_karyawan->nik }}`)"
+                                        class="btn btn-primary"><i class="bx bx-printer"></i>
+                                        Print</button>
                                 </div>
                             </form>
                         </td>
@@ -124,6 +128,7 @@
                             <th class="text-center">Jam Masuk</th>
                             <th class="text-center">Jam Pulang</th>
                             <th class="text-center">Status</th>
+                            <th class="text-center">Total Jam</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -234,6 +239,25 @@
                                         $status = $presensi_info_masuk->presensi_status->status_info;
                                     }
                                 }
+
+                                $awal = strtotime($jam_masuk);
+                                $akhir = strtotime($jam_pulang);
+
+                                $diff = $akhir - $awal;
+
+                                $jam = floor($diff / (60 * 60));
+                                $menit = $diff - $jam * (60 * 60);
+                                $detik = $diff % 60;
+
+                                $selisih_jam = $jam . ':' . floor($menit / 60);
+
+                                if ($awal == 0 && $akhir == 0) {
+                                    $total_jam = 0;
+                                } elseif ($awal > 0 && $akhir == 0) {
+                                    $total_jam = 0;
+                                } else {
+                                    $total_jam = $selisih_jam;
+                                }
                             @endphp
                             <tr>
                                 <td class="text-center">{{ $key + 1 }}</td>
@@ -242,6 +266,7 @@
                                 <td class="text-center">{{ $jam_masuk }}</td>
                                 <td class="text-center">{{ $jam_pulang }}</td>
                                 <td class="text-center">{{ $status }}</td>
+                                <td class="text-center">{{ $total_jam }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -309,4 +334,9 @@
     </div>
 @endsection
 @section('script')
+    <script>
+        function cetak(nik) {
+            $('.modalPrint').modal('show');
+        }
+    </script>
 @endsection
