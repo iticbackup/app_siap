@@ -35,6 +35,11 @@ class BiodataKaryawan extends Model
         'tanggal_resign',
     ];
 
+    // public function satuan_kerjas()
+    // {
+    //     return $this->belongsTo(\App\Models\IticDepartemen::class, '7');
+    // }
+
     public function log_posisi()
     {
         return $this->belongsTo(\App\Models\LogPosisi::class, 'nik','nik');

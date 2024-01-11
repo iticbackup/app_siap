@@ -11,7 +11,9 @@ class IticDepartemen extends Model
     use HasFactory;
     protected $connection= 'emp';
     public $table = 'itic_departemen';
+    protected $primaryKey = 'id_departemen';
     public $timestamps = false;
+    public $incrementing = false;
     // public $table = 'biodata_karyawan';
     // protected $dates = ['deleted_at'];
     public $fillable = [
