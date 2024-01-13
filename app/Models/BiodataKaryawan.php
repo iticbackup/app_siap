@@ -31,6 +31,7 @@ class BiodataKaryawan extends Model
         'pin',
         'status_karyawan',
         'tempat_lahir',
+        'tgl_lahir',
         'kewarganegaraan',
         'agama',
         'status_kontrak',

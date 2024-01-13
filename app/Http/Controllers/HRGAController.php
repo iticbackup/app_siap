@@ -12,6 +12,10 @@ use App\Models\HrgaRiwayatKonselingKaryawan;
 use App\Models\HrgaRiwayatTraining;
 use App\Models\HrgaKaryawanResign;
 
+use App\Models\EmpJabatan;
+use App\Models\EmpPosisi;
+use App\Models\IticDepartemen;
+
 use App\Models\RekapPelatihanSeminar;
 use App\Models\RekapPelatihanSeminarPeserta;
 use App\Models\RekapPelatihanSeminarKategori;
@@ -40,7 +44,11 @@ class HRGAController extends Controller
         HrgaRiwayatTraining $hrga_riwayat_training,
         HrgaKaryawanResign $hrga_karyawan_resign,
         RekapPelatihanSeminar $rekap_pelatihan,
-        RekapPelatihanSeminarPeserta $rekap_pelatihan_seminar_peserta
+        RekapPelatihanSeminarPeserta $rekap_pelatihan_seminar_peserta,
+        EmpJabatan $emp_jabatan,
+        EmpPosisi $emp_posisi,
+        IticDepartemen $itic_departemen,
+        LogPosisi $log_posisi
     ){
         $this->biodata_karyawan = $biodata_karyawan;
         $this->hrga_biodata_karyawan = $hrga_biodata_karyawan;
@@ -50,6 +58,10 @@ class HRGAController extends Controller
         $this->hrga_karyawan_resign = $hrga_karyawan_resign;
         $this->rekap_pelatihan = $rekap_pelatihan;
         $this->rekap_pelatihan_seminar_peserta = $rekap_pelatihan_seminar_peserta;
+        $this->emp_jabatan = $emp_jabatan;
+        $this->emp_posisi = $emp_posisi;
+        $this->itic_departemen = $itic_departemen;
+        $this->log_posisi = $log_posisi;
         $this->day = 0;
     }
 
@@ -433,6 +445,123 @@ class HRGAController extends Controller
     {
         $biodata_karyawan = $this->biodata_karyawan->with('log_posisi')->where('nik',$nik)->first();
         return $biodata_karyawan;
+    }
+
+    public function buat_karyawan_baru()
+    {
+        $data['pin'] = $this->biodata_karyawan->max('pin');
+        $data['posisis'] = $this->emp_posisi->get();
+        $data['jabatans'] = $this->emp_jabatan->get();
+        $data['departemens'] = $this->itic_departemen->get();
+        // dd($data);
+        return view('hrga.buat_karyawan_baru',$data);
+    }
+
+    public function buat_karyawan_baru_simpan(Request $request)
+    {
+        $rules = [
+            'nik' => 'required|unique:emp.biodata_karyawan',
+            'nama' => 'required',
+            'tempat_lahir' => 'required',
+            'tanggal_lahir' => 'required',
+            'jenis_kelamin' => 'required',
+            'no_npwp' => 'required',
+            'alamat' => 'required',
+            'posisi' => 'required',
+            'jabatan' => 'required',
+            'departemen' => 'required',
+            'no_rekening_mandiri' => 'required',
+            'no_rekening_bws' => 'required',
+            'status_klg' => 'required',
+            'kewarganegaraan' => 'required',
+            'agama' => 'required',
+        ];
+
+        $messages = [
+            'nik.unique'  => 'NIK Karyawan sudah ada.',
+            'nik.required'  => 'NIK wajib diisi.',
+            'nama.required'  => 'Nama Karyawan Baru wajib diisi.',
+            'tempat_lahir.required'  => 'Tempat Lahir wajib diisi.',
+            'tanggal_lahir.required'  => 'Tanggal Lahir wajib diisi.',
+            'jenis_kelamin.required'  => 'Jenis Kelamin wajib diisi.',
+            'no_npwp.required'  => 'NPWP wajib diisi.',
+            'alamat.required'  => 'Alamat wajib diisi.',
+            'posisi.required'  => 'Posisi wajib diisi.',
+            'jabatan.required'  => 'Jabatan wajib diisi.',
+            'departemen.required'  => 'Departemen wajib diisi.',
+            'no_rekening_mandiri.required'  => 'No. Rekening Mandiri wajib diisi.',
+            'no_rekening_bws.required'  => 'No. Rekening BWS wajib diisi.',
+            'status_klg.required'  => 'Status Keluarga wajib diisi.',
+            'kewarganegaraan.required'  => 'Kewarganegaraan wajib diisi.',
+            'agama.required'  => 'Agama wajib diisi.',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($validator->passes()) {
+            $input['nik'] = $request->nik;
+            $input['nama'] = $request->nama;
+            $input['tempat_lahir'] = $request->tempat_lahir;
+            $input['tgl_lahir'] = $request->tanggal_lahir;
+            $input['jenis_kelamin'] = $request->jenis_kelamin == 'Laki - Laki' ? 'L' : 'P';
+            $input['npwp'] = $request->no_npwp;
+            $input['alamat'] = $request->alamat;
+            $input['id_posisi'] = $request->posisi;
+            $input['id_jabatan'] = $request->jabatan;
+            $input['satuan_kerja'] = $request->departemen;
+            $input['status_klg'] = $request->status_klg;
+            $input['kewarganegaraan'] = $request->kewarganegaraan;
+            $input['agama'] = $request->agama;
+            $input['pin'] = $request->pin;
+            $input['status_karyawan'] = 'K';
+            $input['rekening'] = $request->no_rekening_mandiri;
+            $input['credit'] = 0;
+            $input['status_kontrak'] = 0;
+
+            $biodata_karyawan = $this->biodata_karyawan->create($input);
+            if ($biodata_karyawan) {
+                $this->log_posisi->create([
+                    'nik' => $input['nik'],
+                    'id_posisi' => $input['id_posisi'],
+                    'id_jabatan' => $input['id_jabatan'],
+                    'satuan_kerja' => $input['satuan_kerja'],
+                    'tanggal' => $request->tanggal_masuk
+                ]);
+                $no_id = $this->hrga_biodata_karyawan->max('id');
+                $this->hrga_biodata_karyawan->create([
+                    'id' => $no_id+1,
+                    'nik' => $input['nik'],
+                    'no_npwp' => $input['npwp'],
+                    'no_rekening_mandiri' => $request->no_rekening_mandiri,
+                    'no_rekening_bws' => $request->no_rekening_bws,
+                    'tempat_lahir' => $input['tempat_lahir'],
+                    'tanggal_lahir' => $input['tgl_lahir'],
+                    'alamat' => $input['agama'],
+                    'jenis_kelamin' => $request->jenis_kelamin,
+                    'status_keluarga' => $input['status_klg'],
+                ]);
+
+                $message_title="Berhasil !";
+                $message_content= $request->nik." ".$request->nama." Berhasil Dibuat";
+                $message_type="success";
+                $message_succes = true;
+            }
+
+            $array_message = array(
+                'success' => $message_succes,
+                'message_title' => $message_title,
+                'message_content' => $message_content,
+                'message_type' => $message_type,
+            );
+
+            return response()->json($array_message);
+        }
+
+        return response()->json(
+            [
+                'success' => false,
+                'error' => $validator->errors()->all()
+            ]
+        );
     }
 
     public function simpan(Request $request)
