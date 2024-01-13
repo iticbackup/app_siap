@@ -246,32 +246,61 @@ class HRGAController extends Controller
     public function index_biodata_karyawan_aktif(Request $request)
     {
         if ($request->ajax()) {
+            // $data = $this->hrga_biodata_karyawan->select([
+            //                                         'hrga_biodata_karyawan.id as id',
+            //                                         'hrga_biodata_karyawan.nik as nik',
+            //                                         // 'hrga_biodata_karyawan.no_urut_level as no_urut_level',
+            //                                         // 'hrga_biodata_karyawan.no_urut_departemen as no_urut_departemen',
+            //                                         'hrga_biodata_karyawan.no_telepon as no_telepon',
+            //                                         'hrga_biodata_karyawan.no_bpjs_ketenagakerjaan as no_bpjs_ketenagakerjaan',
+            //                                         'hrga_biodata_karyawan.no_bpjs_kesehatan as no_bpjs_kesehatan',
+            //                                         'hrga_biodata_karyawan.no_rekening_mandiri as no_rekening_mandiri',
+            //                                         'hrga_biodata_karyawan.no_rekening_bws as no_rekening_bws',
+            //                                         'hrga_biodata_karyawan.no_npwp as no_npwp',
+            //                                         'hrga_biodata_karyawan.departemen_dept as departemen_dept',
+            //                                         'hrga_biodata_karyawan.departemen_bagian as departemen_bagian',
+            //                                         'hrga_biodata_karyawan.departemen_level as departemen_level',
+            //                                         'hrga_biodata_karyawan.tempat_lahir as tempat_lahir',
+            //                                         'hrga_biodata_karyawan.tanggal_lahir as tanggal_lahir',
+            //                                         'hrga_biodata_karyawan.jenis_kelamin as jenis_kelamin',
+            //                                         'hrga_biodata_karyawan.status_keluarga as status_keluarga',
+            //                                         'hrga_biodata_karyawan.golongan_darah as golongan_darah',
+            //                                         'hrga_biodata_karyawan.pendidikan as pendidikan',
+            //                                         'hrga_biodata_karyawan.email as email',
+            //                                         'hrga_biodata_karyawan.alamat as alamat',
+            //                                         'hrga_biodata_karyawan.kunci_loker as kunci_loker',
+            //                                     ])
+            //                                     // ->join('hrga_karyawan_resign','hrga_karyawan_resign.hrga_biodata_karyawan_id','!=','hrga_biodata_karyawan.id')
+            //                                     ->where('hrga_biodata_karyawan.status_karyawan','Y')
+            //                                     ->get();
             $data = $this->hrga_biodata_karyawan->select([
                                                     'hrga_biodata_karyawan.id as id',
                                                     'hrga_biodata_karyawan.nik as nik',
-                                                    // 'hrga_biodata_karyawan.no_urut_level as no_urut_level',
-                                                    // 'hrga_biodata_karyawan.no_urut_departemen as no_urut_departemen',
+                                                    'biodata_karyawan.nama as nama',
+                                                    'hrga_biodata_karyawan.no_npwp as no_npwp',
                                                     'hrga_biodata_karyawan.no_telepon as no_telepon',
                                                     'hrga_biodata_karyawan.no_bpjs_ketenagakerjaan as no_bpjs_ketenagakerjaan',
                                                     'hrga_biodata_karyawan.no_bpjs_kesehatan as no_bpjs_kesehatan',
                                                     'hrga_biodata_karyawan.no_rekening_mandiri as no_rekening_mandiri',
                                                     'hrga_biodata_karyawan.no_rekening_bws as no_rekening_bws',
-                                                    'hrga_biodata_karyawan.no_npwp as no_npwp',
                                                     'hrga_biodata_karyawan.departemen_dept as departemen_dept',
                                                     'hrga_biodata_karyawan.departemen_bagian as departemen_bagian',
                                                     'hrga_biodata_karyawan.departemen_level as departemen_level',
                                                     'hrga_biodata_karyawan.tempat_lahir as tempat_lahir',
                                                     'hrga_biodata_karyawan.tanggal_lahir as tanggal_lahir',
+                                                    'hrga_biodata_karyawan.alamat as alamat',
                                                     'hrga_biodata_karyawan.jenis_kelamin as jenis_kelamin',
                                                     'hrga_biodata_karyawan.status_keluarga as status_keluarga',
                                                     'hrga_biodata_karyawan.golongan_darah as golongan_darah',
                                                     'hrga_biodata_karyawan.pendidikan as pendidikan',
                                                     'hrga_biodata_karyawan.email as email',
-                                                    'hrga_biodata_karyawan.alamat as alamat',
                                                     'hrga_biodata_karyawan.kunci_loker as kunci_loker',
+                                                    'hrga_biodata_karyawan.foto_karyawan as foto_karyawan',
+                                                    'hrga_biodata_karyawan.tanggal_resign as tanggal_resign',
+                                                    'biodata_karyawan.status_karyawan as status_karyawan',
                                                 ])
-                                                // ->join('hrga_karyawan_resign','hrga_karyawan_resign.hrga_biodata_karyawan_id','!=','hrga_biodata_karyawan.id')
-                                                ->where('hrga_biodata_karyawan.status_karyawan','Y')
+                                                ->leftJoin('itic_emp.biodata_karyawan as biodata_karyawan','biodata_karyawan.nik','hrga_biodata_karyawan.nik')
+                                                ->where('biodata_karyawan.status_karyawan','!=','R')
                                                 ->get();
             return DataTables::of($data)
                             ->addIndexColumn()
@@ -306,13 +335,21 @@ class HRGAController extends Controller
                             })
                             ->addColumn('status_karyawan_resign', function($row){
                                 // return $row->biodata_karyawan->nama;
-                                $karyawan_resign = $this->hrga_karyawan_resign->where('hrga_biodata_karyawan_id',$row->id)->first();
-                                // return $karyawan_resign->tanggal_resign;
+                                // $karyawan_resign = $this->hrga_karyawan_resign->where('hrga_biodata_karyawan_id',$row->id)->first();
+                                // // return $karyawan_resign->tanggal_resign;
 
-                                if (empty($karyawan_resign)) {
-                                    return '<span class="badge bg-success">Aktif</span>';
+                                // if (empty($karyawan_resign)) {
+                                //     return '<span class="badge bg-success">Aktif</span>';
+                                // }else{
+                                //     return '<span class="badge bg-danger">Non Aktif</span>'.'<span class="badge bg-dark">'.Carbon::create($karyawan_resign->tanggal_resign)->format('d-m-Y').'</span>';
+                                // }
+
+                                if ($row->status_karyawan == 'K') {
+                                    return '<span class="badge bg-warning">Kontrak</span>';
+                                }elseif($row->status_karyawan == 'R'){
+                                    return '<span class="badge bg-danger">Resign</span>';
                                 }else{
-                                    return '<span class="badge bg-danger">Non Aktif</span>'.'<span class="badge bg-dark">'.Carbon::create($karyawan_resign->tanggal_resign)->format('d-m-Y').'</span>';
+                                    return '<span class="badge bg-success">Aktif</span>';
                                 }
 
                                 // if (empty($row->status_karyawan_resign)) {
@@ -343,34 +380,63 @@ class HRGAController extends Controller
         //                                 ->get();
         // return $data;
         if ($request->ajax()) {
-            $data = $this->hrga_karyawan_resign->with('hrga_biodata_karyawan')->get();
+            // $data = $this->hrga_karyawan_resign->with('hrga_biodata_karyawan')->get();
             // $data = $this->biodata_karyawan->leftJoin('hrga_biodata_karyawan','hrga_biodata_karyawan.nik','biodata_karyawan.nik')
             //                                 ->where('status_karyawan','R')
             //                                 ->get();
+            $data = $this->hrga_biodata_karyawan->select([
+                                                'hrga_biodata_karyawan.id as id',
+                                                'hrga_biodata_karyawan.nik as nik',
+                                                'biodata_karyawan.nama as nama',
+                                                'hrga_biodata_karyawan.no_npwp as no_npwp',
+                                                'hrga_biodata_karyawan.no_telepon as no_telepon',
+                                                'hrga_biodata_karyawan.no_bpjs_ketenagakerjaan as no_bpjs_ketenagakerjaan',
+                                                'hrga_biodata_karyawan.no_bpjs_kesehatan as no_bpjs_kesehatan',
+                                                'hrga_biodata_karyawan.no_rekening_mandiri as no_rekening_mandiri',
+                                                'hrga_biodata_karyawan.no_rekening_bws as no_rekening_bws',
+                                                'hrga_biodata_karyawan.departemen_dept as departemen_dept',
+                                                'hrga_biodata_karyawan.departemen_bagian as departemen_bagian',
+                                                'hrga_biodata_karyawan.departemen_level as departemen_level',
+                                                'hrga_biodata_karyawan.tempat_lahir as tempat_lahir',
+                                                'hrga_biodata_karyawan.tanggal_lahir as tanggal_lahir',
+                                                'hrga_biodata_karyawan.alamat as alamat',
+                                                'hrga_biodata_karyawan.jenis_kelamin as jenis_kelamin',
+                                                'hrga_biodata_karyawan.status_keluarga as status_keluarga',
+                                                'hrga_biodata_karyawan.golongan_darah as golongan_darah',
+                                                'hrga_biodata_karyawan.pendidikan as pendidikan',
+                                                'hrga_biodata_karyawan.email as email',
+                                                'hrga_biodata_karyawan.kunci_loker as kunci_loker',
+                                                'hrga_biodata_karyawan.foto_karyawan as foto_karyawan',
+                                                'hrga_biodata_karyawan.tanggal_resign as tanggal_resign',
+                                                'biodata_karyawan.status_karyawan as status_karyawan',
+                                            ])
+                                            ->leftJoin('itic_emp.biodata_karyawan as biodata_karyawan','biodata_karyawan.nik','hrga_biodata_karyawan.nik')
+                                            ->where('biodata_karyawan.status_karyawan','R')
+                                            ->get();
             return DataTables::of($data)
                             ->addIndexColumn()
                             ->addColumn('foto_karyawan', function($row){
                                 // return '<img src='.asset('public/berkas/HRGA/data_karyawan/'.$row->hrga_biodata_karyawan->foto_karyawan).'>';
-                                if (empty($row->hrga_biodata_karyawan->foto_karyawan)) {
-                                    if ($row->hrga_biodata_karyawan->jenis_kelamin == 'Laki - Laki') {
+                                if (empty($row->foto_karyawan)) {
+                                    if ($row->jenis_kelamin == 'Laki - Laki') {
                                         return '<img src='.asset('public/berkas/HRGA/data_karyawan/office-worker-man.png').' style="width: 100px; height: 137px; object-fit: cover;">';
                                     }else{
                                         return '<img src='.asset('public/berkas/HRGA/data_karyawan/businesswoman.png').' style="width: 100px; height: 137px; object-fit: cover;">';
                                     }
                                 }else{
-                                    return '<img src='.asset('public/berkas/HRGA/data_karyawan/'.$row->hrga_biodata_karyawan->biodata_karyawan->foto_karyawan).' style="width: 100px; height: 137px; object-fit: cover;">';
+                                    return '<img src='.asset('public/berkas/HRGA/data_karyawan/'.$row->foto_karyawan).' style="width: 100px; height: 137px; object-fit: cover;">';
                                 }
                             })
                             ->addColumn('nik', function($row){
-                                return $row->hrga_biodata_karyawan->nik;
+                                return $row->nik;
                                 // return $row->nik;
                             })
                             ->addColumn('no_telepon', function($row){
                                 // return $row->biodata_karyawan->nama;
-                                return $row->hrga_biodata_karyawan->no_telepon;
+                                return $row->no_telepon;
                             })
                             ->addColumn('nama_karyawan', function($row){
-                                return $row->hrga_biodata_karyawan->biodata_karyawan->nama;
+                                return $row->nama;
                                 // return $row->nama;
                             })
                             ->addColumn('status_kerja', function($row){
@@ -392,7 +458,7 @@ class HRGAController extends Controller
                             })
                             ->addColumn('action', function($row){
                                 $btn = '<div class="button-items">';
-                                $btn .= '<button class="btn btn-primary" onclick="detail(`'.$row->hrga_biodata_karyawan->nik.'`)">'.'<i class="fas fa-eye"></i> '.'Detail'.'</button>';
+                                $btn .= '<button class="btn btn-primary" onclick="detail(`'.$row->nik.'`)">'.'<i class="fas fa-eye"></i> '.'Detail'.'</button>';
                                 $btn .= '</div>';
 
                                 return $btn;
@@ -895,6 +961,9 @@ class HRGAController extends Controller
             }
 
             $biodata_karyawan->update($input);
+            $this->biodata_karyawan->where('nik',$request->edit_nik)->update([
+                'status_karyawan'=> $request->edit_status_karyawan == 'T' ? 'R' : null
+            ]);
 
             if($biodata_karyawan){
                 $message_title="Berhasil !";
