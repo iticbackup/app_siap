@@ -122,9 +122,10 @@ class HRGAController extends Controller
                                                     'hrga_biodata_karyawan.kunci_loker as kunci_loker',
                                                     'hrga_biodata_karyawan.foto_karyawan as foto_karyawan',
                                                     'hrga_biodata_karyawan.tanggal_resign as tanggal_resign',
+                                                    'biodata_karyawan.status_karyawan as status_karyawan',
                                                 ])
                                                 ->leftJoin('itic_emp.biodata_karyawan as biodata_karyawan','biodata_karyawan.nik','hrga_biodata_karyawan.nik')
-                                                ->where('biodata_karyawan.status_karyawan','!=','R')
+                                                // ->where('biodata_karyawan.status_karyawan','!=','R')
                                                 ->get();
             return DataTables::of($data)
                                 ->addIndexColumn()
@@ -157,20 +158,18 @@ class HRGAController extends Controller
                                     }
                                 })
                                 ->addColumn('status_karyawan_resign', function($row){
-                                    // return $row->biodata_karyawan->nama;
-                                    $karyawan_resign = $this->hrga_karyawan_resign->where('hrga_biodata_karyawan_id',$row->id)->first();
-                                    // return $karyawan_resign->tanggal_resign;
-
-                                    if (empty($karyawan_resign)) {
-                                        return '<span class="badge bg-success">Aktif</span>';
+                                    if ($row->status_karyawan == 'K') {
+                                        return '<span class="badge bg-warning">Kontrak</span>';
+                                    }elseif($row->status_karyawan == 'R'){
+                                        return '<span class="badge bg-danger">Resign</span>';
                                     }else{
-                                        return '<span class="badge bg-danger">Non Aktif</span>'.'<span class="badge bg-dark">'.Carbon::create($karyawan_resign->tanggal_resign)->format('d-m-Y').'</span>';
+                                        return '<span class="badge bg-success">Aktif</span>';
                                     }
-
-                                    // if (empty($row->status_karyawan_resign)) {
-                                    //     return 'Aktif';
+                                    // $karyawan_resign = $this->hrga_karyawan_resign->where('hrga_biodata_karyawan_id',$row->id)->first();
+                                    // if (empty($karyawan_resign)) {
+                                    //     return '<span class="badge bg-success">Aktif</span>';
                                     // }else{
-                                    //     return $row->status_karyawan_resign;
+                                    //     return '<span class="badge bg-danger">Non Aktif</span>'.'<span class="badge bg-dark">'.Carbon::create($karyawan_resign->tanggal_resign)->format('d-m-Y').'</span>';
                                     // }
                                 })
                                 ->addColumn('action', function($row){
