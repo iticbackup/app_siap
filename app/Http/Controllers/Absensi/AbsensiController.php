@@ -214,6 +214,7 @@ class AbsensiController extends Controller
                                                                         ->where('nik','!=','1000003');
                                                         })
                                                         // ->where('pin',1298)
+                                                        ->orderBy('satuan_kerja','asc')
                                                         ->where('status_karyawan','!=','R')
                                                         ->paginate(20);
             $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
@@ -1136,7 +1137,7 @@ class AbsensiController extends Controller
             $data['hasil'][] = $total_absen_masuk;
         }
         // dd($data);
-        return view('absensi.home.index',$data);
+        return view('absensi.home.search',$data);
     }
 
     public function absensi()
