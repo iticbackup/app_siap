@@ -1114,6 +1114,7 @@ class AbsensiController extends Controller
                                                     ->where('nik','LIKE','%'.$request->cari.'%')
                                                     ->orWhere('nama','LIKE','%'.$request->cari.'%')
                                                     ->where('status_karyawan','!=','R')
+                                                    ->orderBy('satuan_kerja','asc')
                                                     ->paginate();
         $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
         // $data['total_absen_kemarin'] = FinPro::where('scan_date','LIKE','%'.Carbon::yesterday()->format('Y-m-d').'%')->where('inoutmode',1)->count();
