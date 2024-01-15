@@ -299,7 +299,9 @@
                     </footer>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ route('perubahan_data') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i>
+                    {{-- <a href="{{ route('perubahan_data') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i>
+                        Back</a> --}}
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i>
                         Back</a>
                     @if (auth()->user()->nik == 1207514 || auth()->user()->nik == 1711952 || auth()->user()->nik == 0000000 || auth()->user()->nik == 2007275)
                         @php

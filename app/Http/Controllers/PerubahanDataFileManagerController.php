@@ -163,7 +163,7 @@ class PerubahanDataFileManagerController extends Controller
                 $input['departemen_id'] = $request->departemen_id;
                 $input['pengajuan_signature'] = auth()->user()->name;
             }else{
-                return redirect()->back()->with('error','Formulir sebelumnya masih dalam proses, selesaikan formulir sebelumnya.');
+                return redirect()->back()->with('error','Formulir <b>'.$cek_formulir->kode_formulir.'</b> sebelumnya masih dalam proses, selesaikan formulir sebelumnya.');
             }
         }else{
             $cek_formulir = $this->file_manager_perubahan_data->where('is_open','y')

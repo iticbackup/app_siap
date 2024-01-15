@@ -18,8 +18,46 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
+                <div class="card-header bg-dark">
+                    <h4 class="card-title text-white text-center" style="font-size: 14pt">Formulir Perubahan Dokumen</h4>
+                </div>
                 <div class="card-body">
-                    <form action="{{ route('perubahan_data.buat_nomor_formulir.simpan') }}" method="post" class="text-center">
+                    @if ($message = Session::get('success'))
+                        <div class="alert alert-outline-success b-round alert-dismissible fade show" role="alert">
+                            <strong>Info!</strong> {!! $message !!}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    @if ($message = Session::get('error'))
+                        <div class="alert alert-outline-danger b-round alert-dismissible fade show" role="alert">
+                            <strong>Info!</strong> {!! $message !!}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    @if ($message = Session::get('warning'))
+                        <div class="alert alert-outline-warning b-round alert-dismissible fade show" role="alert">
+                            <strong>Info!</strong> {!! $message !!}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    @if ($message = Session::get('info'))
+                        <div class="alert alert-outline-info b-round alert-dismissible fade show" role="alert">
+                            <strong>Info!</strong> {!! $message !!}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="alert alert-outline-danger b-round alert-dismissible fade show" role="alert">
+                            <strong>Error!</strong> Data Error
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+                    <form action="{{ route('perubahan_data.buat_nomor_formulir.simpan') }}" method="post"
+                        class="text-center">
                         @csrf
                         @if (auth()->user()->nik == '0000000')
                             <div class="col-md-2">
@@ -27,7 +65,7 @@
                                 <select name="departemen_id" class="form-control" id="">
                                     <option value="">select</option>
                                     @foreach ($departemens as $departemen)
-                                    <option value="{{ $departemen->id }}">{{ $departemen->departemen }}</option>
+                                        <option value="{{ $departemen->id }}">{{ $departemen->departemen }}</option>
                                     @endforeach
                                 </select>
                             </div>
