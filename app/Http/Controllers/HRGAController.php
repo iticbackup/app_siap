@@ -16,6 +16,9 @@ use App\Models\EmpJabatan;
 use App\Models\EmpPosisi;
 use App\Models\IticDepartemen;
 
+use App\Models\FinProPegawai;
+use App\Models\FinProPegawaiD;
+
 use App\Models\RekapPelatihanSeminar;
 use App\Models\RekapPelatihanSeminarPeserta;
 use App\Models\RekapPelatihanSeminarKategori;
@@ -48,7 +51,9 @@ class HRGAController extends Controller
         EmpJabatan $emp_jabatan,
         EmpPosisi $emp_posisi,
         IticDepartemen $itic_departemen,
-        LogPosisi $log_posisi
+        LogPosisi $log_posisi,
+        FinProPegawai $fin_pro_pegawai,
+        FinProPegawaiD $fin_pro_pegawai_d
     ){
         $this->biodata_karyawan = $biodata_karyawan;
         $this->hrga_biodata_karyawan = $hrga_biodata_karyawan;
@@ -63,6 +68,8 @@ class HRGAController extends Controller
         $this->itic_departemen = $itic_departemen;
         $this->log_posisi = $log_posisi;
         $this->day = 0;
+        $this->fin_pro_pegawai = $fin_pro_pegawai;
+        $this->fin_pro_pegawai_d = $fin_pro_pegawai_d;
     }
 
     public function index_biodata_karyawan(Request $request)
@@ -603,6 +610,49 @@ class HRGAController extends Controller
                     'alamat' => $input['agama'],
                     'jenis_kelamin' => $request->jenis_kelamin,
                     'status_keluarga' => $input['status_klg'],
+                ]);
+
+                $no_pegawai_id = $this->fin_pro_pegawai->max('pegawai_id');
+                $this->fin_pro_pegawai->create([
+                    'pegawai_id' => $no_pegawai_id+1,
+                    'pegawai_pin' => $input['pin'],
+                    'pegawai_nip' => $input['pin'],
+                    'pegawai_nama' => $input['nama'],
+                    'pegawai_alias' => $input['nama'],
+                    'pegawai_pwd' => 0,
+                    'pegawai_rfid' => null,
+                    'pegawai_privilege' => 0,
+                    'pegawai_telp' => null,
+                    'pegawai_status' => 1,
+                    'tempat_lahir' => $input['tempat_lahir'],
+                    'tgl_lahir' => $input['tgl_lahir'],
+                    'pembagian1_id' => 0,
+                    'pembagian2_id' => 0,
+                    'pembagian3_id' => 0,
+                    'tgl_mulai_kerja' => $request->tanggal_masuk,
+                    'tgl_resign' => null,
+                    'gender' => $request->jenis_kelamin == 'Laki - Laki' ? '1' : '2',
+                    'tgl_masuk_pertama' => $request->tanggal_masuk,
+                    'photo_path' => null,
+                    'tmp_img' => null,
+                    'nama_bank' => null,
+                    'nama_rek' => null,
+                    'no_rek' => null,
+                    'new_pegawai_id' => null,
+                ]);
+
+                $no_pegawai_d_id = $this->fin_pro_pegawai_d->max('pegawai_id');
+                $this->fin_pro_pegawai_d->create([
+                    'pegawai_id' => $no_pegawai_d_id+1,
+                    'pend_id' => 30,
+                    'gol_darah' => 1,
+                    'stat_nikah' => 2,
+                    'jml_anak' => 0,
+                    'alamat' => $input['agama'],
+                    'telp_extra' => 0,
+                    'hubungan' => 6,
+                    'nama_hubungan' => 0,
+                    'agama' => 6
                 ]);
 
                 $message_title="Berhasil !";
