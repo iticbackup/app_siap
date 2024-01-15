@@ -155,15 +155,28 @@ class PerubahanDataFileManagerController extends Controller
         $input['kode_formulir'] = 'FPD-'.Carbon::now()->format('dmY').$norut++;
         // dd('TRX-'.Carbon::now()->format('dmY').$norut++);
         $input['is_open'] = 'y';
-
         if (auth()->user()->nik == '0000000') {
-            $input['departemen_id'] = $request->departemen_id;
-            $input['pengajuan_signature'] = auth()->user()->name;
+            $cek_formulir = $this->file_manager_perubahan_data->where('is_open','y')
+                                                        ->where('departemen_id',$request->departemen_id)
+                                                        ->first();
+            if (empty($cek_formulir)) {
+                $input['departemen_id'] = $request->departemen_id;
+                $input['pengajuan_signature'] = auth()->user()->name;
+            }else{
+                return redirect()->back()->with('error','Formulir sebelumnya masih dalam proses, selesaikan formulir sebelumnya.');
+            }
         }else{
-            $departemen_user = $this->departemen_user->where('nik',auth()->user()->nik)->first();
-            $departemen = $this->departemen->find($departemen_user->departemen_id);
-            $input['departemen_id'] = $departemen_user->departemen_id;
-            $input['pengajuan_signature'] = $departemen_user->team.' - '.$departemen->departemen;
+            $cek_formulir = $this->file_manager_perubahan_data->where('is_open','y')
+                                                        ->where('departemen_id',$departemen_user->departemen_id)
+                                                        ->first();
+            if (empty($cek_formulir)) {
+                $departemen_user = $this->departemen_user->where('nik',auth()->user()->nik)->first();
+                $departemen = $this->departemen->find($departemen_user->departemen_id);
+                $input['departemen_id'] = $departemen_user->departemen_id;
+                $input['pengajuan_signature'] = $departemen_user->team.' - '.$departemen->departemen;
+            }else{
+                return redirect()->back()->with('error','Formulir sebelumnya masih dalam proses, selesaikan formulir sebelumnya.');
+            }
         }
         
         $file_manager_perubahan_data = $this->file_manager_perubahan_data->create($input);

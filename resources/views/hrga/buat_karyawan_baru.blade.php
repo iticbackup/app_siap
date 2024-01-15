@@ -172,6 +172,7 @@
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-success">Submit</button>
+                    <a href="{{ route('hrga.biodata_karyawan') }}" class="btn btn-secondary">Back</a>
                 </div>
                 </form>
             </div>

@@ -9,7 +9,11 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::prefix('absensi')->group(function () {
     Route::get('login', function(){
-        return view('auth.absensi.login');
+        if (!Auth::check()) {
+            return view('auth.absensi.login');
+        }else{
+            return redirect()->route('absensi.home');
+        }
     })->name('absensi.login');
 
     Route::post('login', [App\Http\Controllers\AuthAbsensi\LoginController::class, 'login'])->name('absensi.login.post');
