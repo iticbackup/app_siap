@@ -2,7 +2,7 @@
 <?php $asset = asset('public/absensi/'); ?>
 @section('css')
     <link rel="stylesheet" href="{{ $asset }}/assets/plugins/notifications/css/lobibox.min.css" />
-    <link href="{{ $asset }}/assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    {{-- <link href="{{ $asset }}/assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" /> --}}
     {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lobipanel/1.0.6/css/lobipanel.css" integrity="sha512-Ll5C6X686xv2Mb9RS2l9ojDcX6GUTaN1y9i8fujwr8bxkPB/3ldxgnFO2KpeEWof070O++saS31PBcrrF73DxA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> --}}
 @endsection
 @section('title')
@@ -99,8 +99,104 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {{-- @php
+                                    $date_live = \Carbon\Carbon::now()->format('Y-m-d');
+                                @endphp --}}
                                 @foreach ($biodata_karyawans as $key => $biodata_karyawan)
                                 @php
+                                    // dd($biodata_karyawan);
+                                    $date_live = \Carbon\Carbon::now()->format('Y-m-d');
+                                    $mesin_jam_masuk = \App\Models\FinPro::where('scan_date', 'LIKE', '%'.$date_live.'%')
+                                                                        ->whereTime('scan_date','<=','11:59:59')
+                                                                        ->where('pin', $biodata_karyawan->pin)
+                                                                        ->orderBy('scan_date','desc')
+                                                                        ->first();
+                                    if (empty($mesin_jam_masuk)) {
+                                        $presensi_info_masuk = \App\Models\PresensiInfo::where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                                                ->where('pin', $biodata_karyawan->pin)
+                                                                                ->whereTime('scan_date','<=','11:59:59')
+                                                                                ->first();
+                                        if (empty($presensi_info_masuk)) {
+                                            $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)"><i class="bx bxs-plus-circle bx-sm bx-tada text-success"></i></a>';
+                                        }else{
+                                            if ($presensi_info_masuk->status == 4) {
+                                                $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: red">Sakit</a>';
+                                            } elseif ($presensi_info_masuk->status == 7) {
+                                                $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: purple">Absen</a>';
+                                            } elseif ($presensi_info_masuk->status == 13) {
+                                                $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: orange">Cuti</a>';
+                                            } else {
+                                                $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$presensi_info_masuk->att_rec.'`)">'.$presensi_info_masuk->scan_date.'</a>';
+                                            }
+                                        }
+                                    }else{
+                                        $absen_masuk = \App\Models\PresensiInfo::with('presensi_status')
+                                                                                ->where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                                                ->where('pin', $biodata_karyawan->pin)
+                                                                                ->whereTime('scan_date','<=','11:59:59')
+                                                                                // ->where('inoutmode', $inoutmode)
+                                                                                ->first();
+                                        if (empty($absen_masuk)) {
+                                            $date_jam_masuk = \Carbon\Carbon::create($mesin_jam_masuk->scan_date)->format('H:i');
+                                            $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`' . $mesin_jam_masuk->scan_date . '`,`' . $mesin_jam_masuk->pin . '`,`' . $mesin_jam_masuk->inoutmode . '`)" style="color: blue">' . $date_jam_masuk . '</a>';
+                                        } else {
+                                            $date_jam_masuk = \Carbon\Carbon::create($mesin_jam_masuk->scan_date)->format('H:i');
+                                            $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`' . $mesin_jam_masuk->scan_date . '`,`' . $mesin_jam_masuk->pin . '`,`' . $mesin_jam_masuk->inoutmode . '`)" style="color: blue">' . $date_jam_masuk . ' (' . $absen_masuk->presensi_status->status_info . ')</a>';
+                                        }
+                                    }
+
+                                    $mesin_jam_pulang = \App\Models\FinPro::where('scan_date', 'LIKE', '%'.$date_live.'%')
+                                                                        ->whereTime('scan_date','>=','12:00:00')
+                                                                        ->where('pin', $biodata_karyawan->pin)
+                                                                        ->orderBy('scan_date','desc')
+                                                                        ->first();
+
+                                    if (empty($mesin_jam_pulang)) {
+                                        $presensi_info_2 = \App\Models\PresensiInfo::where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                                                ->where('pin', $biodata_karyawan->pin)
+                                                                                ->whereTime('scan_date','>=','12:00:00')
+                                                                                ->orderBy('scan_date','desc')
+                                                                                ->first();
+                                        if (empty($presensi_info_2)) {
+                                            $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)"><i class="bx bxs-plus-circle bx-sm bx-tada text-success"></i></a>';
+                                        } else {
+                                            if ($presensi_info_2->status == 4) {
+                                                $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: red">Sakit</a>';
+                                            } elseif ($presensi_info_2->status == 7) {
+                                                $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: purple">Absen</a>';
+                                                // $jam_keluar = 'Absen';
+                                            } elseif ($presensi_info_2->status == 13) {
+                                                $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: orange">Cuti</a>';
+                                                // $jam_keluar = 'Cuti';
+                                            } else {
+                                                $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`'.$date_live.'`,`'.$biodata_karyawan->pin.'`,`'. 0 .'`)">'.$presensi_info_2->scan_date.'</a>';
+                                            }
+                                        }
+                                    }else{
+                                        $absen_keluar = \App\Models\PresensiInfo::with('presensi_status')
+                                                                                ->where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                                                ->where('pin', $biodata_karyawan->pin)
+                                                                                ->whereTime('scan_date','>=','12:00:00')
+                                                                                ->orderBy('scan_date','desc')
+                                                                                ->first();
+                                        if (empty($absen_keluar)) {
+                                            $date_jam_keluar = \Carbon\Carbon::create($mesin_jam_pulang->scan_date)->format('H:i');
+                                            $jam_keluar = '<a type="button" onclick="detail_absensi_jam_keluar(`' . $mesin_jam_pulang->scan_date . '`,`' . $mesin_jam_pulang->pin . '`,`' . $mesin_jam_pulang->inoutmode . '`)" style="color: blue">' . $date_jam_keluar . '</a>';
+                                        } else {
+                                            $date_jam_keluar = \Carbon\Carbon::create($mesin_jam_pulang->scan_date)->format('H:i');
+                                            $jam_keluar = '<a type="button" onclick="detail_absensi_jam_keluar(`' . $mesin_jam_pulang->scan_date . '`,`' . $mesin_jam_pulang->pin . '`,`' . $mesin_jam_pulang->inoutmode . '`)" style="color: red">' . $date_jam_keluar . ' (' . $absen_keluar->presensi_status->status_info . ')</a>';
+                                        }
+                                    }
+                                @endphp
+                                <tr>
+                                    <td class="text-center" style="vertical-align: middle">{{ $biodata_karyawan->nik }}</td>
+                                    <td class="text-center" style="vertical-align: middle">{{ $biodata_karyawan->nama }}</td>
+                                    <td class="text-center" style="vertical-align: middle">{{ $biodata_karyawan->departemen->nama_departemen >= 1 ? $biodata_karyawan->departemen->nama_unit : $biodata_karyawan->departemen->nama_departemen }}</td>
+                                    <td class="text-center" style="vertical-align: middle">{{ $biodata_karyawan->posisi->nama_posisi }}</td>
+                                    <td class="text-center" style="vertical-align: middle">{!! $jam_masuk !!}</td>
+                                    <td class="text-center" style="vertical-align: middle">{!! $jam_keluar !!}</td>
+                                </tr>
+                                {{-- @php
                                     $cek_status_kerja = \App\Models\IticDepartemen::where('id_departemen', $biodata_karyawan->satuan_kerja)->first();
                                     if (empty($cek_status_kerja)) {
                                         $satuan_kerja = '-';
@@ -210,7 +306,7 @@
                                     <td class="text-center" style="vertical-align: middle">{{ $posisi }}</td>
                                     <td class="text-center" style="vertical-align: middle">{!! $jam_masuk !!}</td>
                                     <td class="text-center" style="vertical-align: middle">{!! $jam_keluar !!}</td>
-                                </tr>
+                                </tr> --}}
                                 @endforeach
                             </tbody>
                             <tfoot>
@@ -449,8 +545,8 @@
     </div>
 @endsection
 @section('script')
-    <script src="{{ $asset }}/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
-    <script src="{{ $asset }}/assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
+    {{-- <script src="{{ $asset }}/assets/plugins/datatable/js/jquery.dataTables.min.js"></script> --}}
+    {{-- <script src="{{ $asset }}/assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script> --}}
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/lobipanel/1.0.6/js/lobipanel.min.js" integrity="sha512-87ZExUcqiYtb95dZZDnehfTeEhUUsvmm5BILx99vEjFXjdn0hJtZo//oFwp8l7AV0F01Md817fVCl1ahn3QSNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
     <script src="{{ $asset }}/assets/plugins/notifications/js/lobibox.min.js"></script>
     <script src="{{ $asset }}/assets/plugins/notifications/js/notifications.min.js"></script>

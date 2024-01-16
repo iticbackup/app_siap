@@ -51,4 +51,14 @@ class BiodataKaryawan extends Model
     {
         return $this->belongsTo(\App\Models\LogPosisi::class, 'nik','nik');
     }
+
+    public function departemen()
+    {
+        return $this->belongsTo(\App\Models\IticDepartemen::class, 'satuan_kerja','id_departemen');
+    }
+
+    public function posisi()
+    {
+        return $this->belongsTo(\App\Models\EmpPosisi::class, 'id_posisi','id_posisi');
+    }
 }

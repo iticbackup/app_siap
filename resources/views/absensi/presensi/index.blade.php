@@ -56,23 +56,23 @@
                         <tbody>
                             @foreach ($biodata_karyawans as $biodata_karyawan)
                             @php
-                                $cek_status_kerja = \App\Models\IticDepartemen::where('id_departemen', $biodata_karyawan->satuan_kerja)->first();
-                                if (empty($cek_status_kerja)) {
-                                    $satuan_kerja = '-';
-                                } else {
-                                    if ($cek_status_kerja->nama_departemen >= 1) {
-                                        $satuan_kerja = $cek_status_kerja->nama_unit;
-                                    } else {
-                                        $satuan_kerja = $cek_status_kerja->nama_departemen;
-                                    }
-                                }
+                                // $cek_status_kerja = \App\Models\IticDepartemen::where('id_departemen', $biodata_karyawan->satuan_kerja)->first();
+                                // if (empty($cek_status_kerja)) {
+                                //     $satuan_kerja = '-';
+                                // } else {
+                                //     if ($cek_status_kerja->nama_departemen >= 1) {
+                                //         $satuan_kerja = $cek_status_kerja->nama_unit;
+                                //     } else {
+                                //         $satuan_kerja = $cek_status_kerja->nama_departemen;
+                                //     }
+                                // }
 
-                                $cek_posisi = \App\Models\EmpPosisi::where('id_posisi', $biodata_karyawan->id_posisi)->first();
-                                if (empty($cek_posisi)) {
-                                    $posisi = '-';
-                                } else {
-                                    $posisi = $cek_posisi->nama_posisi;
-                                }
+                                // $cek_posisi = \App\Models\EmpPosisi::where('id_posisi', $biodata_karyawan->id_posisi)->first();
+                                // if (empty($cek_posisi)) {
+                                //     $posisi = '-';
+                                // } else {
+                                //     $posisi = $cek_posisi->nama_posisi;
+                                // }
                             @endphp
                             <tr>
                                 <td class="text-center" style="vertical-align: middle">
@@ -85,13 +85,126 @@
                                         <div class="card-body">
                                             <div><b>NIK  :</b> {{ $biodata_karyawan->nik }}</div>
                                             <div><b>Nama :</b> {{ $biodata_karyawan->nama }}</div>
-                                            <div><b>Departemen :</b> {{ $satuan_kerja }}</div>
-                                            <div><b>Posisi :</b> {{ $posisi }}</div>
+                                            <div><b>Departemen :</b> {{ $biodata_karyawan->departemen->nama_departemen >= 1 ? $biodata_karyawan->departemen->nama_unit : $biodata_karyawan->departemen->nama_departemen }}</div>
+                                            <div><b>Posisi :</b> {{ $biodata_karyawan->posisi->nama_posisi }}</div>
                                             {{-- {{ $biodata_karyawan->nik.' - '.$biodata_karyawan->nama }} --}}
                                         </div>
                                     </div>
                                 </td>
                                 @foreach ($weeks as $week)
+                                    {{-- @php
+                                        $fin_pros = \DB::connection('fin_pro')->table('att_log')
+                                                                                ->select('*')
+                                                                                ->where('pin',$biodata_karyawan->pin)
+                                                                                ->where('scan_date','LIKE','%'.$week.'%')
+                                                                                // ->whereTime('scan_date','<=','11:59')
+                                                                                // ->orderBy('scan_date','desc')
+                                                                                ->get();
+                                    @endphp
+                                    <td class="text-center" style="vertical-align: middle">
+                                        @php
+                                            $total_jam_kerja = [];
+                                        @endphp
+                                        @foreach ($fin_pros as $fin_pro)
+                                            @php
+                                                $explode_scan_date = explode(" ",$fin_pro->scan_date);
+                                                // dd(end($explode_scan_date));
+                                                if (end($explode_scan_date) <= "11:59:59") {
+                                                    $jam_kerja = '<div class="card radius-10 bg-success bg-gradient">'.
+                                                                    '<div class="card-body">'.
+                                                                        '<div class="text-white">Jam Masuk</div>'.
+                                                                        '<div class="text-white" style="font-weight: bold">'.\Carbon\Carbon::create(end($explode_scan_date))->format('H:i').'</div>'.
+                                                                    '</div>'.
+                                                                '</div>';
+                                                }elseif(end($explode_scan_date) >= "12:00:00"){
+                                                    $jam_kerja = '<div class="card radius-10 bg-success bg-gradient">'.
+                                                                    '<div class="card-body">'.
+                                                                        '<div class="text-white">Jam Pulang</div>'.
+                                                                        '<div class="text-white" style="font-weight: bold">'.\Carbon\Carbon::create(end($explode_scan_date))->format('H:i').'</div>'.
+                                                                    '</div>'.
+                                                                '</div>';
+                                                }
+                                            @endphp
+                                            <div>{!! $jam_kerja !!}</div>
+                                        @endforeach
+                                    </td> --}}
+                                    {{-- @php
+                                       $fin_pro_masuk = \DB::connection('fin_pro')->table('att_log')
+                                                                                ->select('*')
+                                                                                ->where('pin',$biodata_karyawan->pin)
+                                                                                ->where('scan_date','LIKE','%'.$week.'%')
+                                                                                ->whereTime('scan_date','<=','11:59')
+                                                                                ->orderBy('scan_date','desc')
+                                                                                ->limit(1)
+                                                                                ->first();
+                                        if (empty($fin_pro_masuk)) {
+                                            $jam_masuk = null;
+                                            $cek_jam_masuk = null;
+                                        }else{
+                                            $jam_masuk = '<div class="card radius-10 bg-success bg-gradient">'.
+                                                            '<div class="card-body">'.
+                                                                '<div class="text-white">Jam Masuk</div>'.
+                                                                '<div class="text-white" style="font-weight: bold">'.\Carbon\Carbon::create($fin_pro_masuk->scan_date)->format('H:i').'</div>'.
+                                                            '</div>'.
+                                                        '</div>';
+                                            $cek_jam_masuk = \Carbon\Carbon::create($fin_pro_masuk->scan_date)->format('H:i');
+                                        }
+
+                                        $fin_pro_pulang = \DB::connection('fin_pro')->table('att_log')
+                                                                                ->select('*')
+                                                                                ->where('pin',$biodata_karyawan->pin)
+                                                                                ->where('scan_date','LIKE','%'.$week.'%')
+                                                                                ->whereTime('scan_date','>=','12:00')
+                                                                                ->orderBy('scan_date','desc')
+                                                                                ->limit(1)
+                                                                                ->first();
+                                        if (empty($fin_pro_pulang)) {
+                                            $jam_pulang = null;
+                                            $cek_jam_pulang = null;
+                                        }else{
+                                            $jam_pulang = '<div class="card radius-10 bg-success bg-gradient">'.
+                                                            '<div class="card-body">'.
+                                                                '<div class="text-white">Jam Pulang</div>'.
+                                                                '<div class="text-white" style="font-weight: bold">'.\Carbon\Carbon::create($fin_pro_pulang->scan_date)->format('H:i').'</div>'.
+                                                            '</div>'.
+                                                        '</div>';
+                                            $cek_jam_pulang = \Carbon\Carbon::create($fin_pro_pulang->scan_date)->format('H:i');
+                                        }
+
+                                        $awal = strtotime($cek_jam_masuk);
+                                        $akhir = strtotime($cek_jam_pulang);
+
+                                        $diff = $akhir - $awal;
+
+                                        $jam = floor($diff / (60 * 60));
+                                        $menit = $diff - $jam * (60 * 60);
+                                        $detik = $diff % 60;
+
+                                        $selisih_jam = $jam . ':' . floor($menit / 60);
+
+                                        if ($awal == 0 && $akhir == 0) {
+                                            $total_jam = 0;
+                                        } elseif ($awal > 0 && $akhir == 0) {
+                                            $total_jam = 0;
+                                        } else {
+                                            $total_jam = $selisih_jam;
+                                        }
+                                    @endphp
+                                    <td class="text-center" style="vertical-align: middle">
+                                        <div>{!! $jam_masuk !!}</div>
+                                        <div>{!! $jam_pulang !!}</div>
+                                        @if ($cek_jam_masuk != null && $cek_jam_pulang != null)
+                                        <div>
+                                            <div class="card radius-10 bg-primary bg-gradient">
+                                                <div class="card-body">
+                                                    <div class="text-white">Total Jam Kerja</div>
+                                                    <div class="text-white" style="font-weight: bold">{{ $total_jam }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endif
+                                    </td> --}}
+
                                     @php
                                         $fin_pro_masuk = \App\Models\FinPro::where('pin',$biodata_karyawan->pin)
                                                                     ->where('scan_date','LIKE','%'.$week.'%')
@@ -102,7 +215,7 @@
                                             // $presensi_info_masuk = \App\Models\PresensiInfo::where('pin',$biodata_karyawan->pin)
                                             //                                     ->where('scan_date','LIKE','%'.$week.'%')
                                             //                                     ->whereTime('scan_date','<=','11:59')
-                                            //                                     ->take(1)
+                                            //                                     // ->take(1)
                                             //                                     ->first();
                                             // if (empty($presensi_info_masuk)) {
                                             //     $jam_masuk = null;

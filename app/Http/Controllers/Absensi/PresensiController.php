@@ -28,6 +28,8 @@ class PresensiController extends Controller
                                                     // ->where('pin',1298)
                                                     ->where('status_karyawan','!=','R')
                                                     ->orderBy('satuan_kerja','asc')
+                                                    // ->limit(200)
+                                                    // ->get();
                                                     ->paginate(20);
         // dd($data);
         return view('absensi.presensi.index',$data);

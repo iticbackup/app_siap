@@ -208,7 +208,8 @@ class AbsensiController extends Controller
         //                     ->toJson();
         // }
         if (auth()->user()->nik == 0000000) {
-            $data['biodata_karyawans'] = BiodataKaryawan::where(function($query) {
+            $data['biodata_karyawans'] = BiodataKaryawan::with('departemen','posisi')
+                                                        ->where(function($query) {
                                                             return $query->where('nik','!=','1000001')
                                                                         ->where('nik','!=','1000002')
                                                                         ->where('nik','!=','1000003');
