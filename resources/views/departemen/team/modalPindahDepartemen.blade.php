@@ -27,6 +27,14 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label for="">Status Karyawan</label>
+                        <select name="detail_status" class="form-control" id="">
+                            <option value="">-- Status Karyawan --</option>
+                            <option value="Y">Aktif</option>
+                            <option value="N">Non Aktif</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-soft-primary btn-sm">Submit</button>

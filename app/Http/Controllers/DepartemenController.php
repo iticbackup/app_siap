@@ -341,7 +341,8 @@ class DepartemenController extends Controller
                 ];
             }
             $departemen_user->update([
-                'departemen_id' => $request->detail_pindah_departemen
+                'departemen_id' => $request->detail_pindah_departemen,
+                'status' => $request->detail_status
             ]);
             return [
                 'success' => true,
