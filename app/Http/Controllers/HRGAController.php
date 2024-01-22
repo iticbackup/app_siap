@@ -1167,6 +1167,10 @@ class HRGAController extends Controller
                     'no' => $key+1,
                     'nama_pelatihan' => $riwayat_training_karyawan->hrga_rekap_pelatihan_karyawan->tema.'|'.Carbon::create($explode_tanggal[0])->format('d-m-Y H:i')
                 ];
+                // $data[] = [
+                //     'no' => $key+1,
+                //     'nama_pelatihan' => $riwayat_training_karyawan->hrga_rekap_pelatihan_karyawan->tema
+                // ];
             }
         }
         return response()->json([

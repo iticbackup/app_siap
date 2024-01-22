@@ -756,6 +756,7 @@
     
                                 detail_riwayat_training.forEach(dt_riwayat_training);
                                 function dt_riwayat_training(value, index) {
+                                    // console.table(value.nama_pelatihan.hrga_rekap_pelatihan_karyawan);
                                     txt_riwayat_training += '<tr>';
                                     txt_riwayat_training += '<td class="text-center">'+value.no+'</td>';
                                     // txt_riwayat_training += '<td class="text-left">'+'<input type="text" name="" value='+value.nama_pelatihan+'>'+'</td>';
