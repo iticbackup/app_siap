@@ -227,7 +227,8 @@
                                     result.message_content,
                                     'success'
                                 );
-                                location.href('{{ route('hrga.biodata_karyawan') }}')
+                                location.reload();
+                                // location.href('{{ route('hrga.biodata_karyawan') }}')
                             } else {
                                 var error = result.error;
                                 var txt_error = ""
