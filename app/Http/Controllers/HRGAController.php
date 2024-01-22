@@ -620,7 +620,7 @@ class HRGAController extends Controller
                     'pegawai_nama' => $input['nama'],
                     'pegawai_alias' => $input['nama'],
                     'pegawai_pwd' => 0,
-                    'pegawai_rfid' => null,
+                    'pegawai_rfid' => 0,
                     'pegawai_privilege' => 0,
                     'pegawai_telp' => null,
                     'pegawai_status' => 1,
