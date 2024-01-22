@@ -18,6 +18,7 @@ class DepartemenUser extends Model
         'departemen_id',
         'staff',
         'team',
+        'status',
     ];
 
     public function departemen()

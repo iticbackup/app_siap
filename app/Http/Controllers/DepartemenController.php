@@ -250,7 +250,7 @@ class DepartemenController extends Controller
         }
 
         if ($request->ajax()) {
-            $data = $this->departemen_user->where('departemen_id',$id)->get();
+            $data = $this->departemen_user->where('departemen_id',$id)->where('status','Y')->get();
             return DataTables::of($data)
                             ->addIndexColumn()
                             // ->addColumn('user_id', function($row){
