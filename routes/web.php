@@ -157,9 +157,6 @@ Route::group(['middleware' => ['auth']], function() {
         
         Route::prefix('departemen')->group(function () {
             Route::get('/', [App\Http\Controllers\KpiController::class, 'kpi_departemen'])->name('kpi.kpi_departemen');
-            Route::get('{id}', [App\Http\Controllers\KpiController::class, 'kpi_departemen_detail'])->name('kpi.kpi_departemen_detail');
-            Route::get('{kpi_departemen_id}/team', [App\Http\Controllers\KpiController::class, 'kpi_detail_team'])->name('kpi.kpi_detail_team');
-            Route::post('simpan', [App\Http\Controllers\KpiController::class, 'kpi_departemen_detail_simpan'])->name('kpi.kpi_departemen_detail_simpan');
             Route::get('{date}', [App\Http\Controllers\KpiController::class, 'input_date_kpi'])->name('kpi_date');
             Route::post('{date}/simpan', [App\Http\Controllers\KpiController::class, 'input_date_kpi_simpan'])->name('kpi.input_date_kpi_simpan');
             Route::get('{date}/departemen', [App\Http\Controllers\KpiController::class, 'input_detail_kpi_departemen'])->name('kpi.input_detail_kpi_departemen');
@@ -167,6 +164,9 @@ Route::group(['middleware' => ['auth']], function() {
             Route::get('{date}/departemen/{id_departemen}/validasi', [App\Http\Controllers\KpiController::class, 'input_date_kpi_validasi'])->name('kpi.input_date_kpi_validasi');
             Route::post('{date}/departemen/{id_departemen}/validasi/simpan', [App\Http\Controllers\KpiController::class, 'input_date_kpi_validasi_simpan'])->name('kpi.input_date_kpi_validasi_simpan');
             Route::get('{date}/departemen/{id_departemen}/print', [App\Http\Controllers\KpiController::class, 'kpi_print'])->name('kpi.kpi_print');
+            Route::get('{id}', [App\Http\Controllers\KpiController::class, 'kpi_departemen_detail'])->name('kpi.kpi_departemen_detail');
+            Route::get('{kpi_departemen_id}/team', [App\Http\Controllers\KpiController::class, 'kpi_detail_team'])->name('kpi.kpi_detail_team');
+            Route::post('simpan', [App\Http\Controllers\KpiController::class, 'kpi_departemen_detail_simpan'])->name('kpi.kpi_departemen_detail_simpan');
         });
     });
     
