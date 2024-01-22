@@ -607,7 +607,7 @@ class HRGAController extends Controller
                     'no_rekening_bws' => $request->no_rekening_bws,
                     'tempat_lahir' => $input['tempat_lahir'],
                     'tanggal_lahir' => $input['tgl_lahir'],
-                    'alamat' => $input['agama'],
+                    'alamat' => $input['alamat'],
                     'jenis_kelamin' => $request->jenis_kelamin,
                     'status_keluarga' => $input['status_klg'],
                 ]);
@@ -648,7 +648,7 @@ class HRGAController extends Controller
                     'gol_darah' => 1,
                     'stat_nikah' => 2,
                     'jml_anak' => 0,
-                    'alamat' => $input['agama'],
+                    'alamat' => $input['alamat'],
                     'telp_extra' => 0,
                     'hubungan' => 6,
                     'nama_hubungan' => 0,
