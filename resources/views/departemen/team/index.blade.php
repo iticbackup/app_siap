@@ -34,6 +34,8 @@
         @endslot
     @endcomponent
 
+    @include('departemen.team.modalPindahDepartemen')
+
     <a href="{{ route('departemen') }}" class="btn btn-outline-primary mb-3"><i class="fa fa-arrow-left"></i> Back</a>
 
     <div class="row">
@@ -226,6 +228,69 @@
                 }
             });
         });
+
+        $('#form-update').submit(function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            $('#image-input-error').text('');
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('departemen.detail_team_group_update', $departemen->id) }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: (result) => {
+                    if (result.success != false) {
+                        iziToast.success({
+                            title: result.message_title,
+                            message: result.message_content
+                        });
+                        this.reset();
+                        $('.modalPindahDepartemen').modal('hide');
+                        table.ajax.reload(null, false);
+                    } else {
+                        iziToast.error({
+                            title: result.success,
+                            message: result.error
+                        });
+                    }
+                },
+                error: function(request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            });
+        });
+
+        function detail_team(id,team_id){
+            $.ajax({
+                type:'GET',
+                url: "{{ url('departemen/') }}"+'/'+id+'/'+team_id+'/team',
+                contentType: "application/json;  charset=utf-8",
+                cache: false,
+                success: (result) => {
+                    if(result.success == true){
+                        document.getElementById('detail_departemen').innerHTML = result.data.departemen;
+                        document.getElementById('detail_nama_team').innerHTML = result.departemen_user.team;
+                        $('#detail_team_id').val(result.departemen_user.id);
+                        $('#detail_select_departemen').val(result.data.id);
+                        // $('.detail_departemen').val(result.data.departemen);
+                        // $('.detailss_nama_team').val(result.departemen_user.team);
+                        $('.modalPindahDepartemen').modal('show');
+                    }else{
+
+                    }
+                },
+                error: function (request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            });
+        }
 
         function search_nik() {
             let formData = new FormData();

@@ -279,6 +279,9 @@ class DepartemenController extends Controller
                             })
                             ->addColumn('action', function($row){
                                 $btn = '<div class="btn-group">';
+                                $btn.= '<button class="btn btn-primary btn-icon" onClick="detail_team(`'.$row->departemen_id.'`,`'.$row->id.'`)">
+                                            <i class="far fa-id-badge"></i> Pindah Departemen
+                                        </button>';
                                 // $btn.= '<a href='.route('departemen.detail_team',$row->id).' class="btn btn-primary btn-icon">
                                 //             <i class="fas fa-cube"></i> Input Team
                                 //         </a>';
@@ -295,7 +298,65 @@ class DepartemenController extends Controller
                             ->make(true);
         }
         $data['biodata_karyawans'] = BiodataKaryawan::all();
+        $data['departemens'] = $this->departemen->all();
         return view('departemen.team.index',$data);
+    }
+
+    public function detail_team_group($id,$team_id)
+    {
+        $data['departemen'] = $this->departemen->find($id);
+        if (empty($data['departemen'])) {
+            return response()->json([
+                'success' => false,
+                'message_content' => 'Data Tidak Ditemukan'
+            ]);
+        }
+        $data['departemen_user'] = $this->departemen_user->find($team_id);
+        return response()->json([
+            'success' => true,
+            'data' => $data['departemen'],
+            'departemen_user' => $data['departemen_user']
+        ]);
+    }
+
+    public function detail_team_group_update(Request $request, $id){
+        $rules = [
+            'detail_pindah_departemen' => 'required',
+        ];
+
+        $messages = [
+            'detail_pindah_departemen.required'  => 'Departemen wajib diisi.',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+        
+        if ($validator->passes()) {
+            $departemen_user = $this->departemen_user->where('departemen_id',$id)
+                                            ->where('id',$request->detail_team_id)
+                                            ->first();
+            if (empty($departemen_user)) {
+                return [
+                    'success' => false,
+                    'message_content' => 'Data Tidak Ditemukan',
+                ];
+            }
+            $departemen_user->update([
+                'departemen_id' => $request->detail_pindah_departemen
+            ]);
+            return [
+                'success' => true,
+                'message_title' => 'Berhasil!',
+                'message_content' => 'Nama '.$departemen_user->team. ' berhasil pindah departemen'
+            ];
+        }
+
+        return response()->json(
+            [
+                'success' => false,
+                'error' => $validator->errors()->all()
+            ]
+        );
+        
     }
 
     public function team_simpan(Request $request, $ids)

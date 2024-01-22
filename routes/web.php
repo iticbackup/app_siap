@@ -89,7 +89,9 @@ Route::group(['middleware' => ['auth']], function() {
         Route::post('update', [App\Http\Controllers\DepartemenController::class, 'update'])->name('departemen.update');
         Route::get('{id}/delete', [App\Http\Controllers\DepartemenController::class, 'delete'])->name('departemen.delete');
         Route::get('{id}/team', [App\Http\Controllers\DepartemenController::class, 'detail_team'])->name('departemen.detail_team');
+        Route::get('{id}/{team_id}/team', [App\Http\Controllers\DepartemenController::class, 'detail_team_group'])->name('departemen.detail_team_group');
         Route::post('{id}/team/simpan', [App\Http\Controllers\DepartemenController::class, 'team_simpan'])->name('departemen.team_simpan');
+        Route::post('{id}/team/update', [App\Http\Controllers\DepartemenController::class, 'detail_team_group_update'])->name('departemen.detail_team_group_update');
         Route::post('search_nik', [App\Http\Controllers\DepartemenController::class, 'search_nik'])->name('departemen.search_nik');
     });
 
