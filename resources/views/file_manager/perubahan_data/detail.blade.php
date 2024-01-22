@@ -58,12 +58,12 @@
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
-                                <th class="text-center">Tanggal</th>
-                                <th class="text-center">No. Dokumen</th>
-                                <th class="text-center">Halaman</th>
-                                <th class="text-center">Revisi</th>
-                                <th class="text-center">Uraian Perubahan</th>
-                                <th class="text-center">Disahkan</th>
+                                <th class="text-center" style="background-color: #AAD9BB">Tanggal</th>
+                                <th class="text-center" style="background-color: #AAD9BB">No. Dokumen</th>
+                                <th class="text-center" style="background-color: #AAD9BB">Halaman</th>
+                                <th class="text-center" style="background-color: #AAD9BB">Revisi</th>
+                                <th class="text-center" style="background-color: #AAD9BB">Uraian Perubahan</th>
+                                <th class="text-center" style="background-color: #AAD9BB">Disahkan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -83,7 +83,7 @@
                                             @php
                                                 $explode_validasi = explode('|',$file_manager_perubahan_data->status);
                                             @endphp
-                                            {{ \Carbon\Carbon::create($explode_validasi[1])->format('d/m/Y') }}
+                                                {{ \Carbon\Carbon::create($explode_validasi[1])->format('d/m/Y') }}
                                         @endif
                                     </td>
                                 </tr>

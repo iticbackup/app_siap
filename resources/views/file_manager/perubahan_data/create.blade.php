@@ -100,7 +100,7 @@
                                         <div class="mb-1">
                                             <label class="form-label">No. Dokumen</label>
                                             <input type="text" name="no_dokumen" class="form-control" placeholder="No. Dokumen"
-                                                id="">
+                                                id="no_dokumen">
                                             <div class="text-primary" style="font-size: 8pt">Format penulisan: IT/xx/xxx/xx</div>
                                         </div>
                                     </div>
@@ -108,20 +108,20 @@
                                         <div class="mb-1">
                                             <label class="form-label">Halaman</label>
                                             <input type="text" name="halaman" class="form-control" placeholder="Halaman"
-                                                id="">
+                                                id="halaman">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-1">
                                             <label class="form-label">Revisi</label>
                                             <input type="text" name="revisi" class="form-control" placeholder="Revisi"
-                                                id="">
+                                                id="revisi">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-1">
                                             <label class="form-label">Kategori File</label>
-                                            <select name="kategori_file" class="form-control" id="">
+                                            <select name="kategori_file" class="form-control" id="kategori_file">
                                                 <option value="">-- Pilih Kategori --</option>
                                                 <option value="PK">PK</option>
                                                 <option value="SOP">SOP</option>
@@ -172,13 +172,13 @@
                                 <div class="mb-3">
                                     <label class="form-label">Uraian Perubahan</label>
                                     <span></span>
-                                    <textarea name="uraian_perubahan" class="form-control editor" id="" cols="30" rows="10"></textarea>
+                                    <textarea name="uraian_perubahan" class="form-control editor" id="uraian_perubahan" cols="30" rows="10"></textarea>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="mb-3">
                                     <label class="form-label">Upload File</label>
-                                    <input type="file" name="files" class="form-control">
+                                    <input type="file" name="files" class="form-control" id="files">
                                 </div>
                             </div>
                             <div class="col-md-1">
@@ -199,7 +199,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Tanggal Formulir Dibuat</label>
-                                <input type="date" name="tanggal_formulir" class="form-control" required id="">
+                                <input type="date" name="tanggal_formulir" class="form-control" required id="" oninvalid="this.setCustomValidity('Input Tanggal Wajib Diisi')" oninput="this.setCustomValidity('')">
                             </div>
                         </div>
                         <hr style="border-top: 1px dashed rgb(0, 17, 255);">
@@ -344,9 +344,24 @@
                             message: result.message_content
                         });
 
+                        // $("input[type=text]").val('');
+                        $("#no_dokumen").val('');
+                        $("#halaman").val('');
+                        $("#revisi").val('');
+                        $("#kategori_file").val('');
+                        $("#uraian_perubahan").val('');
+                        $("#files").val('');
                         table.ajax.reload(null, false);
-
                     } else {
+                        // var error = result.error;
+                        // const text_error = '';
+
+                        // error.forEach(errors);
+
+                        // function errors(value, index) {
+                        //     text_error = text_error+value+"<br>";
+                        // }
+
                         iziToast.error({
                             title: result.success,
                             message: result.error

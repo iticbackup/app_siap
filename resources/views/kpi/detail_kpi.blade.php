@@ -73,62 +73,120 @@
                             </table>
                         </div>
                         <div class="mb-3">
-                            <table class="table table-bordered dt-responsive nowrap"
-                            style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                <thead>
-                                    <tr>
-                                        <td class="text-center" rowspan="2" style="width: 2%">No</td>
-                                        <td class="text-center" rowspan="2" style="width: 500px">Indikator</td>
-                                        <td class="text-center" colspan="2">Target</td>
-                                        <td class="text-center" colspan="2">Realisasi</td>
-                                        <td class="text-center" rowspan="2" style="width: 100px">(%) Pencapaian</td>
-                                        <td class="text-center" rowspan="2" style="width: 5%">Bobot</td>
-                                        <td class="text-center" rowspan="2">Nilai</td>
-                                        <td class="text-center" rowspan="2">Skor</td>
-                                        <td class="text-center" rowspan="2">Keterangan</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center" style="width: 5%">Nilai</td>
-                                        <td class="text-center" style="width: 150px">Ket./Satuan</td>
-                                        <td class="text-center" style="width: 5%">Nilai</td>
-                                        <td class="text-center" style="width: 150px">Ket./Satuan</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $total_nilai_kpi = [];
-                                        // $kpi_details = \App\Models\KpiDetail::where('kpi_id',$kpi->id)->get();
-                                    @endphp
-                                    {{-- @foreach ($kpi_indikators as $key_2 => $kpi_indikator)
-                                        <tr>
-                                            <td class="text-center">{{ $key_2+1 }}</td>
-                                            <td>{{ $kpi_indikator->indikator }}</td>
-                                            <td>{{ $kpi_indikator->target_nilai }}</td>
-                                        </tr>
-                                    @endforeach --}}
-                                    @foreach ($kpi->kpi_detail as $key_2 => $kpi_detail)
-                                        {{-- $nilai_kpi_team = []; --}}
-                                        @php
-                                            array_push($total_nilai_kpi,$kpi_detail->skor);
-                                        @endphp
-                                        <tr>
-                                            <td class="text-center">{{ $key_2+1 }}</td>
-                                            <td>{{ $kpi_detail->indikator }}</td>
-                                            <td class="text-center">{{ $kpi_detail->target_nilai }}</td>
-                                            <td>{{ $kpi_detail->target_keterangan }}</td>
-                                            <td class="text-center">{{ $kpi_detail->realisasi_nilai }}</td>
-                                            <td>{{ $kpi_detail->realisasi_keterangan }}</td>
-                                            <td class="text-center">{{ $kpi_detail->pencapaian }}</td>
-                                            <td class="text-center">{{ $kpi_detail->bobot }}%</td>
-                                            <td class="text-center">{{ $kpi_detail->nilai }}</td>
-                                            <td class="text-center">{{ $kpi_detail->skor }}</td>
-                                            <td class="text-center">{{ $kpi_detail->keterangan }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                            <div class="card">
+                                <div class="card-header bg-dark">
+                                    <div class="text-center text-white" style="font-weight: bold">KPI PERFORMANCE
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-bordered dt-responsive nowrap"
+                                    style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <td class="text-center" rowspan="2" style="width: 2%; font-weight: bold;">No</td>
+                                                <td class="text-center" rowspan="2" style="width: 500px; font-weight: bold;">Indikator</td>
+                                                <td class="text-center" colspan="2" style="font-weight: bold;">Target</td>
+                                                <td class="text-center" colspan="2" style="font-weight: bold;">Realisasi</td>
+                                                <td class="text-center" rowspan="2" style="width: 100px; font-weight: bold;">(%) Pencapaian</td>
+                                                <td class="text-center" rowspan="2" style="width: 5%; font-weight: bold;">Bobot</td>
+                                                <td class="text-center" rowspan="2" style="font-weight: bold;">Nilai</td>
+                                                <td class="text-center" rowspan="2" style="font-weight: bold;">Skor</td>
+                                                <td class="text-center" rowspan="2" style="font-weight: bold;">Keterangan</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center" style="width: 5%; font-weight: bold;">Nilai</td>
+                                                <td class="text-center" style="width: 150px; font-weight: bold;">Ket./Satuan</td>
+                                                <td class="text-center" style="width: 5%; font-weight: bold;">Nilai</td>
+                                                <td class="text-center" style="width: 150px; font-weight: bold;">Ket./Satuan</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $total_nilai_kpi = [];
+                                                $total_nilai_pencapaian = [];
+                                                // $kpi_details = \App\Models\KpiDetail::where('kpi_id',$kpi->id)->get();
+                                            @endphp
+                                            {{-- @foreach ($kpi_indikators as $key_2 => $kpi_indikator)
+                                                <tr>
+                                                    <td class="text-center">{{ $key_2+1 }}</td>
+                                                    <td>{{ $kpi_indikator->indikator }}</td>
+                                                    <td>{{ $kpi_indikator->target_nilai }}</td>
+                                                </tr>
+                                            @endforeach --}}
+                                            @foreach ($kpi->kpi_detail as $key_2 => $kpi_detail)
+                                                {{-- $nilai_kpi_team = []; --}}
+                                                @php
+                                                    array_push($total_nilai_kpi,$kpi_detail->skor);
+                                                    array_push($total_nilai_pencapaian,$kpi_detail->pencapaian);
+                                                    // $explode_skor = explode('%',$kpi_detail->pencapaian);
+                                                @endphp
+                                                <tr>
+                                                    <td class="text-center">{{ $key_2+1 }}</td>
+                                                    <td>{{ $kpi_detail->indikator }}</td>
+                                                    <td class="text-center">{{ $kpi_detail->target_nilai }}</td>
+                                                    <td>{{ $kpi_detail->target_keterangan }}</td>
+                                                    <td class="text-center">{{ $kpi_detail->realisasi_nilai }}</td>
+                                                    <td>{{ $kpi_detail->realisasi_keterangan }}</td>
+                                                    <td class="text-center">{{ $kpi_detail->pencapaian }}</td>
+                                                    <td class="text-center">{{ $kpi_detail->bobot }}%</td>
+                                                    <td class="text-center">{{ $kpi_detail->nilai }}</td>
+                                                    <td class="text-center">{{ $kpi_detail->pencapaian }}</td>
+                                                    {{-- <td class="text-center">{{ $kpi_detail->skor }}</td> --}}
+                                                    <td class="text-center">{{ $kpi_detail->keterangan }}</td>
+                                                </tr>
+                                            @endforeach
+                                                <tr>
+                                                    <td colspan="6" style="text-align: right; font-weight: bold; background-color: #DBE7C9">NILAI</td>
+                                                    <td class="text-center" style="font-weight: bold; background-color: #DBE7C9">{{ array_sum($total_nilai_pencapaian)/count($total_nilai_pencapaian) }}</td>
+                                                    <td colspan="2" style="background-color: #DBE7C9"></td>
+                                                    <td class="text-center" style="font-weight: bold; background-color: #DBE7C9">{{ array_sum($total_nilai_pencapaian)/count($total_nilai_pencapaian) }}</td>
+                                                    <td style="background-color: #DBE7C9"></td>
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header bg-dark">
+                                        <div class="text-center text-white" style="font-weight: bold">KPI CULTURE</div>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-bordered dt-responsive nowrap"
+                                            style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <td class="text-center">No</td>
+                                                    <td class="text-center">Culture</td>
+                                                    <td class="text-center">Indikator</td>
+                                                    <td class="text-center">Skala</td>
+                                                    <td class="text-center">Bobot</td>
+                                                    <td class="text-center">%</td>
+                                                    <td class="text-center">Nilai</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                    $kpi_cultures = \DB::table('kpi_detail_culture')->where('kpi_id',$kpi->id)->get();
+                                                @endphp
+                                                @foreach ($kpi_cultures as $key_culture => $kpi_culture)
+                                                    <tr>
+                                                        <td class="text-center" style="width: 5%">{{ $key_culture+1 }}</td>
+                                                        <td class="text-center" style="width: 10%">{{ $kpi_culture->culture }}</td>
+                                                        <td class="text-center" style="width: 25%">{{ $kpi_culture->indikator }}</td>
+                                                        <td class="text-center" style="width: 20%">{!! $kpi_culture->skala == null ? '<span class="badge bg-info">Waiting</span>' : $kpi_culture->skala !!}</td>
+                                                        <td class="text-center" style="width: 20%">{!! $kpi_culture->bobot == null ? '<span class="badge bg-info">Waiting</span>' : $kpi_culture->bobot !!}</td>
+                                                        <td class="text-center"></td>
+                                                        <td class="text-center"></td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <table class="table table-bordered dt-responsive nowrap"
                                     style="border-collapse: collapse; border-spacing: 0; width: 100%;">
@@ -339,7 +397,7 @@
                 </div>
                 <div class="card-footer">
                     <a href="{{ route('kpi') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
-                    <a href="{{ route('kpi.input_date_kpi_validasi',['date' => $date, 'id_departemen' => $id_departemen]) }}" class="btn btn-primary"><i class="fas fa-check"></i> Validasi</a>
+                    <a href="{{ route('kpi.input_date_kpi_validasi',['date' => $date, 'id_departemen' => $id_departemen]) }}" class="btn btn-primary"><i class="fas fa-check"></i> Go Verification</a>
                     <a href="{{ route('kpi.kpi_print',['date' => $date, 'id_departemen' => $id_departemen]) }}" class="btn btn-info" target="_blank"><i class="mdi mdi-printer"></i> Print</a>
                 </div>
             </div>

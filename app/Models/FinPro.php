@@ -28,6 +28,11 @@ class FinPro extends Model
         return $this->belongsTo(\App\Models\BiodataKaryawan::class, 'pin','pin');
     }
 
+    public function presensi_info()
+    {
+        return $this->belongsTo(\App\Models\PresensiInfo::class, 'pin', 'pin');
+    }
+
     // public function itic_departemen()
     // {
     //     return $this->belongsTo(\App\Models\LogPosisi::class, 'nik','nik');

@@ -26,6 +26,7 @@
                 <a href="{{ route('file_manager') }}" class="{{ Request::is('file_manager') ? 'active' : '' }}"><i
                         class="mdi mdi-file-table"></i> File Management</a>
             </li> --}}
+            @can('documentcontrol-list')
             <li>
                 <a href="javascript: void(0);"> <i data-feather="file-text"
                     class="align-self-center menu-icon"></i><span>Document Control</span><span class="menu-arrow"><i
@@ -39,6 +40,7 @@
                     </li>
                 </ul>
             </li>
+            @endcan
             @can('rekap-list')
             <li>
                 <a href="javascript: void(0);"> <i data-feather="file-text"
@@ -80,6 +82,11 @@
                     @can('kpi_indikator')
                     <li class="nav-item"><a class="nav-link" href="{{ route('kpi.kpi_indikator') }}">
                         <i class="ti-control-record"></i>Indikator</a>
+                    </li>
+                    @endcan
+                    @can('kpi_culture')
+                    <li class="nav-item"><a class="nav-link" href="{{ route('kpi.culture') }}">
+                        <i class="ti-control-record"></i>Culture</a>
                     </li>
                     @endcan
                     <li class="nav-item"><a class="nav-link" href="{{ route('kpi') }}">

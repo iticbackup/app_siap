@@ -36,7 +36,7 @@
         <a href="{{ route('ijin_keluar_masuk') }}" class="has-arrow">
             <div class="parent-icon"><i class='bx bx-file'></i>
             </div>
-            <div class="menu-title">Ijin Keluar Masuk</div>
+            <div class="menu-title">Ijin Keluar Masuk / Ijin Jam Kerja</div>
         </a>
     </li>
     <li>

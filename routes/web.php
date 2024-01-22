@@ -152,16 +152,26 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('indikator/team/{departemen_user_id}/{id}/edit', [App\Http\Controllers\KpiController::class, 'kpi_indikator_edit'])->name('kpi.kpi_indikator_edit');
         Route::post('indikator/team/{departemen_user_id}/{id}/edit', [App\Http\Controllers\KpiController::class, 'kpi_indikator_update'])->name('kpi.kpi_indikator_update');
         Route::get('indikator/team/{departemen_user_id}/{id}/delete', [App\Http\Controllers\KpiController::class, 'kpi_indikator_delete'])->name('kpi.kpi_indikator_delete');
-        Route::get('departemen', [App\Http\Controllers\KpiController::class, 'kpi_departemen'])->name('kpi.kpi_departemen');
-        Route::get('departemen/{id}', [App\Http\Controllers\KpiController::class, 'kpi_departemen_detail'])->name('kpi.kpi_departemen_detail');
-        Route::post('departemen/simpan', [App\Http\Controllers\KpiController::class, 'kpi_departemen_detail_simpan'])->name('kpi.kpi_departemen_detail_simpan');
-        Route::get('{date}', [App\Http\Controllers\KpiController::class, 'input_date_kpi'])->name('kpi_date');
-        Route::post('{date}/simpan', [App\Http\Controllers\KpiController::class, 'input_date_kpi_simpan'])->name('kpi.input_date_kpi_simpan');
-        Route::get('{date}/departemen', [App\Http\Controllers\KpiController::class, 'input_detail_kpi_departemen'])->name('kpi.input_detail_kpi_departemen');
-        Route::get('{date}/departemen/{id_departemen}/detail', [App\Http\Controllers\KpiController::class, 'input_date_kpi_detail'])->name('kpi.input_date_kpi_detail');
-        Route::get('{date}/departemen/{id_departemen}/validasi', [App\Http\Controllers\KpiController::class, 'input_date_kpi_validasi'])->name('kpi.input_date_kpi_validasi');
-        Route::post('{date}/departemen/{id_departemen}/validasi/simpan', [App\Http\Controllers\KpiController::class, 'input_date_kpi_validasi_simpan'])->name('kpi.input_date_kpi_validasi_simpan');
-        Route::get('{date}/departemen/{id_departemen}/print', [App\Http\Controllers\KpiController::class, 'kpi_print'])->name('kpi.kpi_print');
+        
+        Route::prefix('departemen')->group(function () {
+            Route::get('/', [App\Http\Controllers\KpiController::class, 'kpi_departemen'])->name('kpi.kpi_departemen');
+            Route::get('{id}', [App\Http\Controllers\KpiController::class, 'kpi_departemen_detail'])->name('kpi.kpi_departemen_detail');
+            Route::get('{kpi_departemen_id}/team', [App\Http\Controllers\KpiController::class, 'kpi_detail_team'])->name('kpi.kpi_detail_team');
+            Route::post('simpan', [App\Http\Controllers\KpiController::class, 'kpi_departemen_detail_simpan'])->name('kpi.kpi_departemen_detail_simpan');
+            Route::get('{date}', [App\Http\Controllers\KpiController::class, 'input_date_kpi'])->name('kpi_date');
+            Route::post('{date}/simpan', [App\Http\Controllers\KpiController::class, 'input_date_kpi_simpan'])->name('kpi.input_date_kpi_simpan');
+            Route::get('{date}/departemen', [App\Http\Controllers\KpiController::class, 'input_detail_kpi_departemen'])->name('kpi.input_detail_kpi_departemen');
+            Route::get('{date}/departemen/{id_departemen}/detail', [App\Http\Controllers\KpiController::class, 'input_date_kpi_detail'])->name('kpi.input_date_kpi_detail');
+            Route::get('{date}/departemen/{id_departemen}/validasi', [App\Http\Controllers\KpiController::class, 'input_date_kpi_validasi'])->name('kpi.input_date_kpi_validasi');
+            Route::post('{date}/departemen/{id_departemen}/validasi/simpan', [App\Http\Controllers\KpiController::class, 'input_date_kpi_validasi_simpan'])->name('kpi.input_date_kpi_validasi_simpan');
+            Route::get('{date}/departemen/{id_departemen}/print', [App\Http\Controllers\KpiController::class, 'kpi_print'])->name('kpi.kpi_print');
+        });
+    });
+    
+    Route::prefix('kpi_culture')->group(function () {
+        Route::get('/', [App\Http\Controllers\KpiController::class, 'kpi_culture'])->name('kpi.culture');
+        Route::post('simpan', [App\Http\Controllers\KpiController::class, 'kpi_culture_simpan'])->name('kpi.culture.simpan');
+        Route::post('kpi_verifikasi/{kpi_id}/update', [App\Http\Controllers\KpiController::class, 'kpi_culture_verifikasi_update'])->name('kpi.culture.verifikasi');
     });
 
     Route::prefix('b_modules')->group(function () {

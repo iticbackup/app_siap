@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <table id="datatables" class="table table-bordered dt-responsive nowrap"
+                    <table class="table table-bordered dt-responsive nowrap"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
@@ -50,60 +50,26 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @for ($i = $start_date; $i <= $live_date; $i++)
-                            @php
-                                $first_month = \Carbon\Carbon::create($i.'-'.'10')->isoFormat('LL');
-                            @endphp
-                                <tr>
-                                    <td>{{ $first_month }}</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            @endfor --}}
-
-                            {{-- @for ($i = $start_date; $i <= $end_date; $i++)
-                            @php
-                                $date_now = \Carbon\Carbon::today()->format('d-m-Y');
-                                $finish_month = \Carbon\Carbon::create($i.'-'.'16')->format('d-m-Y');
-                                // $convert_date_now = strtotime($date_now);
-                                // $convert_finish_month = strtotime($finish_month);
-                                // dd($convert_date_now);
-                            @endphp
-                            <tr>
-                                <td>{{ $finish_month }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        @if ($date_now >= $finish_month || $date_now <= $finish_month)
-                                        <button type="button" class="btn btn-success"><i class="fas fa-plus"></i> Input KPI</button>
-                                        @endif
-                                        <button type="button" class="btn btn-outline-primary">Primary</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endfor --}}
                             @for ($i = $start_date; $i <= $end_date; $i++)
                             @php
                                 $date_now = \Carbon\Carbon::today()->format('d-m-Y');
-                                $start_month = \Carbon\Carbon::create($i.'-'.'01')->subMonth()->format('d-m-Y');
-                                $finish_month = \Carbon\Carbon::parse($i.'-'.'10')->format('d-m-Y');
+                                // $start_month = \Carbon\Carbon::create($i.'-'.'01')->subMonth()->format('d-m-Y');
+                                $start_month = \Carbon\Carbon::create($i.'-'.'01')->format('d-m-Y');
+                                $finish_month = \Carbon\Carbon::create($i.'-'.'10')->format('d-m-Y');
                                 $convert_date_now = strtotime($date_now);
                                 $convert_finish_month = strtotime($finish_month);
-                                // dd($convert_date_now);
                                 $explode_start_month = explode('-',$date_now);
                                 $explode_finish = explode('-',$finish_month);
                             @endphp
                             <tr>
-                                <td><span class="badge badge-outline-primary">{{ $finish_month }}</span></td>
-                                {{-- <td>
-                                    <span class="badge badge-outline-info">{{ $explode_start_month[2].$explode_start_month[1].$explode_start_month[0] }}</span>
-                                    <span class="badge badge-outline-primary">{{ $explode_finish[2].$explode_finish[1].$explode_finish[0] }}</span>
-                                </td> --}}
+                                <td class="text-center"><span class="badge badge-outline-primary">{{ $start_month.' sd '.$finish_month }}</span></td>
                                 <td class="text-center">
                                     @if ($explode_start_month[2].$explode_start_month[1].$explode_start_month[0] <= $explode_finish[2].$explode_finish[1].$explode_finish[0])
-                                        <span class="badge bg-warning">Progress</span>
+                                        <span class="badge bg-warning">Process</span>
                                     @else
-                                        <span class="badge bg-success"><i class="fas fa-check"></i> Selesai</span>
+                                        <span class="badge bg-success">Selesai</span>
                                     @endif
+                                    {{-- {{ dd($explode_start_month[2].$explode_start_month[1].$explode_start_month[0].' - '.$explode_finish[2].$explode_finish[1].$explode_finish[0]) }} --}}
                                 </td>
                                 <td>
                                     <div class="btn-group">
@@ -126,17 +92,6 @@
 
                         </tbody>
                     </table>
-                    {{-- <table id="datatables" class="table table-bordered dt-responsive nowrap"
-                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Tanggal Dibuat</th>
-                                <th class="text-center">Nama</th>
-                                <th class="text-center">Jabatan</th>
-                                <th class="text-center">Action</th>
-                            </tr>
-                        </thead>
-                    </table> --}}
                 </div>
             </div>
         </div>
@@ -165,17 +120,17 @@
             }
         });
 
-        var table = $('#datatables').DataTable({
-            columnDefs: [
-                {
-                    className: 'text-center',
-                    targets: [0]
-                },
-            ],
-            order: [
-                [0, 'desc']
-            ]
-        });
+        // var table = $('#datatables').DataTable({
+        //     columnDefs: [
+        //         {
+        //             className: 'text-center',
+        //             targets: [0]
+        //         },
+        //     ],
+        //     order: [
+        //         [0, 'desc']
+        //     ]
+        // });
 
         // var table = $('#datatables').DataTable({
         //     processing: true,

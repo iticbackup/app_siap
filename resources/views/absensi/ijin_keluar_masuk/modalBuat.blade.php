@@ -59,7 +59,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="">Jam Datang</label>
+                        <label for="">Jam Masuk</label>
                         <div class="input-group">
                             <select name="jam_datang_jam" class="form-control" id="">
                                 <option value="">-- Jam --</option>

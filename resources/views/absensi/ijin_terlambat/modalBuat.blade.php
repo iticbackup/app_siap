@@ -26,7 +26,7 @@
                         <input type="date" name="tanggal" class="form-control" id="">
                     </div>
                     <div class="mb-3">
-                        <label for="">Waktu</label>
+                        <label for="">Pukul</label>
                         <div class="input-group">
                             <select name="waktu_datang_jam" class="form-control" id="">
                                 <option value="">-- Jam --</option>
@@ -103,7 +103,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="">Jam Datang</label>
+                        <label for="">Penyesuaian Jam Istirahat</label>
                         <div class="input-group">
                             <select name="jam_istirahat_jam" class="form-control" id="">
                                 <option value="">-- Jam --</option>
@@ -136,7 +136,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="">Jam Istirahat</label>
+                        <label for="">Penyesuaian Jam Pulang</label>
                         <div class="input-group">
                             <select name="jam_pulang_jam" class="form-control" id="">
                                 <option value="">-- Jam --</option>

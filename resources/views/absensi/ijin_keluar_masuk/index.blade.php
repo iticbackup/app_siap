@@ -7,7 +7,7 @@
 @endsection
 
 @section('title')
-    Absensi - Ijin Keluar Masuk
+    Absensi - Ijin Keluar Masuk / Ijin Jam Kerja
 @endsection
 
 @section('content')
@@ -311,7 +311,9 @@
                             msg: result.message_content
                         });
                         // table.ajax.reload(null, false);
-                        location.reload();
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2000);
                     } else {
                         Lobibox.notify('error', {
                             pauseDelayOnHover: true,
@@ -412,7 +414,9 @@
                             msg: result.message_content
                         });
                         // table.ajax.reload(null, false);
-                        location.reload();
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2000);
                         $('.modalEditIjinKerja').modal('hide');
                     } else {
                         var error = result.error;

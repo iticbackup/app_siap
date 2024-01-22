@@ -226,44 +226,71 @@ class PerubahanDataFileManagerController extends Controller
 
     public function detail_form_simpan(Request $request, $id)
     {
-        $file_manager_perubahan_data = $this->file_manager_perubahan_data->find($id);
+        $rules = [
+            'no_dokumen' => 'required',
+            'halaman' => 'required',
+            'revisi' => 'required',
+            'kategori_file' => 'required',
+            'uraian_perubahan' => 'required',
+            'files' => 'required',
+        ];
 
-        $departemen = $this->departemen->find($file_manager_perubahan_data->departemen_id);
-        $file_manager_category = $this->file_manager_category->where('departemen_id',$file_manager_perubahan_data->departemen_id)->first();
+        $messages = [
+            'no_dokumen.required'  => 'No. Dokumen wajib diisi.',
+            'halaman.required'  => 'No. Halaman wajib diisi.',
+            'revisi.required'  => 'No. Revisi wajib diisi.',
+            'kategori_file.required'  => 'Kategori File wajib diisi.',
+            'uraian_perubahan.required'  => 'Uraian Perubahan wajib diisi.',
+            'files.required'  => 'Upload File wajib diisi.',
+        ];
 
-        $input['halaman'] = $request->halaman;
-        $input['revisi'] = $request->revisi;
-        $input['kategori_file'] = $request->kategori_file;
-        $input['uraian_perubahan'] = $request->uraian_perubahan;
-
-        if (!File::isDirectory(public_path('berkas/'.$departemen->departemen.'/'.$input['kategori_file'].'/'.'Perubahan'))) {
-            File::makeDirectory(public_path('berkas/'.$departemen->departemen.'/'.$input['kategori_file'].'/'.'Perubahan'),0777,true);
-        }
-
-        $file = $request->file('files');
-        $fileName = $file->getClientOriginalName();
-        $file->move(public_path('berkas/'.$departemen->departemen.'/'.$file_manager_category->kategori.'/'.'Perubahan'), $fileName);
-
-        $explode_no_dokumen = explode('/',$request->no_dokumen);
-        $file_manager_perubahan_data_detail = $this->file_manager_perubahan_data_detail->create([
-            'id' => Str::uuid()->toString(),
-            'file_manager_perubahan_data_id' => $id,
-            'no_dokumen' => implode('.',$explode_no_dokumen),
-            'halaman' => $request->halaman,
-            'kategori_file' => $request->kategori_file,
-            'revisi' => $request->revisi,
-            'uraian_perubahan' => $request->uraian_perubahan,
-            'files' => $fileName
-        ]);
-
-        if ($file_manager_perubahan_data_detail) {
-            \LogActivity::addToLog('No. Dokumen '.implode('.',$explode_no_dokumen).' Berhasil Ditambah');
-            return response()->json([
-                'success' => true,
-                'message_title' => 'Berhasil',
-                'message_content' => 'No. Dokumen '.implode('.',$explode_no_dokumen).' Berhasil Ditambah'
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($validator->passes()) {
+            $file_manager_perubahan_data = $this->file_manager_perubahan_data->find($id);
+    
+            $departemen = $this->departemen->find($file_manager_perubahan_data->departemen_id);
+            $file_manager_category = $this->file_manager_category->where('departemen_id',$file_manager_perubahan_data->departemen_id)->first();
+    
+            $input['halaman'] = $request->halaman;
+            $input['revisi'] = $request->revisi;
+            $input['kategori_file'] = $request->kategori_file;
+            $input['uraian_perubahan'] = $request->uraian_perubahan;
+    
+            if (!File::isDirectory(public_path('berkas/'.$departemen->departemen.'/'.$input['kategori_file'].'/'.'Perubahan'))) {
+                File::makeDirectory(public_path('berkas/'.$departemen->departemen.'/'.$input['kategori_file'].'/'.'Perubahan'),0777,true);
+            }
+    
+            $file = $request->file('files');
+            $fileName = $file->getClientOriginalName();
+            $file->move(public_path('berkas/'.$departemen->departemen.'/'.$file_manager_category->kategori.'/'.'Perubahan'), $fileName);
+    
+            $explode_no_dokumen = explode('/',$request->no_dokumen);
+            $file_manager_perubahan_data_detail = $this->file_manager_perubahan_data_detail->create([
+                'id' => Str::uuid()->toString(),
+                'file_manager_perubahan_data_id' => $id,
+                'no_dokumen' => implode('.',$explode_no_dokumen),
+                'halaman' => $request->halaman,
+                'kategori_file' => $request->kategori_file,
+                'revisi' => $request->revisi,
+                'uraian_perubahan' => $request->uraian_perubahan,
+                'files' => $fileName
             ]);
+    
+            if ($file_manager_perubahan_data_detail) {
+                \LogActivity::addToLog('No. Dokumen '.implode('.',$explode_no_dokumen).' Berhasil Ditambah');
+                return response()->json([
+                    'success' => true,
+                    'message_title' => 'Berhasil',
+                    'message_content' => 'No. Dokumen '.implode('.',$explode_no_dokumen).' Berhasil Ditambah'
+                ]);
+            }
         }
+        return response()->json(
+            [
+                'success' => false,
+                'error' => $validator->errors()->all()
+            ]
+        );
     }
 
     public function simpan(Request $request, $id)

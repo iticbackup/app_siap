@@ -71,13 +71,13 @@
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
-                                <th class="text-center">Tanggal</th>
-                                <th class="text-center">No. Dokumen</th>
-                                <th class="text-center">Halaman</th>
-                                <th class="text-center">Revisi</th>
-                                <th class="text-center" style="width: 50%">Uraian Perubahan</th>
-                                <th class="text-center">File</th>
-                                <th class="text-center" style="width: 10%">Disahkan</th>
+                                <th class="text-center" style="background-color: #AAD9BB">Tanggal</th>
+                                <th class="text-center" style="background-color: #AAD9BB">No. Dokumen</th>
+                                <th class="text-center" style="background-color: #AAD9BB">Halaman</th>
+                                <th class="text-center" style="background-color: #AAD9BB">Revisi</th>
+                                <th class="text-center" style="width: 50%; background-color: #AAD9BB">Uraian Perubahan</th>
+                                <th class="text-center" style="background-color: #AAD9BB">File</th>
+                                {{-- <th class="text-center" style="width: 10%; background-color: #AAD9BB">Disahkan</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -110,15 +110,19 @@
                                             {{ \Carbon\Carbon::create($explode_validasi[1])->format('d/m/Y') }}
                                         @endif
                                     </td> --}}
-                                    @php
+                                    {{-- @php
                                         if (empty($file_manager_perubahan_data->status)) {
                                             $validasi = '-';
                                         }else{
                                             $explode_validasi_all = explode('|',$file_manager_perubahan_data->status);
-                                            $validasi = \Carbon\Carbon::create($explode_validasi_all[1])->format('d/m/Y');
+                                            if ($explode_validasi_all[0] == 'y') {
+                                                $validasi_dc = '<span class="text-success" style="font-weight: bold">DC</span> '.\Carbon\Carbon::create($explode_validasi_all[1])->format('d/m/Y');
+                                            }elseif($explode_validasi_all[0] == 'n'){
+                                                $validasi_dc = '<span class="text-danger" style="font-weight: bold">DC</span> '.\Carbon\Carbon::create($explode_validasi_all[1])->format('d/m/Y');
+                                            }
                                         }
-                                    @endphp
-                                    <td class="text-center">{{ $validasi }}</td>
+                                    @endphp --}}
+                                    {{-- <td class="text-center">{!! $validasi_dc !!}</td> --}}
                                 </tr>
                             @endforeach
                             @php
@@ -127,7 +131,9 @@
                             @if (empty($file_manager_perubahan_data->status))
                                 @if (auth()->user()->nik == 1207514 || auth()->user()->nik == 0000000 || auth()->user()->nik == 2007275)
                                 <tr>
-                                    <td colspan="6" style="text-align: right">Status Validasi Document Control</td>
+                                    <td colspan="5" style="text-align: right">
+                                        Status Validasi Document Control
+                                    </td>
                                     <td>
                                         <select name="validasi_document_control" class="form-control" id="validasi_document_control">
                                             <option value="">-- Pilih Status --</option>
@@ -141,7 +147,9 @@
                             @if ($explode_validasi_signature[2] == null)
                                 @if (auth()->user()->nik == 1711952 || auth()->user()->nik == 0000000)
                                     <tr>
-                                        <td colspan="6" style="text-align: right">Status Validasi Management Representative</td>
+                                        <td colspan="5" style="text-align: right">
+                                            Status Validasi Management Representative
+                                        </td>
                                         <td>
                                             <select name="validasi_management_repesentative" class="form-control" id="validasi_management_representative">
                                                 <option value="">-- Pilih Status --</option>

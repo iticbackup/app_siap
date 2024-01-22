@@ -10,6 +10,7 @@ use App\Models\KpiDepartemen;
 use App\Models\KpiBobot;
 use App\Models\KpiTeam;
 use App\Models\KpiIndikator;
+use App\Models\KpiCulture;
 use App\Models\DepartemenUser;
 
 use \Carbon\Carbon;
@@ -25,6 +26,7 @@ class KpiController extends Controller
         KpiIndikator $kpi_indikator,
         KpiBobot $kpi_bobot,
         KpiTeam $kpi_team,
+        KpiCulture $kpi_culture,
         DepartemenUser $departemen_user
     ){
         $this->kpi = $kpi;
@@ -33,6 +35,7 @@ class KpiController extends Controller
         $this->kpi_indikator = $kpi_indikator;
         $this->kpi_bobot = $kpi_bobot;
         $this->kpi_team = $kpi_team;
+        $this->kpi_culture = $kpi_culture;
         $this->departemen_user = $departemen_user;
 
         // Nik Direktur
@@ -54,8 +57,12 @@ class KpiController extends Controller
         // }
         
         // $data['live_date'] = Carbon::today()->format('Y-m');
-        $data['start_date'] = Carbon::create('2023-01')->format('Y-m');
-        $data['end_date'] = Carbon::create(Carbon::today()->format('Y-m'))->format('Y-m');
+        // $data['start_date'] = Carbon::create('2023-01')->format('Y-m');
+        // $data['end_date'] = Carbon::create(Carbon::today()->format('Y-m'))->format('Y-m');
+
+        $data['start_date'] = Carbon::now()->startOfYear()->format('Y-m');
+        $data['end_date'] = Carbon::now()->endOfYear()->format('Y-m');
+
         // $data['live_date'] = Carbon::today()->format('Y-m');
 
         // for ($i=$data['tahun']; $i <= $data['live'] ; $i++) { 
@@ -84,13 +91,16 @@ class KpiController extends Controller
                                 $btn.= '<button onclick="buat_team('.$row->id.')" class="btn btn-success btn-icon">
                                             <i class="fa fa-plus"></i> Input Team
                                         </button>';
+                                $btn.= '<button onclick="detail_team('.$row->id.')" class="btn btn-info btn-icon">
+                                            <i class="fa fa-user"></i> Detail Team
+                                        </button>';
                                 $btn.= '</div>';
                                 return $btn;
                             })
                             ->rawColumns(['action'])
                             ->make(true);
         }
-        return view('kpi.kpi_departemen');
+        return view('kpi.departemen.kpi_departemen');
     }
 
     public function kpi_departemen_detail($id)
@@ -104,6 +114,21 @@ class KpiController extends Controller
             'departemen_user' => $departemen_user,
             'kpi' => $kpi_departemen,
         ]);
+    }
+
+    public function kpi_detail_team($kpi_departemen_id)
+    {
+        $kpi_team = $this->kpi_team->with('departemen_user')->where('kpi_departemen_id',$kpi_departemen_id)->get();
+        if (empty($kpi_team)) {
+            return [
+                'success' => false,
+                'message_content' => 'Team Tidak Ditemukan'
+            ];
+        }
+        return [
+            'success' => true,
+            'data' => $kpi_team
+        ];
     }
 
     public function kpi_departemen_detail_simpan(Request $request)
@@ -212,12 +237,13 @@ class KpiController extends Controller
     public function input_detail_kpi_departemen($date)
     {
         $data['date'] = $date;
-        if (auth()->user()->nik != '000000' && auth()->user()->nik != '1910125') {
-            $kpi_team = $this->kpi_team->whereRelation('departemen_user','nik',auth()->user()->nik)->first();
-            $data['kpi_departemens'] = $this->kpi_departemen->where('id',$kpi_team->kpi_departemen_id)->get();
-        }else{
-            $data['kpi_departemens'] = $this->kpi_departemen->all();
-        }
+        // if (auth()->user()->nik != '000000' && auth()->user()->nik != '1910125') {
+        //     $kpi_team = $this->kpi_team->whereRelation('departemen_user','nik',auth()->user()->nik)->first();
+        //     $data['kpi_departemens'] = $this->kpi_departemen->where('id',$kpi_team->kpi_departemen_id)->get();
+        // }else{
+        //     $data['kpi_departemens'] = $this->kpi_departemen->all();
+        // }
+        $data['kpi_departemens'] = $this->kpi_departemen->all();
         return view('kpi.detail_kpi_departemen',$data);
     }
 
@@ -228,9 +254,9 @@ class KpiController extends Controller
         $date_live = Carbon::today()->format('d-m-Y');
         $data['periode'] = Carbon::create($date)->subMonth();
 
-        if (condition) {
-            # code...
-        }
+        // if (condition) {
+        //     # code...
+        // }
 
         $departemen_user = $this->departemen_user->select('id')->where('nik',auth()->user()->nik)->first();
         $data_kpi_team = $this->kpi_team->select('kpi_departemen_id')->where('departemen_user_id',$departemen_user->id)->first();
@@ -238,7 +264,7 @@ class KpiController extends Controller
                                             // ->whereMonth('periode',$data['periode']->format('m'))
                                             // ->whereYear('periode',$data['periode']->format('Y'))
                                             ->get();
-        
+        $data['kpi_cultures'] = $this->kpi_culture->get();
         return view('kpi.input_date_kpi',$data);
     }
 
@@ -338,7 +364,7 @@ class KpiController extends Controller
                     'realisasi_nilai' => $request['realisasi_nilai_'.$key][$key_1],
                     'realisasi_keterangan' => $request['realisasi_keterangan_'.$key][$key_1],
                     'bobot' => $request['bobot_'.$key][$key_1],
-                    'pencapaian' => $request['pencapaian_'.$key][$key_1].'%',
+                    'pencapaian' => $request['pencapaian_'.$key][$key_1],
                     'nilai' => $nilai,
                     'skor' => $skor,
                     'keterangan' => $request['keterangan_'.$key][$key_1],
@@ -365,6 +391,25 @@ class KpiController extends Controller
                     'nilai' => $nilai,
                     'skor' => $skor,
                     'keterangan' => $request['keterangan_'.$key][$key_1],
+                ]);
+            }
+
+            foreach ($request['detail_culture_'.$key] as $key_2 => $value2) {
+                \DB::table('kpi_detail_culture')->insert([
+                    'kpi_id' => $kpi->id,
+                    'culture' => $request['kpi_culture_'.$key][$key_2],
+                    'indikator' => $request['indikator_kpi_culture_'.$key][$key_2],
+                    // 'skala' => $request['skala_kpi_culture_'.$key][$key_1],
+                    // 'bobot' => $request['bobot_kpi_culture_'.$key][$key_1],
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
+            }
+
+            foreach ($request['kpi_total_nilai_nama_kpi_'.$key] as $key_3 => $value3) {
+                \App\Models\KpiTotalNilai::create([
+                    'kpi_id' => $kpi->id,
+                    'nama_kpi' => $value3,
                 ]);
             }
 
@@ -538,22 +583,28 @@ class KpiController extends Controller
         // dd($kpis);
         foreach ($kpis as $key => $kpi) {
 
-            if ($request['status_mengetahui_'.$key]) {
+            if ($request['status_mengetahui_'.$key] != "") {
                 if ($request['status_mengetahui_'.$key] == 'y') {
                     $status_mengetahui = 'y';
                     $status_date_mengetahui_verifikasi = Carbon::now();
+                    $acc_status_mengetahui = $status_mengetahui.'|'.$status_date_mengetahui_verifikasi;
                 }elseif($request['status_mengetahui_'.$key] == 'n'){
                     $status_mengetahui = 'n';
                     $status_date_mengetahui_verifikasi = Carbon::now();
+                    $acc_status_mengetahui = $status_mengetahui.'|'.$status_date_mengetahui_verifikasi;
+                }else{
+                    $acc_status_mengetahui = null;
                 }
             }else{
                 if ($kpi->status_mengetahui == null) {
                     $status_mengetahui = null;
                     $status_date_mengetahui_verifikasi = null;
+                    $acc_status_mengetahui = null;
                 }else{
                     $explode_status_mengetahui = explode("|",$kpi->status_mengetahui);
                     $status_mengetahui = $explode_status_mengetahui[0];
                     $status_date_mengetahui_verifikasi = $explode_status_mengetahui[1];
+                    $acc_status_mengetahui = $status_mengetahui.'|'.$status_date_mengetahui_verifikasi;
                 }
             }
 
@@ -561,18 +612,22 @@ class KpiController extends Controller
                 if ($request['status_penilai_'.$key] == 'y') {
                     $status_penilai = 'y';
                     $status_date_penilai_verifikasi = Carbon::now();
+                    $acc_status_penilai = $status_penilai.'|'.$status_date_penilai_verifikasi;
                 }elseif($request['status_penilai_'.$key] == 'n'){
                     $status_penilai = 'n';
                     $status_date_penilai_verifikasi = Carbon::now();
+                    $acc_status_penilai = $status_penilai.'|'.$status_date_penilai_verifikasi;
                 }
             }else{
                 if ($kpi->status_penilai == null) {
                     $status_penilai = null;
                     $status_date_penilai_verifikasi = null;
+                    $acc_status_penilai = null;
                 }else{
                     $explode_status_penilai = explode("|",$kpi->status_penilai);
                     $status_penilai = $explode_status_penilai[0];
                     $status_date_penilai_verifikasi = $explode_status_penilai[1];
+                    $acc_status_penilai = $status_penilai.'|'.$status_date_penilai_verifikasi;
                 }
             }
 
@@ -583,25 +638,54 @@ class KpiController extends Controller
             }
 
             $data['details'][] = [
-                'status_mengetahui' => $status_mengetahui.'|'.$status_date_mengetahui_verifikasi,
-                'status_penilai' => $status_penilai.'|'.$status_date_penilai_verifikasi,
-                // 'status' => $status_mengetahui.'|'.$status_date_mengetahui_verifikasi.'|'.$status_penilai.'|'.$status_date_penilai_verifikasi,
+                'status_mengetahui' => $acc_status_mengetahui,
+                'status_penilai' => $acc_status_penilai,
                 'remaks' => $remaks
-                // 'remaks' => $request['remaks'][$key]
-                // 'mengetahui' => $request['mengetahui_'.$key],
-                // 'penilai' => $penilai,
-                // 'status' => $status_penilai.'|'.$status_date_penilai_verifikasi
             ];
-
             $kpi->update([
-                'status_mengetahui' => $status_mengetahui.'|'.$status_date_mengetahui_verifikasi,
-                'status_penilai' => $status_penilai.'|'.$status_date_penilai_verifikasi,
+                'status_mengetahui' => $acc_status_mengetahui,
+                'status_penilai' => $acc_status_penilai,
                 // 'status' => $status_mengetahui.'|'.$status_date_mengetahui_verifikasi.'|'.$status_penilai.'|'.$status_date_penilai_verifikasi,
                 'remaks' => $remaks
             ]);
-
+            
+            foreach ($request->id_kpi_total_nilai as $key_kpi_total_nilai => $kpi_total_nilai_nama_kpi) {
+                if ($key_kpi_total_nilai % 2 == 0) {
+                    $nilai = $request['total_skor_kpi_performance'][$key];
+                }else{
+                    $nilai = $request['total_skor_akhir_kpi_culture'][$key];
+                }
+                // $total_nilai_kpi = ($request['kpi_total_nilai_bobot'][$key_kpi_total_nilai]/100)*$request['total_skor_akhir_kpi_culture'][$key];
+                $total_nilai_kpi = ($request['kpi_total_nilai_bobot'][$key_kpi_total_nilai]/100)*$nilai;
+                // $skor_nilai_kpi = $request['total_skor_kpi_performance'][$key]*($request['kpi_total_nilai_bobot'][$key_kpi_total_nilai]/100);
+                $data['kpi_total_nilai'][] = [
+                    'bobot' => $request['kpi_total_nilai_bobot'][$key_kpi_total_nilai],
+                    'nilai' => $nilai,
+                    // 'nilai' => $request['total_skor_kpi_performance'][$key],
+                    'total_nilai' => number_format($total_nilai_kpi,0,',','.'),
+                    'skor_nilai' => number_format($total_nilai_kpi,0,',','.'),
+                    'keterangan' => $request['kpi_total_nilai_keterangan'][$key_kpi_total_nilai],
+                ];
+                \App\Models\KpiTotalNilai::where('id',$kpi_total_nilai_nama_kpi)->update([
+                    'bobot' => $request['kpi_total_nilai_bobot'][$key_kpi_total_nilai],
+                    'nilai' => $nilai,
+                    'total_nilai' => number_format($total_nilai_kpi,0,',','.'),
+                    'skor_nilai' => number_format($total_nilai_kpi,0,',','.'),
+                    'keterangan' => $request['kpi_total_nilai_keterangan'][$key_kpi_total_nilai],
+                ]);
+            }
+            // dd($data);
         }
-
+        
+        foreach ($request->kpi_culture_id as $key_culture => $kpi_culture_verifikasi) {
+            \DB::table('kpi_detail_culture')->where('id',$kpi_culture_verifikasi)->update([
+                'skala' => $request['kpi_culture_skala'][$key_culture],
+                'bobot' => $request['kpi_culture_bobot'][$key_culture],
+                'user_id' => auth()->user()->id,
+                'updated_at' => Carbon::now()
+            ]);
+        }
+        
         // dd($data);
         return redirect()->route('kpi.input_date_kpi_validasi',['date' => $date, 'id_departemen' => $id_departemen]);
     }
@@ -615,5 +699,76 @@ class KpiController extends Controller
                                 ->get();
         $data['kpi_bobots'] = $this->kpi_bobot->all();
         return view('kpi.kpi_print',$data);
+    }
+
+    public function kpi_culture(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = $this->kpi_culture->all();
+            return DataTables::of($data)
+                            ->addIndexColumn()
+                            ->addColumn('action', function($row){
+                                // $btn = '<div class="btn-group">';
+                                // $btn.= '<button onclick="buat_team('.$row->id.')" class="btn btn-success btn-icon">
+                                //             <i class="fa fa-plus"></i> Input Team
+                                //         </button>';
+                                // $btn.= '</div>';
+                                // return $btn;
+                            })
+                            ->rawColumns(['action'])
+                            ->make(true);
+        }
+
+        return view('kpi.culture.index');
+    }
+
+    public function kpi_culture_simpan(Request $request){
+        $rules = [
+            'culture' => 'required',
+            'indikator' => 'required',
+        ];
+
+        $messages = [
+            'culture.required'  => 'Culture wajib diisi.',
+            'indikator.required'  => 'Indikator wajib diisi.',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($validator->passes()) {
+            $norut = $this->kpi_culture->max('id');
+            if(empty($norut)){
+                $id = 1;
+            }else{
+                $id = $norut+1;
+            }
+            $input['id'] = $id;
+            $input['culture'] = $request->culture;
+            $input['indikator'] = $request->indikator;
+            $kpi_culture = $this->kpi_culture->create($input);
+            if($kpi_culture){
+                $message_title="Berhasil !";
+                $message_content="Kpi Culture Berhasil Dibuat";
+                $message_type="success";
+                $message_succes = true;
+            }
+            $array_message = array(
+                'success' => $message_succes,
+                'message_title' => $message_title,
+                'message_content' => $message_content,
+                'message_type' => $message_type,
+            );
+            return response()->json($array_message);
+        }
+        return response()->json(
+            [
+                'success' => false,
+                'error' => $validator->errors()->all()
+            ]
+        );
+    }
+
+    public function kpi_culture_verifikasi_update(Request $request, $kpi_id)
+    {
+        dd($request->all());
     }
 }
