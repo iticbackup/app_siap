@@ -51,7 +51,7 @@ class IjinTerlambatController extends Controller
 
         $messages = [
             'nik.required'  => 'NIK Karyawan wajib diisi.',
-            // 'tanggal.required'  => 'Tanggal Ijin wajib diisi.',
+            'tanggal.required'  => 'Tanggal Ijin wajib diisi.',
             // 'waktu_datang_menit.required'  => 'Jam Datang wajib diisi.',
             // 'jam_masuk_jam.required'  => 'Jam Keluar Waktu Jam wajib diisi.',
             // 'jam_masuk_menit.required'  => 'Jam Keluar Waktu Menit wajib diisi.',
