@@ -166,9 +166,9 @@ class PresensiController extends Controller
                                                     })
                                                     ->where('nik','LIKE','%'.$request->cari.'%')
                                                     ->orWhere('nama','LIKE','%'.$request->cari.'%')
-                                                    ->where('status_karyawan','!=','R')
-                                                    ->orderBy('satuan_kerja','asc')
-                                                    ->paginate(20);
+                                                    // ->where('status_karyawan','!=','R')
+                                                    // ->orderBy('satuan_kerja','asc')
+                                                    ->paginate(20)->withQueryString();
         return view('absensi.presensi.index',$data);
     }
 
