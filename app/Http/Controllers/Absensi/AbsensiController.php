@@ -209,6 +209,10 @@ class AbsensiController extends Controller
         // }
         if (auth()->user()->nik == 0000000) {
             $data['biodata_karyawans'] = BiodataKaryawan::with('departemen','posisi')
+                                                        // ->select([
+                                                        //     'id','nik','nama','alamat','id_posisi','id_jabatan',
+                                                        //     'pin'
+                                                        // ])
                                                         ->where(function($query) {
                                                             return $query->where('nik','!=','1000001')
                                                                         ->where('nik','!=','1000002')
@@ -217,7 +221,10 @@ class AbsensiController extends Controller
                                                         // ->where('pin',1298)
                                                         ->orderBy('satuan_kerja','asc')
                                                         ->where('status_karyawan','!=','R')
+                                                        // ->take(20)
                                                         ->paginate(20);
+                                                        // ->get();
+            // dd($data);
             $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
             $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
             $end_year_now = Carbon::now()->endOfYear()->format('Y-m');

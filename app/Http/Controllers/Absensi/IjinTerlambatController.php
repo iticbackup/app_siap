@@ -214,13 +214,17 @@ class IjinTerlambatController extends Controller
 
     public function search(Request $request)
     {
+        $date_live = Carbon::now()->format('Y');
         $biodata_karyawan = BiodataKaryawan::select('nik','pin')
                                             ->where('nik','LIKE','%'.$request->cari.'%')
                                             ->orWhere('nama','LIKE','%'.$request->cari.'%')
                                             ->first();
         $data['ijin_terlambats'] = $this->presensi_info->where('pin',$biodata_karyawan->pin)
                                             ->orWhereBetween('scan_date',[$request->cari_tanggal_awal, $request->cari_tanggal_akhir])
-                                            ->paginate(20);
+                                            ->whereYear('scan_date',$date_live)
+                                            ->orderBy('scan_date','desc')
+                                            ->paginate(20)->withQueryString();
+                                            // ->get();
         $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
         return view('absensi.ijin_terlambat.index',$data);
     }

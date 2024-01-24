@@ -209,6 +209,7 @@
                             @endforelse
                         </tbody> --}}
                         </table>
+                        {{ $ijin_terlambats->links('vendor.pagination.template1.default') }}
                     </div>
 
                 </div>
