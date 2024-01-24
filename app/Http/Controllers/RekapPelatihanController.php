@@ -216,7 +216,11 @@ class RekapPelatihanController extends Controller
     public function rekap_pelatihan_rekap(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->rekap_pelatihan->where('periode',Carbon::now()->format('Y'))->get();
+            if (env('PERIODE') == Carbon::now()->format('Y')) {
+                $data = $this->rekap_pelatihan->where('periode',Carbon::now()->format('Y'))->get();
+            }else{
+                $data = $this->rekap_pelatihan->where('periode',env('PERIODE'))->get();
+            }
             return DataTables::of($data)
                             ->addIndexColumn()
                             ->addColumn('tema', function($row){
