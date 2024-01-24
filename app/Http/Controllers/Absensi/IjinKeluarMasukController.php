@@ -245,7 +245,7 @@ class IjinKeluarMasukController extends Controller
                                             ->where('nik',$biodata_karyawan->nik)
                                             ->whereBetween('tanggal_ijin',[$request->cari_tanggal_awal,$request->cari_tanggal_akhir])
                                             // ->whereRelation('biodata_karyawan','nik',$request->cari)
-                                            ->paginate(20);
+                                            ->paginate(20)->withQueryString();
                                             // dd($data['ijin_keluar_masuks']);
         return view('absensi.ijin_keluar_masuk.index',$data);              
     }
