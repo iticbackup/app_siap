@@ -39,7 +39,7 @@
                             <div class="mb-3">
                                 <table style="width: 30%">
                                     <tr>
-                                        <td>Nama Karyawan</td>
+                                        <td>Nama Karyawan 1</td>
                                         <td>:</td>
                                         <td>
                                             <input type="hidden" name="kpi_team_id[]" value="{{ $kpi_team->id }}"
