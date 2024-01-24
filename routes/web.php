@@ -58,9 +58,13 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('users/{nama}/search', [App\Http\Controllers\UserController::class, 'search_nik']);
     Route::resource('products', App\Http\Controllers\ProductController::class);
 
-    // Route::prefix('users')->group(function () {
-
-    // });
+    Route::prefix('periode')->group(function () {
+        Route::get('/', [App\Http\Controllers\PeriodeController::class, 'index'])->name('periode');
+        Route::post('simpan', [App\Http\Controllers\PeriodeController::class, 'simpan'])->name('periode.simpan');
+        Route::get('{id}/detail', [App\Http\Controllers\PeriodeController::class, 'detail'])->name('periode.detail');
+        Route::post('update', [App\Http\Controllers\PeriodeController::class, 'update'])->name('periode.update');
+        Route::get('{id}/delete', [App\Http\Controllers\PeriodeController::class, 'delete'])->name('periode.delete');
+    });
 
     Route::prefix('file_manager')->group(function () {
         Route::get('/', [App\Http\Controllers\FileManagerController::class, 'index'])->name('file_manager');

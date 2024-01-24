@@ -100,11 +100,11 @@
             <li class="menu-label mt-0">HRGA</li>
             <li class="{{ Request::is('hrga/biodata_karyawan') ? 'active' : '' }}">
                 <a href="{{ route('hrga.biodata_karyawan') }}" class="{{ Request::is('hrga/biodata_karyawan') ? 'active' : '' }}"><i
-                        class="mdi mdi-home"></i> Data Karyawan</a>
+                        class="mdi mdi-account-box-multiple"></i> Data Karyawan</a>
             </li>
             <li class="{{ Request::is('hrga/buat_karyawan_baru') ? 'active' : '' }}">
                 <a href="{{ route('hrga.biodata_karyawan.buat_karyawan_baru') }}" class="{{ Request::is('hrga/buat_karyawan_baru') ? 'active' : '' }}"><i
-                        class="mdi mdi-home"></i> Buat Karyawan Baru</a>
+                        class="mdi mdi-account-box-multiple"></i> Buat Karyawan Baru</a>
             </li>
             @endcan
 
@@ -116,6 +116,10 @@
             @endif --}}
             @can('kt-developer')
             <li class="menu-label mt-0">Developer</li>
+            <li class="{{ Request::is('periode') ? 'active' : '' }}">
+                <a href="{{ route('periode') }}" class="{{ Request::is('periode') ? 'active' : '' }}"><i
+                        class="mdi mdi-database-lock"></i> Periode</a>
+            </li>
             <li class="{{ Request::is('departemen') ? 'active' : '' }}">
                 <a href="{{ route('departemen') }}" class="{{ Request::is('departemen') ? 'active' : '' }}"><i
                         class="mdi mdi-file-table"></i> Departemen</a>

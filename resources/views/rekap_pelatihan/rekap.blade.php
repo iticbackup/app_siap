@@ -26,12 +26,13 @@
     @include('rekap_pelatihan.modalExcelPeriode')
 
     <div class="row">
+        @include('errors.alert')
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h4 class="card-title">Total Rekap Pelatihan & Seminar Periode {!! date('Y') !!}</h4>
+                            <h4 class="card-title">Total Rekap Pelatihan & Seminar Periode {!! $periode->periode !!}</h4>
                         </div>
                         {{-- <div class="col-auto">
                             <div class="dropdown">

@@ -59,6 +59,7 @@
         <div class="col-lg-9">
 
         </div> --}}
+        @include('errors.alert')
         <div class="col-lg-6">
             @forelse ($reminders as $reminder)
                 @php
@@ -66,7 +67,7 @@
                     $datelive = \Carbon\Carbon::now()
                         // ->addDay(3)
                         ->format('Y-m-d H:i');
-                    
+
                     if (\Carbon\Carbon::create($explode_tanggal[0])->format('Y-m-d') == \Carbon\Carbon::create($explode_tanggal[1])->format('Y-m-d')) {
                         $date = \Carbon\Carbon::create($explode_tanggal[1])->isoFormat('LL');
                         $pukul = \Carbon\Carbon::create($explode_tanggal[0])->format('H:i') . ' - ' . \Carbon\Carbon::create($explode_tanggal[1])->format('H:i');
@@ -113,16 +114,16 @@
                 @endif
             @empty
             @endforelse
-            
+
             @if (auth()->user()->nik == 1207514 || auth()->user()->nik == 1711952 || auth()->user()->nik == 0000000)
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Total Rekap Pelatihan / Seminar Periode {{ date('Y') }}</div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Total Rekap Pelatihan / Seminar Periode {{ date('Y') }}</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="ana_dash_1" class="apex-charts"></div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div id="ana_dash_1" class="apex-charts"></div>
-                </div>
-            </div>
             @endif
 
             {{-- @foreach ($file_manager_perubahan_datas as $file_manager_perubahan_data)
@@ -275,125 +276,162 @@
                         <div class="card-body">
                             <ul class="nav-border nav nav-pills" role="tablist">
                                 @foreach ($departemens as $key_tab => $departemen)
-                                <li class="nav-item">
-                                    <a class="nav-link {{ $key_tab+1 == 1 ? 'active' : null }} font-weight-semibold pt-0" data-bs-toggle="tab" href="#Project{{ $key_tab+1 }}_Tab" role="tab">{{ $departemen->departemen }}</a>
-                                </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ $key_tab + 1 == 1 ? 'active' : null }} font-weight-semibold pt-0"
+                                            data-bs-toggle="tab" href="#Project{{ $key_tab + 1 }}_Tab"
+                                            role="tab">{{ $departemen->departemen }}</a>
+                                    </li>
                                 @endforeach
                             </ul>
                         </div>
                         <div class="card-body pt-0">
                             <div class="tab-content">
                                 @foreach ($departemens as $key => $departemen)
-                                @php
-                                    $file_manager_perubahan_datas = \App\Models\FileManagerPerubahanData::where('departemen_id',$departemen->id)
-                                                                                                        ->whereYear('tanggal_formulir',$year)
-                                                                                                        ->whereMonth('tanggal_formulir',$month)
-                                                                                                        ->orderBy('created_at','desc')
-                                                                                                        ->get();
-                                @endphp
-                                <div class="tab-pane {{ $key+1 == 1 ? 'active' : null }}" id="Project{{ $key+1 }}_Tab" role="tabpanel">
-                                    @foreach ($file_manager_perubahan_datas as $key_file_perubahan => $file_manager_perubahan_data)
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="media mb-3">
-                                                    <img src="{{ URL::asset('public/assets/images/widgets/project2.jpg') }}" alt="" class="thumb-lg rounded-circle">
-                                                    <div class="media-body align-self-center text-truncate ms-3">
-                                                        <h4 class="m-0 font-weight-semibold text-dark font-16">{{ $file_manager_perubahan_data->kode_formulir }}</h4>
-                                                        <p class="text-muted mb-0 font-13"><span class="text-dark">Departemen : </span>{{ $file_manager_perubahan_data->departemen->departemen }}</p>
+                                    @php
+                                        $file_manager_perubahan_datas = \App\Models\FileManagerPerubahanData::where('departemen_id', $departemen->id)
+                                            ->whereYear('tanggal_formulir', $year)
+                                            ->whereMonth('tanggal_formulir', $month)
+                                            ->orderBy('created_at', 'desc')
+                                            ->get();
+                                    @endphp
+                                    <div class="tab-pane {{ $key + 1 == 1 ? 'active' : null }}"
+                                        id="Project{{ $key + 1 }}_Tab" role="tabpanel">
+                                        @foreach ($file_manager_perubahan_datas as $key_file_perubahan => $file_manager_perubahan_data)
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="media mb-3">
+                                                            <img src="{{ URL::asset('public/assets/images/widgets/project2.jpg') }}"
+                                                                alt="" class="thumb-lg rounded-circle">
+                                                            <div class="media-body align-self-center text-truncate ms-3">
+                                                                <h4 class="m-0 font-weight-semibold text-dark font-16">
+                                                                    {{ $file_manager_perubahan_data->kode_formulir }}</h4>
+                                                                <p class="text-muted mb-0 font-13"><span
+                                                                        class="text-dark">Departemen :
+                                                                    </span>{{ $file_manager_perubahan_data->departemen->departemen }}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 text-lg-right">
+                                                        <h6 class="font-weight-semibold m-0">Tanggal Dibuat : <span
+                                                                class="text-muted font-weight-normal">
+                                                                {{ $file_manager_perubahan_data->created_at->isoFormat('LLLL') }}</span>
+                                                        </h6>
+                                                        <h6 class="font-weight-semibold  mb-0 mt-2">Tanggal Perubahan :
+                                                            <span class="text-muted font-weight-normal">
+                                                                {{ $file_manager_perubahan_data->updated_at->isoFormat('LLLL') }}</span>
+                                                        </h6>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-6 text-lg-right">
-                                                <h6 class="font-weight-semibold m-0">Tanggal Dibuat : <span class="text-muted font-weight-normal"> {{ $file_manager_perubahan_data->created_at->isoFormat('LLLL') }}</span></h6>
-                                                <h6 class="font-weight-semibold  mb-0 mt-2">Tanggal Perubahan : <span class="text-muted font-weight-normal"> {{ $file_manager_perubahan_data->updated_at->isoFormat('LLLL') }}</span></h6>
-                                            </div>
-                                        </div>
-    
-                                        <div class="holder">
-                                            <ul class="steppedprogress pt-1">
-                                                @if ($file_manager_perubahan_data->is_open == 'y')
-                                                <li class="complete continuous"><span>Planing</span></li>
-                                                <li class="complete"><span>Waiting Verifikasi</span></li>
-                                                <li class="complete"><span>Approved / Rejected</span></li>
-                                                @elseif($file_manager_perubahan_data->is_open == 'n')
-                                                    @if (empty($file_manager_perubahan_data->status))
-                                                    <li class="complete"><span>Planing</span></li>
-                                                    <li class="complete continuous"><span>Waiting Verifikasi</span></li>
-                                                    <li class="complete"><span>Approved / Rejected</span></li>
-                                                    @else
-                                                    @php
-                                                        $explode_status = explode('|',$file_manager_perubahan_data->status);
-                                                    @endphp
-    
-                                                    @if ($explode_status[0] == 'y' && $explode_status[2] == 'y')
-                                                        <li class="complete"><span>Planing</span></li>
-                                                        <li class="complete"><span>Waiting Verifikasi</span></li>
-                                                        <li class="complete finish success"><span>Approved</span></li>
-                                                    @elseif ($explode_status[0] == 'y' && $explode_status[2] == null)
-                                                        <li class="complete"><span>Planing</span></li>
-                                                        <li class="complete continuous"><span>Waiting Verifikasi</span></li>
-                                                        <li class="complete"><span>Approved</span></li>
-                                                    @elseif($explode_status[0] == 'n' && $explode_status[2] == null)
-                                                        <li class="complete"><span>Planing</span></li>
-                                                        <li class="complete"><span>Waiting Verifikasi</span></li>
-                                                        <li class="complete finish danger"><span>Rejected Document Control</span></li>
-                                                    @elseif($explode_status[0] == 'y' && $explode_status[2] == 'n')
-                                                        <li class="complete"><span>Planing</span></li>
-                                                        <li class="complete"><span>Waiting Verifikasi</span></li>
-                                                        <li class="complete finish danger"><span>Rejected Management Representative</span></li>
-                                                    @endif
-    
-                                                    @endif
-                                                @endif
-                                            </ul>
-                                        </div>
 
-                                        <div class="task-box">
-                                            <div class="task-priority-icon"><i class="fas fa-circle text-success"></i></div>
-                                            <p class="text-muted mb-1">{{ $file_manager_perubahan_data->remaks }}</p>
-                                            @if ($file_manager_perubahan_data->is_open == 'y')
-                                            <p class="text-muted text-end mb-1">0% Complete</p>
-                                            <div class="progress mb-3" style="height: 4px;">
-                                                <div class="progress-bar bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            @elseif($file_manager_perubahan_data->is_open == 'n')
-                                                @if (empty($file_manager_perubahan_data->status))
-                                                <p class="text-muted text-end mb-1">25% Complete</p>
-                                                <div class="progress mb-3" style="height: 4px;">
-                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div class="holder">
+                                                    <ul class="steppedprogress pt-1">
+                                                        @if ($file_manager_perubahan_data->is_open == 'y')
+                                                            <li class="complete continuous"><span>Planing</span></li>
+                                                            <li class="complete"><span>Waiting Verifikasi</span></li>
+                                                            <li class="complete"><span>Approved / Rejected</span></li>
+                                                        @elseif($file_manager_perubahan_data->is_open == 'n')
+                                                            @if (empty($file_manager_perubahan_data->status))
+                                                                <li class="complete"><span>Planing</span></li>
+                                                                <li class="complete continuous"><span>Waiting
+                                                                        Verifikasi</span></li>
+                                                                <li class="complete"><span>Approved / Rejected</span></li>
+                                                            @else
+                                                                @php
+                                                                    $explode_status = explode('|', $file_manager_perubahan_data->status);
+                                                                @endphp
+
+                                                                @if ($explode_status[0] == 'y' && $explode_status[2] == 'y')
+                                                                    <li class="complete"><span>Planing</span></li>
+                                                                    <li class="complete"><span>Waiting Verifikasi</span>
+                                                                    </li>
+                                                                    <li class="complete finish success">
+                                                                        <span>Approved</span></li>
+                                                                @elseif ($explode_status[0] == 'y' && $explode_status[2] == null)
+                                                                    <li class="complete"><span>Planing</span></li>
+                                                                    <li class="complete continuous"><span>Waiting
+                                                                            Verifikasi</span></li>
+                                                                    <li class="complete"><span>Approved</span></li>
+                                                                @elseif($explode_status[0] == 'n' && $explode_status[2] == null)
+                                                                    <li class="complete"><span>Planing</span></li>
+                                                                    <li class="complete"><span>Waiting Verifikasi</span>
+                                                                    </li>
+                                                                    <li class="complete finish danger"><span>Rejected
+                                                                            Document Control</span></li>
+                                                                @elseif($explode_status[0] == 'y' && $explode_status[2] == 'n')
+                                                                    <li class="complete"><span>Planing</span></li>
+                                                                    <li class="complete"><span>Waiting Verifikasi</span>
+                                                                    </li>
+                                                                    <li class="complete finish danger"><span>Rejected
+                                                                            Management Representative</span></li>
+                                                                @endif
+                                                            @endif
+                                                        @endif
+                                                    </ul>
                                                 </div>
-                                                @else
-                                                    @php
-                                                        $explode_status = explode('|',$file_manager_perubahan_data->status);
-                                                    @endphp
-                                                    @if ($explode_status[0] == 'y' && $explode_status[2] == 'y')
-                                                    <p class="text-muted text-end mb-1">100% Complete</p>
-                                                    <div class="progress mb-3" style="height: 4px;">
-                                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                    @elseif($explode_status[0] == 'y' && $explode_status[2] == null)
-                                                    <p class="text-muted text-end mb-1">75% Complete</p>
-                                                    <div class="progress mb-3" style="height: 4px;">
-                                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                    @elseif($explode_status[0] == 'n' && $explode_status[2] == null)
-                                                    <p class="text-muted text-end mb-1">100% Complete</p>
-                                                    <div class="progress mb-3" style="height: 4px;">
-                                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                    @elseif($explode_status[0] == 'y' && $explode_status[2] == 'n')
-                                                    <p class="text-muted text-end mb-1">100% Complete</p>
-                                                    <div class="progress mb-3" style="height: 4px;">
-                                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
+
+                                                <div class="task-box">
+                                                    <div class="task-priority-icon"><i
+                                                            class="fas fa-circle text-success"></i></div>
+                                                    <p class="text-muted mb-1">{{ $file_manager_perubahan_data->remaks }}
+                                                    </p>
+                                                    @if ($file_manager_perubahan_data->is_open == 'y')
+                                                        <p class="text-muted text-end mb-1">0% Complete</p>
+                                                        <div class="progress mb-3" style="height: 4px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar"
+                                                                style="width: 0%;" aria-valuenow="0" aria-valuemin="0"
+                                                                aria-valuemax="100"></div>
+                                                        </div>
+                                                    @elseif($file_manager_perubahan_data->is_open == 'n')
+                                                        @if (empty($file_manager_perubahan_data->status))
+                                                            <p class="text-muted text-end mb-1">25% Complete</p>
+                                                            <div class="progress mb-3" style="height: 4px;">
+                                                                <div class="progress-bar bg-primary" role="progressbar"
+                                                                    style="width: 25%;" aria-valuenow="25"
+                                                                    aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        @else
+                                                            @php
+                                                                $explode_status = explode('|', $file_manager_perubahan_data->status);
+                                                            @endphp
+                                                            @if ($explode_status[0] == 'y' && $explode_status[2] == 'y')
+                                                                <p class="text-muted text-end mb-1">100% Complete</p>
+                                                                <div class="progress mb-3" style="height: 4px;">
+                                                                    <div class="progress-bar bg-success"
+                                                                        role="progressbar" style="width: 100%;"
+                                                                        aria-valuenow="100" aria-valuemin="0"
+                                                                        aria-valuemax="100"></div>
+                                                                </div>
+                                                            @elseif($explode_status[0] == 'y' && $explode_status[2] == null)
+                                                                <p class="text-muted text-end mb-1">75% Complete</p>
+                                                                <div class="progress mb-3" style="height: 4px;">
+                                                                    <div class="progress-bar bg-primary"
+                                                                        role="progressbar" style="width: 75%;"
+                                                                        aria-valuenow="75" aria-valuemin="0"
+                                                                        aria-valuemax="100"></div>
+                                                                </div>
+                                                            @elseif($explode_status[0] == 'n' && $explode_status[2] == null)
+                                                                <p class="text-muted text-end mb-1">100% Complete</p>
+                                                                <div class="progress mb-3" style="height: 4px;">
+                                                                    <div class="progress-bar bg-danger" role="progressbar"
+                                                                        style="width: 100%;" aria-valuenow="100"
+                                                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                                                </div>
+                                                            @elseif($explode_status[0] == 'y' && $explode_status[2] == 'n')
+                                                                <p class="text-muted text-end mb-1">100% Complete</p>
+                                                                <div class="progress mb-3" style="height: 4px;">
+                                                                    <div class="progress-bar bg-danger" role="progressbar"
+                                                                        style="width: 100%;" aria-valuenow="100"
+                                                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                                                </div>
+                                                            @endif
+                                                        @endif
                                                     @endif
-                                                @endif
-                                            @endif
-                                        </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
-                                    @endforeach
-                                </div>
                                 @endforeach
                             </div>
                         </div>
@@ -520,7 +558,7 @@
         //         //     }
         //         // ],
 
-                
+
         //         // eventClick: function(arg) {
         //         //     if (confirm('delete event?')) {
         //         //         arg.event.remove()
@@ -567,17 +605,17 @@
                         size: 0
                     }
                 },
-                series: [
-                    {
-                        name: 'Total Rekap Pelatihan Selesai',
-                        data: @json($total_hasil_rekap_done)
-                        // data: [0, 60, 20, 90, 45, 110, 55, 130, 44, 110, 75, 120]
-                    },
-                ],
+                series: [{
+                    name: 'Total Rekap Pelatihan Selesai',
+                    data: @json($total_hasil_rekap_done)
+                    // data: [0, 60, 20, 90, 45, 110, 55, 130, 44, 110, 75, 120]
+                }, ],
 
                 xaxis: {
                     type: 'month',
-                    categories: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+                    categories: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September',
+                        'Oktober', 'November', 'Desember'
+                    ],
                     axisBorder: {
                         show: true,
                     },

@@ -8,6 +8,8 @@ use App\Exports\RekapPelatihanExcel;
 use App\Exports\RekapPelatihanAllDepExcel;
 use App\Exports\TotalRekapPelatihanExcel;
 
+use App\Models\Periode;
+
 use App\Models\RekapPelatihanSeminar;
 use App\Models\RekapPelatihanSeminarPeserta;
 use App\Models\RekapPelatihanSeminarKategori;
@@ -37,7 +39,8 @@ class RekapPelatihanController extends Controller
         RekapPelatihanSeminarKategori $rekap_pelatihan_kategori,
         BiodataKaryawan $biodata_karyawan,
         Departemen $departemen,
-        DepartemenUser $departemen_user
+        DepartemenUser $departemen_user,
+        Periode $periode
     )
     {
         // $this->middleware('permission:rekap-list')->except(
@@ -74,6 +77,7 @@ class RekapPelatihanController extends Controller
         $this->biodata_karyawan = $biodata_karyawan;
         $this->departemen = $departemen;
         $this->departemen_user = $departemen_user;
+        $this->periode = $periode;
         $this->day = 0;
     }
 
@@ -96,6 +100,10 @@ class RekapPelatihanController extends Controller
                             })
                             ->rawColumns(['action'])
                             ->make(true);
+        }
+        $data['periode'] = $this->periode->select('periode','status')->where('status','y')->first();
+        if (empty($data['periode'])) {
+            return redirect()->back()->with('error','Periode Tahunan Belum Dibuat. Silahkah hubungi team IT');
         }
         return view('rekap_pelatihan.kategori.index');
     }
@@ -216,10 +224,11 @@ class RekapPelatihanController extends Controller
     public function rekap_pelatihan_rekap(Request $request)
     {
         if ($request->ajax()) {
-            if (env('PERIODE') == Carbon::now()->format('Y')) {
+            $periode = $this->periode->select('periode','status')->where('status','y')->first();
+            if ($periode->periode == Carbon::now()->format('Y')) {
                 $data = $this->rekap_pelatihan->where('periode',Carbon::now()->format('Y'))->get();
             }else{
-                $data = $this->rekap_pelatihan->where('periode',env('PERIODE'))->get();
+                $data = $this->rekap_pelatihan->where('periode',$periode->periode)->get();
             }
             return DataTables::of($data)
                             ->addIndexColumn()
@@ -342,6 +351,10 @@ class RekapPelatihanController extends Controller
                             ->make(true);
         }
         // $data['periode'] = $periode;
+        $data['periode'] = $this->periode->select('periode','status')->where('status','y')->first();
+        if (empty($data['periode'])) {
+            return redirect()->back()->with('error','Periode Tahunan Belum Dibuat. Silahkah hubungi team IT');
+        }
         $date_now = Carbon::now();
         $data['start_month'] = Carbon::now()->startOfYear()->format('m');
         $data['end_month'] = Carbon::now()->endOfYear()->format('m');
@@ -373,6 +386,10 @@ class RekapPelatihanController extends Controller
 
     public function rekap_pelatihan_create()
     {
+        $data['periode'] = $this->periode->select('periode','status')->where('status','y')->first();
+        if (empty($data['periode'])) {
+            return redirect()->back()->with('error','Periode Tahunan Belum Dibuat. Silahkah hubungi team IT');
+        }
         $data['rekap_kategoris'] = $this->rekap_pelatihan_kategori->all();
         $data['departemens'] = $this->departemen->all();
         $data['biodata_karyawans'] = $this->biodata_karyawan->all();
