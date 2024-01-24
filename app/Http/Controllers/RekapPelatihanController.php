@@ -766,8 +766,8 @@ class RekapPelatihanController extends Controller
         $data['periode'] = $periode;
         // dd($data);
         // $data['rekap_pelatihans'] = $this->rekap_pelatihan->where('periode',$periode)->get();
-        return view('rekap_pelatihan.excel_rekap_periode',$data);
-        // return Excel::download(new TotalRekapPelatihanExcel($periode), 'Total Rekap Pelatihan & Seminar PT Indonesian Tobacco Tbk Periode '.$periode.'.xlsx');
+        // return view('rekap_pelatihan.excel_rekap_periode',$data);
+        return Excel::download(new TotalRekapPelatihanExcel($periode), 'Total Rekap Pelatihan & Seminar PT Indonesian Tobacco Tbk Periode '.$periode.'.xlsx');
 
     }
 
