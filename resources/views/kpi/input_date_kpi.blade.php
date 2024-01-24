@@ -85,27 +85,32 @@
                                         <div class="text-center text-white" style="font-weight: bold">KPI PERFORMANCE</div>
                                     </div>
                                     <div class="card-body">
+                                        @if ($kpi_indikators->isEmpty())
+                                        <div class="alert alert-outline-danger mb-3" role="alert">
+                                            <strong>Informasi!</strong> Silahkan buat indikator KPI Performance pada menu <b>KPI Indikator</b> untuk bisa menampilkan inputan.
+                                        </div>
+                                        @endif
                                         <table class="table table-bordered dt-responsive nowrap"
                                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                                 <tr>
-                                                    <td class="text-center" rowspan="2" style="width: 2%">No</td>
-                                                    <td class="text-center" rowspan="2" style="width: 500px">Indikator
+                                                    <td class="text-center" rowspan="2" style="width: 2%; font-weight: bold">No</td>
+                                                    <td class="text-center" rowspan="2" style="width: 500px; font-weight: bold">Indikator
                                                     </td>
-                                                    <td class="text-center" colspan="2">Target</td>
-                                                    <td class="text-center" colspan="2">Realisasi</td>
-                                                    <td class="text-center" rowspan="2" style="width: 100px">(%)
+                                                    <td class="text-center" colspan="2" style="font-weight: bold">Target</td>
+                                                    <td class="text-center" colspan="2" style="font-weight: bold">Realisasi</td>
+                                                    <td class="text-center" rowspan="2" style="width: 100px; font-weight: bold">(%)
                                                         Pencapaian</td>
-                                                    <td class="text-center" rowspan="2" style="width: 5%">Bobot</td>
+                                                    <td class="text-center" rowspan="2" style="width: 5%; font-weight: bold">Bobot</td>
                                                     {{-- <td class="text-center" rowspan="2">Nilai</td>
                                             <td class="text-center" rowspan="2">Skor</td> --}}
-                                                    <td class="text-center" rowspan="2">Keterangan</td>
+                                                    <td class="text-center" rowspan="2" style="font-weight: bold">Keterangan</td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="text-center" style="width: 5%">Nilai</td>
-                                                    <td class="text-center" style="width: 150px">Ket./Satuan</td>
-                                                    <td class="text-center" style="width: 5%">Nilai</td>
-                                                    <td class="text-center" style="width: 150px">Ket./Satuan</td>
+                                                    <td class="text-center" style="width: 5%; font-weight: bold">Nilai</td>
+                                                    <td class="text-center" style="width: 150px; font-weight: bold">Ket./Satuan</td>
+                                                    <td class="text-center" style="width: 5%; font-weight: bold">Nilai</td>
+                                                    <td class="text-center" style="width: 150px; font-weight: bold">Ket./Satuan</td>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -169,11 +174,11 @@
                                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                                 <tr>
-                                                    <td class="text-center" style="width: 5%">No</td>
-                                                    <td class="text-center" style="width: 10%">Culture</td>
-                                                    <td class="text-center" style="width: 25%">Indikator</td>
-                                                    <td class="text-center" style="width: 20%">Skala</td>
-                                                    <td class="text-center" style="width: 20%">Bobot</td>
+                                                    <td class="text-center" style="width: 5%; font-weight: bold">No</td>
+                                                    <td class="text-center" style="width: 10%; font-weight: bold">Culture</td>
+                                                    <td class="text-center" style="width: 25%; font-weight: bold">Indikator</td>
+                                                    <td class="text-center" style="width: 20%; font-weight: bold">Skala</td>
+                                                    <td class="text-center" style="width: 20%; font-weight: bold">Bobot</td>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -225,12 +230,12 @@
                                                 style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                 <thead>
                                                     <tr>
-                                                        <td class="text-center">KPI</td>
-                                                        <td class="text-center">BOBOT (%)</td>
-                                                        <td class="text-center">NILAI</td>
-                                                        <td class="text-center">TOTAL NILAI</td>
-                                                        <td class="text-center">SKOR NILAI</td>
-                                                        <td class="text-center">KETERANGAN NILAI</td>
+                                                        <td class="text-center" style="font-weight: bold">KPI</td>
+                                                        <td class="text-center" style="font-weight: bold">BOBOT (%)</td>
+                                                        <td class="text-center" style="font-weight: bold">NILAI</td>
+                                                        <td class="text-center" style="font-weight: bold">TOTAL NILAI</td>
+                                                        <td class="text-center" style="font-weight: bold">SKOR NILAI</td>
+                                                        <td class="text-center" style="font-weight: bold">KETERANGAN NILAI</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -388,10 +393,10 @@
                                                         <option value="{{ $mengetahui->team }}">{{ $mengetahui->team }}
                                                         </option>
                                                         @foreach ($penilais as $penilai)
-                                                            @if ($penilai->jabatan != 'Staff')
-                                                                <option value="{{ $penilai->departemen_user->team }}">
-                                                                    {{ $penilai->departemen_user->team }}</option>
-                                                            @endif
+                                                            {{-- @if ($penilai->jabatan != 'Staff')
+                                                            @endif --}}
+                                                            <option value="{{ $penilai->departemen_user->team }}">
+                                                                {{ $penilai->departemen_user->team }}</option>
                                                         @endforeach
                                                     @endif
                                                 </select>

@@ -158,14 +158,14 @@
                                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                                 <tr>
-                                                    <td class="text-center">No</td>
-                                                    <td class="text-center">Culture</td>
-                                                    <td class="text-center">Indikator</td>
-                                                    <td class="text-center">Skala</td>
-                                                    <td class="text-center">Bobot</td>
-                                                    <td class="text-center">%</td>
-                                                    <td class="text-center">Nilai</td>
-                                                    <td class="text-center">Skor Akhir</td>
+                                                    <td class="text-center" style="font-weight: bold">No</td>
+                                                    <td class="text-center" style="font-weight: bold">Culture</td>
+                                                    <td class="text-center" style="font-weight: bold">Indikator</td>
+                                                    <td class="text-center" style="font-weight: bold">Skala</td>
+                                                    <td class="text-center" style="font-weight: bold">Bobot</td>
+                                                    <td class="text-center" style="font-weight: bold">%</td>
+                                                    <td class="text-center" style="font-weight: bold">Nilai</td>
+                                                    <td class="text-center" style="font-weight: bold">Skor Akhir</td>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -235,12 +235,12 @@
                                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                                 <tr>
-                                                    <td class="text-center">KPI</td>
-                                                    <td class="text-center">BOBOT (%)</td>
-                                                    <td class="text-center">NILAI</td>
-                                                    <td class="text-center">TOTAL NILAI</td>
-                                                    <td class="text-center">SKOR NILAI</td>
-                                                    <td class="text-center">KETERANGAN NILAI</td>
+                                                    <td class="text-center" style="font-weight: bold">KPI</td>
+                                                    <td class="text-center" style="font-weight: bold">BOBOT (%)</td>
+                                                    <td class="text-center" style="font-weight: bold">NILAI</td>
+                                                    <td class="text-center" style="font-weight: bold">TOTAL NILAI</td>
+                                                    <td class="text-center" style="font-weight: bold">SKOR NILAI</td>
+                                                    <td class="text-center" style="font-weight: bold">KETERANGAN NILAI</td>
                                                 </tr>
                                             </thead>
                                             <tbody>

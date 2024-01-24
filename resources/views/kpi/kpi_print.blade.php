@@ -284,49 +284,168 @@
                 <tr>
                     <td>
                         <div class="content">
+                            <div style="text-align: center; font-weight: bold; margin-top: 2.5%">KPI PERFORMANCE</div>
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th class="th" rowspan="2">No</th>
-                                        <th class="th" rowspan="2">Indikator</th>
-                                        <th class="th" colspan="2">Target</th>
-                                        <th class="th" colspan="2">Realisasi</th>
-                                        <th class="th" rowspan="2">(%) Pencapaian</th>
-                                        <th class="th" rowspan="2">Bobot</th>
-                                        <th class="th" rowspan="2">Nilai</th>
-                                        <th class="th" rowspan="2">Skor</th>
-                                        <th class="th" rowspan="2">Keterangan</th>
-                                    </tr>
-                                    <tr>
+                                        <th class="th">No</th>    
+                                        <th class="th">Indikator</th>    
+                                        <th class="th">Bobot</th>    
+                                        <th class="th">Target</th>    
+                                        <th class="th">Keterangan</th>
+                                        <th class="th">Realisasi</th>
+                                        <th class="th">Keterangan</th>
+                                        <th class="th">%</th>
                                         <th class="th">Nilai</th>
-                                        <th class="th">Ket./Satuan</th>
-                                        <th class="th">Nilai</th>
-                                        <th class="th">Ket./Satuan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @php
                                         $total_nilai_kpi = [];
+                                        $total_nilai_pencapaian = [];
                                     @endphp
-
                                     @foreach ($kpi->kpi_detail as $key_2 => $kpi_detail)
+                                    @php
+                                        array_push($total_nilai_kpi,$kpi_detail->skor);
+                                        array_push($total_nilai_pencapaian,$kpi_detail->pencapaian);
+                                    @endphp
+                                    <tr>
+                                        <td class="td text-center">{{ $key_2+1 }}</td>  
+                                        <td class="td">{{ $kpi_detail->indikator }}</td> 
+                                        <td class="td text-center">{{ $kpi_detail->bobot }}%</td>
+                                        <td class="td text-center">{{ $kpi_detail->target_nilai }}</td>
+                                        <td class="td text-center">{{ $kpi_detail->target_keterangan }}</td>
+                                        <td class="td text-center">{{ $kpi_detail->realisasi_nilai }}</td>
+                                        <td class="td text-center">{{ $kpi_detail->realisasi_keterangan }}</td>
+                                        <td class="td text-center">{{ $kpi_detail->pencapaian }}</td>
+                                        <td class="td text-center">{{ $kpi_detail->nilai }}</td>
+                                    </tr>    
+                                    @endforeach
+                                    <tr>
+                                        <td class="td" colspan="5" style="text-align: right; font-weight: bold;">NILAI</td>
+                                        <td class="td" style="text-align: center; font-weight: bold;">{{ array_sum($total_nilai_pencapaian)/count($total_nilai_pencapaian) }}</td>
+                                        <td class="td"></td>
+                                        <td class="td" style="text-align: center; font-weight: bold;">{{ array_sum($total_nilai_pencapaian)/count($total_nilai_pencapaian) }}</td>
+                                        <td class="td"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div style="text-align: center; font-weight: bold; margin-top: 2.5%">KPI CULTURE</div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="th">No</th>
+                                        <th class="th">Culture</th>
+                                        <th class="th">Indikator</th>
+                                        <th class="th">Skala</th>
+                                        <th class="th">Bobot</th>
+                                        <th class="th">%</th>
+                                        <th class="th">Nilai</th>
+                                        <th class="th">Total Nilai</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                    $total_nilai_culture = [];
+                                    $kpi_cultures = \App\Models\KpiDetailCulture::with('user')
+                                                                                ->where('kpi_id', $kpi->id)
+                                                                                ->get();
+                                    @endphp
+                                    @foreach ($kpi_cultures as $key_culture => $kpi_culture)
                                         @php
-                                            array_push($total_nilai_kpi,$kpi_detail->skor);
+                                            $persentase = (100/4)*$kpi_culture->skala;
+                                            array_push($total_nilai_culture,$persentase);
                                         @endphp
                                         <tr>
-                                            <td class="td text-center">{{ $key_2+1 }}</td>
-                                            <td class="td">{{ $kpi_detail->indikator }}</td>
-                                            <td class="td text-center">{{ $kpi_detail->target_nilai }}</td>
-                                            <td class="td text-center">{{ $kpi_detail->target_keterangan }}</td>
-                                            <td class="td text-center">{{ $kpi_detail->realisasi_nilai }}</td>
-                                            <td class="td text-center">{{ $kpi_detail->realisasi_keterangan }}</td>
-                                            <td class="td text-center">{{ $kpi_detail->pencapaian }}</td>
-                                            <td class="td text-center">{{ $kpi_detail->bobot }}%</td>
-                                            <td class="td text-center">{{ $kpi_detail->nilai }}</td>
-                                            <td class="td text-center">{{ $kpi_detail->skor }}</td>
-                                            <td class="td text-center">{{ $kpi_detail->keterangan }}</td>
+                                            <td class="td" style="width: 5%; text-align: center">{{ $key_culture+1 }}</td>
+                                            <td class="td" style="width: 10%; text-align: center">{{ $kpi_culture->culture }}</td>
+                                            <td class="td" style="width: 25%; text-align: center">{{ $kpi_culture->indikator }}</td>
+                                            <td class="td" style="width: 10%; text-align: center">{!! $kpi_culture->skala == null ? 'Waiting' : $kpi_culture->skala !!}</td>
+                                            <td class="td" style="width: 10%; text-align: center">{!! $kpi_culture->bobot == null ? 'Waiting' : $kpi_culture->bobot !!}</td>
+                                            <td class="td" style="width: 10%; text-align: center">{{ $persentase }}</td>
+                                            <td class="td" style="width: 10%; text-align: center">
+                                                @if ($persentase==100)
+                                                    A
+                                                @elseif($persentase==75)
+                                                    B
+                                                @elseif($persentase==50)
+                                                    C
+                                                @elseif($persentase==25)
+                                                    D
+                                                @else
+                                                    E
+                                                @endif
+                                            </td>
+                                            <td class="td" style="width: 15%; text-align: center">{{ number_format($persentase,2,',','.') }}</td>
                                         </tr>
                                     @endforeach
+                                    @php
+                                        $hasil_total_nilai_culture = array_sum($total_nilai_culture)/count($kpi_cultures);
+                                    @endphp
+                                    <tr>
+                                        <td class="td" colspan="5" style="font-weight: bold; text-align: right">NILAI</td>
+                                        <td class="td" style="font-weight: bold; text-align: center">{{ $hasil_total_nilai_culture }}</td>
+                                        <td class="td" style="font-weight: bold; text-align: center"></td>
+                                        <td class="td" style="font-weight: bold; text-align: center">{{ number_format($hasil_total_nilai_culture,0,'.',',') }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div style="text-align: center; font-weight: bold; margin-top: 2.5%">TOTAL NILAI KPI</div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td class="td" style="font-weight: bold; text-align: center">KPI</td>
+                                        <td class="td" style="font-weight: bold; text-align: center">BOBOT (%)</td>
+                                        <td class="td" style="font-weight: bold; text-align: center">NILAI</td>
+                                        <td class="td" style="font-weight: bold; text-align: center">TOTAL NILAI</td>
+                                        <td class="td" style="font-weight: bold; text-align: center">SKOR NILAI</td>
+                                        <td class="td" style="font-weight: bold; text-align: center; width: 25%">KETERANGAN NILAI</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $grand_total_nilai_kpi = [];
+                                        $kpi_total_nilais = \App\Models\KpiTotalNilai::where('kpi_id',$kpi->id)->get();
+                                    @endphp
+                                    @foreach ($kpi_total_nilais as $key_kpi_total_nilai => $kpi_total_nilai)
+                                        @php
+                                            array_push($grand_total_nilai_kpi,$kpi_total_nilai->total_nilai);
+                                        @endphp
+                                        <tr>
+                                            <td class="td">{{ $kpi_total_nilai->nama_kpi }}</td>
+                                            <td class="td" style="text-align: center">{{ $kpi_total_nilai->bobot }}</td>
+                                            <td class="td" style="text-align: center">
+                                                @if (empty($kpi_total_nilai->nilai))
+                                                <span class="badge bg-info">Input Otomatis</span>
+                                                @else
+                                                {{ $kpi_total_nilai->nilai }}
+                                                @endif
+                                            </td>
+                                            <td class="td" style="text-align: center">
+                                                @if (empty($kpi_total_nilai->total_nilai))
+                                                <span class="badge bg-info">Input Otomatis</span>
+                                                @else
+                                                {{ $kpi_total_nilai->total_nilai }}
+                                                @endif
+                                            </td>
+                                            <td class="td" style="text-align: center">
+                                                @if (empty($kpi_total_nilai->skor_nilai))
+                                                <span class="badge bg-info">Input Otomatis</span>
+                                                @else
+                                                {{ $kpi_total_nilai->skor_nilai }}
+                                                @endif
+                                            </td>
+                                            <td class="td">
+                                                {{ $kpi_total_nilai->keterangan }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    <tr>
+                                        <td class="td" colspan="3" style="font-weight: bold; text-align: right">GRAND TOTAL</td>
+                                        <td class="td" style="font-weight: bold; text-align: center">{{ array_sum($grand_total_nilai_kpi) }}</td>
+                                        <td class="td" style="font-weight: bold; text-align: center">{{ array_sum($grand_total_nilai_kpi) }}</td>
+                                        <td class="td" style="font-weight: bold; text-align: center"></td>
+                                    </tr>
                                 </tbody>
                             </table>
                             <div class="row">
@@ -352,31 +471,42 @@
                                     </tbody>
                                 </table>
                                 <table class="table" style="width: 25%; margin-top: 1%; margin-left: 25%">
-                                    <tr>
-                                        <th class="th text-center">Total Nilai</th>
-                                    </tr>
-                                    <tr>
-                                        <th class="th text-center" style="font-size: 48pt">{{ number_format(array_sum($total_nilai_kpi),2,',','.') }}</th>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-center">
-                                            @if (number_format(array_sum($total_nilai_kpi),2,',','.') < '2,00')
-                                                BURUK
-                                            @elseif(number_format(array_sum($total_nilai_kpi),2,',','.') >= '2,00' && number_format(array_sum($total_nilai_kpi),2,',','.') <= '2,50')
-                                                KURANG
-                                            @elseif(number_format(array_sum($total_nilai_kpi),2,',','.') >= '2,51' && number_format(array_sum($total_nilai_kpi),2,',','.') <= '3,00')
-                                                CUKUP
-                                            @elseif(number_format(array_sum($total_nilai_kpi),2,',','.') >= '3,01' && number_format(array_sum($total_nilai_kpi),2,',','.') <= '3,50')
-                                                BAIK
-                                            @elseif(number_format(array_sum($total_nilai_kpi),2,',','.') >= '3,51' && number_format(array_sum($total_nilai_kpi),2,',','.') <= '4,00')
-                                                BAIK SEKALI
-                                            @endif
-                                        </th>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th class="th" style="text-align: center">Total Nilai</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="th" style="font-size: 48pt">{{ number_format(array_sum($grand_total_nilai_kpi),0,',','.') }}</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="th" style="text-align: center">
+                                                @if (number_format(array_sum($grand_total_nilai_kpi), 2, ',', '.') >= '0' &&
+                                                        number_format(array_sum($grand_total_nilai_kpi), 2, ',', '.') <= '59')
+                                                    BURUK
+                                                @elseif(number_format(array_sum($grand_total_nilai_kpi), 2, ',', '.') >= '60' &&
+                                                        number_format(array_sum($grand_total_nilai_kpi), 2, ',', '.') <= '75')
+                                                    KURANG
+                                                @elseif(number_format(array_sum($grand_total_nilai_kpi), 2, ',', '.') >= '76' &&
+                                                        number_format(array_sum($grand_total_nilai_kpi), 2, ',', '.') <= '85')
+                                                    CUKUP
+                                                @elseif(number_format(array_sum($grand_total_nilai_kpi), 2, ',', '.') >= '86' &&
+                                                        number_format(array_sum($grand_total_nilai_kpi), 2, ',', '.') <= '95')
+                                                    BAIK
+                                                @elseif(number_format(array_sum($grand_total_nilai_kpi), 2, ',', '.') >= '96' &&
+                                                        number_format(array_sum($grand_total_nilai_kpi), 2, ',', '.') <= '100')
+                                                    BAIK SEKALI
+                                                @endif
+                                            </th>
+                                        </tr>
+                                    </thead>
                                 </table>
                             </div>
-                            <div style="margin-top: 0.5%; margin-bottom: 0.5%;">Catatan: {{ $kpi->remaks == null ? '-' : $kpi->remaks }}</div>
-                            @php
+                        </div>
+                        <div class="mb-3">
+                            <label for=""><b>Catatan :</b></label>
+                            <p>{{ $kpi->remaks == null ? '-' : $kpi->remaks }}</p>
+                        </div>
+                        @php
                             $mengetahui = [
                                 'identifier' => 'Signature: '.$kpi->mengetahui."\n".
                                                 'Departemen: '.'Direktur'."\n".
@@ -399,8 +529,8 @@
                                                 'Periode Penilaian: '.\Carbon\Carbon::create($kpi->periode)->isoFormat('MMMM YYYY')."\n".
                                                 'Tanggal Dibuat: '.\Carbon\Carbon::create($kpi->created_at)->isoFormat('LLL')
                             ];
-                            @endphp
-                            <table class="table" style="width: 100%">
+                        @endphp
+                        <table class="table" style="width: 100%">
                                 <thead>
                                     <tr>
                                         <td class="td text-center" colspan="3" style="font-weight: bold">Validasi</td>
@@ -456,7 +586,6 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
                     </td>
                 </tr>
             </tbody>
