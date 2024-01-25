@@ -91,17 +91,18 @@
                                         </div>
                                     </div>
                                 </td>
+                                @php
+                                    $no = 1;
+                                @endphp
                                 @foreach ($weeks as $week)
                                     @php
                                         $fin_pro_masuk = \App\Models\FinPro::where('pin',$biodata_karyawan->pin)
                                                                     ->where('scan_date','LIKE','%'.$week.'%')
                                                                     ->whereTime('scan_date','<=','11:59')
                                                                     ->orderBy('scan_date','desc')
+                                                                    ->limit($no)
                                                                     ->first();
                                         if (empty($fin_pro_masuk)) {
-                                            // $presensi_info_masuk = \App\Models\PresensiInfo::where('pin',$biodata_karyawan->pin)
-                                            //                                                 ->where('scan_date','LIKE','%'.$week.'%')
-                                            //                                                 ->first();
                                             $jam_masuk = null;
                                             $cek_jam_masuk = null;
                                         }else{
@@ -118,6 +119,7 @@
                                                                     ->where('scan_date','LIKE','%'.$week.'%')
                                                                     ->whereTime('scan_date','>=','12:00')
                                                                     ->orderBy('scan_date','desc')
+                                                                    ->limit($no)
                                                                     ->first();
                                         if (empty($fin_pro_pulang)) {
                                             $jam_pulang = null;
@@ -150,6 +152,8 @@
                                         } else {
                                             $total_jam = $selisih_jam;
                                         }
+
+                                        $no++;
 
                                     @endphp
                                     <td class="text-center" style="vertical-align: middle">

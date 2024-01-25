@@ -42,12 +42,12 @@ class PresensiController extends Controller
         if (empty($data['biodata_karyawan'])) {
             return redirect()->back();
         }
-        $data['start_month_now'] = Carbon::now()->startOfMonth()->format('Y-m-d');
-        $data['end_month_now'] = Carbon::now()->endOfMonth()->format('Y-m-d');
+        $start_month_now = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $end_month_now = Carbon::now()->endOfMonth()->format('Y-m-d');
         // dd($end_month_now);
-        // for ($i=$start_month_now; $i <= $end_month_now; $i++) { 
-        //     $data['weeks'][] = $i;
-        // }
+        for ($i=$start_month_now; $i <= $end_month_now; $i++) { 
+            $data['weeks'][] = $i;
+        }
 
         $cek_status_kerja = IticDepartemen::where('id_departemen', $data['biodata_karyawan']->satuan_kerja)->first();
         if (empty($cek_status_kerja)) {
