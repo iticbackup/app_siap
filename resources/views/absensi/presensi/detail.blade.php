@@ -102,8 +102,21 @@
                                         $jam_masuk = '-';
                                         $status_masuk = '-';
                                     }else{
-                                        $jam_masuk = \Carbon\Carbon::create($presensi_info_masuk->scan_date)->format('H:i');
-                                        $status_masuk = '-';
+                                        // $jam_masuk = \Carbon\Carbon::create($presensi_info_masuk->scan_date)->format('H:i');
+                                        // $status_masuk = '-';
+                                        if ($presensi_info_masuk->status == 3) {
+                                            $jam_masuk = \Carbon\Carbon::create($presensi_info_masuk->scan_date)->format('H:i');
+                                            $status_masuk = $presensi_info_masuk->presensi_status->status_info;
+                                        }elseif ($presensi_info_masuk->status == 4 || $presensi_info_masuk->status == 10) {
+                                            $jam_masuk = '-';
+                                            $status_masuk = $presensi_info_masuk->presensi_status->status_info;
+                                        }elseif($presensi_info_masuk->status == 5 || $presensi_info_masuk->status == 6){
+                                            $jam_masuk = '-';
+                                            $status_masuk = $presensi_info_masuk->presensi_status->status_info;
+                                        }elseif($presensi_info_masuk->status == 13){
+                                            $jam_masuk = '-';
+                                            $status_masuk = $presensi_info_masuk->presensi_status->status_info;
+                                        }
                                     }
                                 }else{
                                     $presensi_info_masuk = \App\Models\PresensiInfo::where('pin', $biodata_karyawan->pin)
@@ -147,8 +160,21 @@
                                         $jam_pulang = '-';
                                         $status_pulang = '-';
                                     }else{
-                                        $jam_pulang = \Carbon\Carbon::create($presensi_info_pulang->scan_date)->format('H:i');
-                                        $status_pulang = '-';
+                                        // $jam_pulang = \Carbon\Carbon::create($presensi_info_pulang->scan_date)->format('H:i');
+                                        // $status_pulang = '-';
+                                        if ($presensi_info_pulang->status == 3) {
+                                            $jam_pulang = \Carbon\Carbon::create($presensi_info_pulang->scan_date)->format('H:i');
+                                            $status_pulang = $presensi_info_pulang->presensi_status->status_info;
+                                        }elseif ($presensi_info_masuk->status == 4 || $presensi_info_pulang->status == 10) {
+                                            $jam_pulang = '-';
+                                            $status_pulang = $presensi_info_pulang->presensi_status->status_info;
+                                        }elseif($presensi_info_pulang->status == 5 || $presensi_info_pulang->status == 6){
+                                            $jam_pulang = '-';
+                                            $status_pulang = $presensi_info_pulang->presensi_status->status_info;
+                                        }elseif($presensi_info_pulang->status == 13){
+                                            $jam_pulang = '-';
+                                            $status_pulang = $presensi_info_pulang->presensi_status->status_info;
+                                        }
                                     }
                                 }else{
                                     $presensi_info_pulang = \App\Models\PresensiInfo::where('pin', $biodata_karyawan->pin)
