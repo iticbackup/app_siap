@@ -223,10 +223,10 @@
                             auth()->user()->nik == 0000000 || 
                             auth()->user()->nik == 2007275)
                             @if (empty($file_manager_perubahan_data->status))
-                            {{-- <a href="{{ route('perubahan_data.cek_validasi', ['id' => $file_manager_perubahan_data->id]) }}"
-                                class="btn btn-primary"><i class="far fa-edit"></i> Go Verification</a> --}}
-                            <a href="{{ url()->previous() }}"
+                            <a href="{{ route('perubahan_data.cek_validasi', ['id' => $file_manager_perubahan_data->id]) }}"
                                 class="btn btn-primary"><i class="far fa-edit"></i> Go Verification</a>
+                            {{-- <a href="{{ url()->previous() }}"
+                                class="btn btn-primary"><i class="far fa-edit"></i> Go Verification</a> --}}
                             @elseif($explode_validasi[0] == 'y' && $explode_validasi[2] == null)
                             <a href="{{ route('perubahan_data.cek_validasi', ['id' => $file_manager_perubahan_data->id]) }}"
                                 class="btn btn-primary"><i class="far fa-edit"></i> Go Verification</a>

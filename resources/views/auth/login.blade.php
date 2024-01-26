@@ -1,5 +1,8 @@
 {{-- @extends('layouts.auth') --}}
 @extends('layouts.auth.master')
+@section('title')
+    Login
+@endsection
 {{-- @section('content_auth')
 <div class="row">
     <div class="img-holder">

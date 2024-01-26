@@ -249,14 +249,15 @@ class KpiController extends Controller
 
     public function input_date_kpi($date)
     {
+        // $check_kpi = $this->kpi->where('periode',$date)->first();
+        // dd($check_kpi);
+        // if (empty($check_kpi)) {
+        //     return redirect()->route('kpi');
+        // }
         $data['date'] = $date;
         $data['kpi_bobots'] = $this->kpi_bobot->all();
         $date_live = Carbon::today()->format('d-m-Y');
         $data['periode'] = Carbon::create($date)->subMonth();
-
-        // if (condition) {
-        //     # code...
-        // }
 
         $departemen_user = $this->departemen_user->select('id')->where('nik',auth()->user()->nik)->first();
         $data_kpi_team = $this->kpi_team->select('kpi_departemen_id')->where('departemen_user_id',$departemen_user->id)->first();
@@ -266,6 +267,7 @@ class KpiController extends Controller
                                             ->get();
         $data['kpi_cultures'] = $this->kpi_culture->get();
         return view('kpi.input_date_kpi',$data);
+
     }
 
     public function buat_kpi()
