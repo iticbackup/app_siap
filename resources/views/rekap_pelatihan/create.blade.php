@@ -320,6 +320,11 @@
         })
     </script>
     <script>
+        // $('#form-simpan').submit(function(e) {
+        //     e.preventDefault();
+        //     let formData = new FormData(this);
+        //     $('#loadingscreen').modal('show');
+        // });
         $('#form-simpan').submit(function(e) {
             e.preventDefault();
             let formData = new FormData(this);
@@ -331,7 +336,7 @@
                 contentType: false,
                 processData: false,
                 beforeSend: function() {
-                    // $('.modalLoading').modal('show');
+                    $('#loadingscreen').modal('show');
                 },
                 success: (result) => {
                     if (result.success != false) {
@@ -340,11 +345,13 @@
                             message: result.message_content
                         });
                         setTimeout(() => {
-                            $('.modalLoading').modal('hide');
+                            // $('.modalLoading').modal('hide');
+                            $('#loadingscreen').modal('hide');
                             window.location.href =
                                 "{{ route('rekap_pelatihan.rekap_pelatihan') }}";
                         }, 3000);
                     } else {
+                        $('#loadingscreen').modal('hide');
                         iziToast.error({
                             title: result.success,
                             message: result.error
