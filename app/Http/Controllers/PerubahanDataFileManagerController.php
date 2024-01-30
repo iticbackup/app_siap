@@ -166,17 +166,23 @@ class PerubahanDataFileManagerController extends Controller
                 return redirect()->back()->with('error','Formulir <b>'.$cek_formulir->kode_formulir.'</b> sebelumnya masih dalam proses, selesaikan formulir sebelumnya.');
             }
         }else{
+            $departemen_user = $this->departemen_user->select('departemen_id')->where('nik',auth()->user()->nik)->first();
             $cek_formulir = $this->file_manager_perubahan_data->where('is_open','y')
                                                         ->where('departemen_id',$departemen_user->departemen_id)
                                                         ->first();
+                                                        // dd($cek_formulir);
             if (empty($cek_formulir)) {
                 $departemen_user = $this->departemen_user->where('nik',auth()->user()->nik)->first();
                 $departemen = $this->departemen->find($departemen_user->departemen_id);
                 $input['departemen_id'] = $departemen_user->departemen_id;
                 $input['pengajuan_signature'] = $departemen_user->team.' - '.$departemen->departemen;
             }else{
-                return redirect()->back()->with('error','Formulir sebelumnya masih dalam proses, selesaikan formulir sebelumnya.');
+                return redirect()->back()->with('error','Nomor Formulir <b>'.$cek_formulir->kode_formulir.'</b> sebelumnya masih dalam proses, selesaikan formulir sebelumnya.');
             }
+            // $departemen_user = $this->departemen_user->where('nik',auth()->user()->nik)->first();
+            // $departemen = $this->departemen->find($departemen_user->departemen_id);
+            // $input['departemen_id'] = $departemen_user->departemen_id;
+            // $input['pengajuan_signature'] = $departemen_user->team.' - '.$departemen->departemen;
         }
         
         $file_manager_perubahan_data = $this->file_manager_perubahan_data->create($input);
