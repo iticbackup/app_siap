@@ -44,7 +44,7 @@ class DepartemenController extends Controller
                                 //     $ul = '-';
                                 // }
                                 // return $ul;
-                                $departemen_users = $this->departemen_user->where('departemen_id',$row->id)->where('status','Y')->get();
+                                $departemen_users = $this->departemen_user->where('departemen_id',$row->id)->get();
                                 $ol = '<ul>';
                                 foreach ($departemen_users as $key => $value) {
                                     if ($value->staff == 'y') {
@@ -250,7 +250,7 @@ class DepartemenController extends Controller
         }
 
         if ($request->ajax()) {
-            $data = $this->departemen_user->where('departemen_id',$id)->where('status','Y')->get();
+            $data = $this->departemen_user->where('departemen_id',$id)->get();
             return DataTables::of($data)
                             ->addIndexColumn()
                             // ->addColumn('user_id', function($row){
