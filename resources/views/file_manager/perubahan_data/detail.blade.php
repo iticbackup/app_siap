@@ -221,7 +221,10 @@
                         @if (auth()->user()->nik == 1207514 || 
                             auth()->user()->nik == 1711952 || 
                             auth()->user()->nik == 0000000 || 
-                            auth()->user()->nik == 2007275)
+                            auth()->user()->nik == 0000010 || 
+                            auth()->user()->nik == 2007275 ||
+                            auth()->user()->nik == 2207603
+                            )
                             @if (empty($file_manager_perubahan_data->status))
                             <a href="{{ route('perubahan_data.cek_validasi', ['id' => $file_manager_perubahan_data->id]) }}"
                                 class="btn btn-primary"><i class="far fa-edit"></i> Go Verification</a>
