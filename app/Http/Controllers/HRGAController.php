@@ -148,6 +148,9 @@ class HRGAController extends Controller
                                         return '<img src='.asset('public/berkas/HRGA/data_karyawan/'.$row->foto_karyawan).' style="width: 100px; height: 137px; object-fit: cover;">';
                                     }
                                 })
+                                ->addColumn('departemen', function($row){
+                                    return $row->departemen_dept;
+                                })
                                 ->addColumn('nama_karyawan', function($row){
                                     if (empty($row->nama)) {
                                         $nama = "-";

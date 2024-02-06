@@ -66,6 +66,7 @@
                                 <th class="text-center" style="width: 10%">Foto</th>
                                 <th class="text-center" style="width: 10%">NIK</th>
                                 <th class="text-center">Nama Karyawan</th>
+                                <th class="text-center" style="width: 10%">Departemen</th>
                                 <th class="text-center" style="width: 10%">No. Telpon</th>
                                 <th class="text-center" style="width: 10%">Status Kerja</th>
                                 <th class="text-center" style="width: 10%">Status Karyawan | Tanggal Resign</th>
@@ -130,6 +131,10 @@
                 {
                     data: 'nama_karyawan',
                     name: 'nama_karyawan'
+                },
+                {
+                    data: 'departemen',
+                    name: 'departemen'
                 },
                 {
                     data: 'no_telepon',
