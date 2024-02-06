@@ -144,7 +144,7 @@
                                         multiple="multiple" data-placeholder="Choose">
                                         @foreach ($departemens as $departemen)
                                             @php
-                                                $departemen_users = \App\Models\DepartemenUser::where('departemen_id', $departemen->id)->get();
+                                                $departemen_users = \App\Models\DepartemenUser::where('departemen_id', $departemen->id)->where('status','Y')->get();
                                             @endphp
                                             <optgroup label="{{ $departemen->departemen }}">
                                                 @foreach ($departemen_users as $departemen_user)

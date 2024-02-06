@@ -355,7 +355,8 @@ class RekapPelatihanController extends Controller
         if (empty($data['periode'])) {
             return redirect()->back()->with('error','Periode Tahunan Belum Dibuat. Silahkah hubungi team IT');
         }
-        $date_now = Carbon::now();
+        $date_now = Carbon::create($data['periode']['periode']);
+        // $date_now = Carbon::now();
         $data['start_month'] = Carbon::now()->startOfYear()->format('m');
         $data['end_month'] = Carbon::now()->endOfYear()->format('m');
         for ($i=$data['start_month']; $i <= $data['end_month'] ; $i++) { 
@@ -759,6 +760,9 @@ class RekapPelatihanController extends Controller
             'PPIC',
             'Produksi',
             'QC',
+            'Rnd',
+            'Klaten',
+            'QHSE',
         );
         $data['departemens'] = $this->departemen->whereIn('departemen',$departemen)->get();
         // dd($data);
