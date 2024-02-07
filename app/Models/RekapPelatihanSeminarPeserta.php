@@ -34,4 +34,9 @@ class RekapPelatihanSeminarPeserta extends Model
     {
         return $this->belongsTo(\App\Models\RekapPelatihanSeminar::class, 'rekap_pelatihan_seminar_id');
     }
+
+    public function departemen()
+    {
+        return $this->belongsTo(\App\Models\Departemen::class, 'departemen_id', 'id');
+    }
 }

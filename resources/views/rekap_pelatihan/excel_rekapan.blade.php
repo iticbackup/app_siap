@@ -53,7 +53,7 @@
                     {{-- <ul>
                     </ul> --}}
                     @foreach ($rekap_pelatihan_pesertas as $rekap_pelatihan_peserta)
-                        <div>- {{ $rekap_pelatihan_peserta->peserta }}</div><br>
+                        <div>- {{ $rekap_pelatihan_peserta->peserta }} - {{ $rekap_pelatihan_peserta->departemen->departemen }}</div><br>
                     @endforeach
                 </td>
                 <td style="vertical-align: top; border: 1px solid black; text-align: center">{{ $hitung_total_peserta_kali_jam }}</td>
