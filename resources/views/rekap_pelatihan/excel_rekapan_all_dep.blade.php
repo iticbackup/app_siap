@@ -26,6 +26,7 @@
             @foreach ($departemens as $departemen)
             @php
                 $total_rekap_pelatihan = [];
+                // dd($departemen->departemen_user->team);
             @endphp
             <td style="text-align: center; border: 1px solid black;">
                 @php
@@ -35,9 +36,20 @@
                                                 from rekap_pelatihan_seminar_peserta 
                                                 left join rekap_pelatihan_seminar
                                                 on rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id = rekap_pelatihan_seminar.id
-                                                where departemen_id='.$departemen->id.' and rekap_pelatihan_seminar.periode='.$periode.'
+                                                where departemen_id='.$departemen->id.' 
+                                                and rekap_pelatihan_seminar.periode='.$periode.'
                                                 group by rekap_pelatihan_seminar_id',
                                         ));
+                    // $rekap_pelatihans = \DB::select(\DB::raw(
+                    //                             'select rekap_pelatihan_seminar_id,departemen_id, count(departemen_id) as jumlah_peserta, 
+                    //                             count(departemen_id)/count(departemen_id) as nilai 
+                    //                             from rekap_pelatihan_seminar_peserta 
+                    //                             left join rekap_pelatihan_seminar
+                    //                             on rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id = rekap_pelatihan_seminar.id
+                    //                             where rekap_pelatihan_seminar_peserta.departemen_id='.$departemen->id.' 
+                    //                             and rekap_pelatihan_seminar.periode='.$periode.'
+                    //                             group by rekap_pelatihan_seminar_id',
+                    //                     ));
                     foreach ($rekap_pelatihans as $rekap_pelatihan) {
                         array_push($total_rekap_pelatihan,$rekap_pelatihan->nilai);
                     }
@@ -59,8 +71,8 @@
                 @foreach ($departemen->departemen_user_all as $departemen_user_all)
                 @php
                 $rekap = \App\Models\RekapPelatihanSeminarPeserta::leftJoin('rekap_pelatihan_seminar','rekap_pelatihan_seminar.id','=','rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id')
-                                                    // ->where('rekap_pelatihan_seminar_peserta.peserta',$departemen_user_all->team)
-                                                    ->where('rekap_pelatihan_seminar_peserta.departemen_id',$departemen_user_all->departemen_id)
+                                                    ->where('rekap_pelatihan_seminar_peserta.peserta',$departemen_user_all->team)
+                                                    // ->where('rekap_pelatihan_seminar_peserta.departemen_id',$departemen_user_all->departemen_id)
                                                     ->where('rekap_pelatihan_seminar.periode',$periode)
                                                     ->get();
                 $simpan_rekap = json_encode($rekap->count());
@@ -144,8 +156,8 @@
                     $rekap_staff = \App\Models\RekapPelatihanSeminarPeserta::leftJoin('rekap_pelatihan_Seminar','rekap_pelatihan_Seminar.id','=','rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id')
                                                     ->leftJoin('departemen_user','departemen_user.team','=','rekap_pelatihan_seminar_peserta.peserta')
                                                     // ->leftJoin('departemen_user','departemen_user.team','=','rekap_pelatihan_seminar_peserta.peserta')
-                                                    // ->where('rekap_pelatihan_seminar_peserta.peserta',$departemen_user_all->team)
-                                                    ->where('rekap_pelatihan_seminar_peserta.departemen_id',$departemen_user_all->departemen_id)
+                                                    ->where('rekap_pelatihan_seminar_peserta.peserta',$departemen_user_all->team)
+                                                    // ->where('rekap_pelatihan_seminar_peserta.departemen_id',$departemen_user_all->departemen_id)
                                                     ->where('rekap_pelatihan_Seminar.periode',$periode)
                                                     ->where('departemen_user.staff','y')
                                                     ->get();
@@ -181,8 +193,8 @@
                         $rekap_nonstaff = \App\Models\RekapPelatihanSeminarPeserta::leftJoin('rekap_pelatihan_seminar','rekap_pelatihan_seminar.id','=','rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id')
                                                     ->leftJoin('departemen_user','departemen_user.team','=','rekap_pelatihan_seminar_peserta.peserta')
                                                     // ->leftJoin('departemen_user','departemen_user.team','=','rekap_pelatihan_seminar_peserta.peserta')
-                                                    // ->where('rekap_pelatihan_seminar_peserta.peserta',$departemen_user_all->team)
-                                                    ->where('rekap_pelatihan_seminar_peserta.departemen_id',$departemen_user_all->departemen_id)
+                                                    ->where('rekap_pelatihan_seminar_peserta.peserta',$departemen_user_all->team)
+                                                    // ->where('rekap_pelatihan_seminar_peserta.departemen_id',$departemen_user_all->departemen_id)
                                                     ->where('rekap_pelatihan_seminar.periode',$periode)
                                                     ->where('departemen_user.staff','n')
                                                     ->get();
@@ -241,8 +253,8 @@
                     @php
                         $rekap_laki_laki = \App\Models\RekapPelatihanSeminarPeserta::leftJoin('rekap_pelatihan_Seminar','rekap_pelatihan_Seminar.id','=','rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id')
                                                     ->leftJoin('departemen_user','departemen_user.team','=','rekap_pelatihan_seminar_peserta.peserta')
-                                                    // ->where('rekap_pelatihan_seminar_peserta.peserta',$departemen_user_all->team)
-                                                    ->where('rekap_pelatihan_seminar_peserta.departemen_id',$departemen_user_all->departemen_id)
+                                                    ->where('rekap_pelatihan_seminar_peserta.peserta',$departemen_user_all->team)
+                                                    // ->where('rekap_pelatihan_seminar_peserta.departemen_id',$departemen_user_all->departemen_id)
                                                     ->where('rekap_pelatihan_Seminar.periode',$periode)
                                                     ->where('departemen_user.jenis_kelamin','L')
                                                     ->get();
@@ -270,8 +282,8 @@
                     @php
                         $rekap_perempuan = \App\Models\RekapPelatihanSeminarPeserta::leftJoin('rekap_pelatihan_Seminar','rekap_pelatihan_Seminar.id','=','rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id')
                                                     ->leftJoin('departemen_user','departemen_user.team','=','rekap_pelatihan_seminar_peserta.peserta')
-                                                    // ->where('rekap_pelatihan_seminar_peserta.peserta',$departemen_user_all->team)
-                                                    ->where('rekap_pelatihan_seminar_peserta.departemen_id',$departemen_user_all->departemen_id)
+                                                    ->where('rekap_pelatihan_seminar_peserta.peserta',$departemen_user_all->team)
+                                                    // ->where('rekap_pelatihan_seminar_peserta.departemen_id',$departemen_user_all->departemen_id)
                                                     ->where('rekap_pelatihan_Seminar.periode',$periode)
                                                     ->where('departemen_user.jenis_kelamin','P')
                                                     ->get();
