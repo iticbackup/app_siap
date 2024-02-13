@@ -70,6 +70,11 @@
             <td style="text-align: center; border: 1px solid black;">
                 @foreach ($departemen->departemen_user_all as $departemen_user_all)
                 @php
+                // $rekap = \App\Models\RekapPelatihanSeminarPeserta::leftJoin('rekap_pelatihan_seminar','rekap_pelatihan_seminar.id','=','rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id')
+                //                                     ->where('rekap_pelatihan_seminar_peserta.peserta',$departemen_user_all->team)
+                //                                     // ->where('rekap_pelatihan_seminar_peserta.departemen_id',$departemen_user_all->departemen_id)
+                //                                     ->where('rekap_pelatihan_seminar.periode',$periode)
+                //                                     ->get();
                 $rekap = \App\Models\RekapPelatihanSeminarPeserta::leftJoin('rekap_pelatihan_seminar','rekap_pelatihan_seminar.id','=','rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id')
                                                     ->where('rekap_pelatihan_seminar_peserta.peserta',$departemen_user_all->team)
                                                     // ->where('rekap_pelatihan_seminar_peserta.departemen_id',$departemen_user_all->departemen_id)

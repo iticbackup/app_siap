@@ -250,7 +250,7 @@ class DepartemenController extends Controller
         }
 
         if ($request->ajax()) {
-            $data = $this->departemen_user->where('departemen_id',$id)->get();
+            $data = $this->departemen_user->where('departemen_id',$id)->where('status','Y')->get();
             return DataTables::of($data)
                             ->addIndexColumn()
                             // ->addColumn('user_id', function($row){
@@ -281,6 +281,9 @@ class DepartemenController extends Controller
                                 $btn = '<div class="btn-group">';
                                 $btn.= '<button class="btn btn-primary btn-icon" onClick="detail_team(`'.$row->departemen_id.'`,`'.$row->id.'`)">
                                             <i class="far fa-id-badge"></i> Pindah Departemen
+                                        </button>';
+                                $btn.= '<button class="btn btn-warning btn-icon" onClick="edit_team(`'.$row->departemen_id.'`,`'.$row->id.'`)">
+                                            <i class="far fa-edit"></i> Edit Team
                                         </button>';
                                 // $btn.= '<a href='.route('departemen.detail_team',$row->id).' class="btn btn-primary btn-icon">
                                 //             <i class="fas fa-cube"></i> Input Team
@@ -319,7 +322,7 @@ class DepartemenController extends Controller
         ]);
     }
 
-    public function detail_team_group_update(Request $request, $id){
+    public function detail_pindah_team_update(Request $request, $id){
         $rules = [
             'detail_pindah_departemen' => 'required',
         ];
@@ -343,6 +346,49 @@ class DepartemenController extends Controller
             $departemen_user->update([
                 'departemen_id' => $request->detail_pindah_departemen,
                 'status' => $request->detail_status
+            ]);
+            return [
+                'success' => true,
+                'message_title' => 'Berhasil!',
+                'message_content' => 'Nama '.$departemen_user->team. ' berhasil pindah departemen'
+            ];
+        }
+
+        return response()->json(
+            [
+                'success' => false,
+                'error' => $validator->errors()->all()
+            ]
+        );
+        
+    }
+
+    public function detail_team_update(Request $request, $id){
+        $rules = [
+            'edit_jenis_kelamin' => 'required',
+            'edit_status' => 'required',
+        ];
+
+        $messages = [
+            'edit_jenis_kelamin.required'  => 'Jenis Kelamin wajib diisi.',
+            'edit_status.required'  => 'Status Karyawan wajib diisi.',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+        
+        if ($validator->passes()) {
+            $departemen_user = $this->departemen_user->where('departemen_id',$id)
+                                            ->where('id',$request->edit_team_id)
+                                            ->first();
+            if (empty($departemen_user)) {
+                return [
+                    'success' => false,
+                    'message_content' => 'Data Tidak Ditemukan',
+                ];
+            }
+            $departemen_user->update([
+                'jenis_kelamin' => $request->edit_jenis_kelamin,
+                'status' => $request->edit_status,
             ]);
             return [
                 'success' => true,
@@ -386,9 +432,11 @@ class DepartemenController extends Controller
             foreach ($request->team as $key => $value) {
                 $input['id'] = $id+$key;
                 $input['departemen_id'] = $ids;
-                $input['team'] = $value;
                 $input['nik'] = $request->nik;
+                $input['team'] = $value;
                 $input['staff'] = $request->staff;
+                $input['jenis_kelamin'] = $request->jenis_kelamin;
+                $input['status'] = 'Y';
                 $departemen_team = $this->departemen_user->create($input);
                 // $input = [
                 //     'id' => $id+$key,

@@ -34,6 +34,7 @@
         @endslot
     @endcomponent
 
+    @include('departemen.team.modalEditTeam')
     @include('departemen.team.modalPindahDepartemen')
 
     <a href="{{ route('departemen') }}" class="btn btn-outline-primary mb-3"><i class="fa fa-arrow-left"></i> Back</a>
@@ -97,6 +98,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <input type="text" name="team[]" class="form-control team" id="check_team" placeholder="Nama">
+                                    <input type="hidden" name="jenis_kelamin" class="form-control jenis_kelamin" id="">
                                 </div>
                             </div>
                         </div>
@@ -229,13 +231,13 @@
             });
         });
 
-        $('#form-update').submit(function(e) {
+        $('#form-pindah-update').submit(function(e) {
             e.preventDefault();
             let formData = new FormData(this);
             $('#image-input-error').text('');
             $.ajax({
                 type: 'POST',
-                url: "{{ route('departemen.detail_team_group_update', $departemen->id) }}",
+                url: "{{ route('departemen.detail_pindah_team_update', $departemen->id) }}",
                 data: formData,
                 contentType: false,
                 processData: false,
@@ -263,6 +265,70 @@
                 }
             });
         });
+
+        $('#form-update').submit(function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            $('#image-input-error').text('');
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('departemen.detail_team_update', $departemen->id) }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: (result) => {
+                    if (result.success != false) {
+                        iziToast.success({
+                            title: result.message_title,
+                            message: result.message_content
+                        });
+                        this.reset();
+                        $('.modalEditTeam').modal('hide');
+                        table.ajax.reload(null, false);
+                    } else {
+                        iziToast.error({
+                            title: result.success,
+                            message: result.error
+                        });
+                    }
+                },
+                error: function(request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            });
+        });
+
+        function edit_team(id,team_id){
+            $.ajax({
+                type:'GET',
+                url: "{{ url('departemen/') }}"+'/'+id+'/'+team_id+'/team',
+                contentType: "application/json;  charset=utf-8",
+                cache: false,
+                success: (result) => {
+                    if(result.success == true){
+                        document.getElementById('edit_departemen').innerHTML = result.data.departemen;
+                        document.getElementById('edit_nama_team').innerHTML = result.departemen_user.team;
+                        $('#edit_team_id').val(result.departemen_user.id);
+                        $('#edit_jenis_kelamin').val(result.departemen_user.jenis_kelamin);
+                        $('#edit_status').val(result.departemen_user.status);
+                        // $('.detail_departemen').val(result.data.departemen);
+                        // $('.detailss_nama_team').val(result.departemen_user.team);
+                        $('.modalEditTeam').modal('show');
+                    }else{
+
+                    }
+                },
+                error: function (request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            });
+        }
 
         function detail_team(id,team_id){
             $.ajax({
@@ -313,6 +379,7 @@
                     if(result.success == true){
                         setTimeout(() => {
                             $('.team').val(result.data.nama);
+                            $('.jenis_kelamin').val(result.data.jenis_kelamin);
                             document.getElementById('check_nik').style.display = "none";
                         }, 1000);
                     }else{
