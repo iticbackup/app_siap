@@ -60,6 +60,7 @@
                             <tr>
                                 <th class="text-center" style="background-color: #AAD9BB">Tanggal</th>
                                 <th class="text-center" style="background-color: #AAD9BB">No. Dokumen</th>
+                                <th class="text-center" style="background-color: #AAD9BB">Kategori</th>
                                 <th class="text-center" style="background-color: #AAD9BB">Halaman</th>
                                 <th class="text-center" style="background-color: #AAD9BB">Revisi</th>
                                 <th class="text-center" style="background-color: #AAD9BB">Uraian Perubahan</th>
@@ -73,6 +74,7 @@
                                         {{ \Carbon\Carbon::create($file_manager_perubahan_data->tanggal_formulir)->format('d/m/Y') }}
                                     </td>
                                     <td class="text-center">{{ $file_manager_perubahan_data_detail->no_dokumen }}</td>
+                                    <td class="text-center">{{ $file_manager_perubahan_data_detail->kategori_file }}</td>
                                     <td class="text-center">{{ $file_manager_perubahan_data_detail->halaman }}</td>
                                     <td class="text-center">{{ $file_manager_perubahan_data_detail->revisi }}</td>
                                     <td style="width: 500px; word-break: break-all;">{!! $file_manager_perubahan_data_detail->uraian_perubahan !!}</td>

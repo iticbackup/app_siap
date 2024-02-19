@@ -277,7 +277,7 @@ class PerubahanDataFileManagerController extends Controller
     
             $file = $request->file('files');
             $fileName = $file->getClientOriginalName();
-            $file->move(public_path('berkas/'.$departemen->departemen.'/'.$file_manager_category->kategori.'/'.'Perubahan'), $fileName);
+            $file->move(public_path('berkas/'.$departemen->departemen.'/'.$input['kategori_file'].'/'.'Perubahan'), $fileName);
     
             $explode_no_dokumen = explode('/',$request->no_dokumen);
             $file_manager_perubahan_data_detail = $this->file_manager_perubahan_data_detail->create([
@@ -483,7 +483,8 @@ class PerubahanDataFileManagerController extends Controller
                 ]);
                 foreach ($file_manager_perubahan_data->file_manager_perubahan_data_detail as $key => $file_manager_perubahan_data_detail) {
                     // --fix coding--
-                    $path_file_asli = public_path('berkas/'.$file_manager_perubahan_data_detail->file_manager_perubahan_data->departemen->departemen.'/'.$file_manager_perubahan_data_detail->kategori_file.'/'.'Asli');
+                    $path_file_asli = public_path('berkas/'.$file_manager_perubahan_data_detail->file_manager_perubahan_data->departemen->departemen.'/'.
+                                        $file_manager_perubahan_data_detail->kategori_file.'/'.'Asli');
                     
                     if(!File::isDirectory($path_file_asli)){
                         File::makeDirectory($path_file_asli, 0777, true, true);
@@ -496,7 +497,7 @@ class PerubahanDataFileManagerController extends Controller
                     //             '/'.$file_manager_perubahan_data_detail->kategori_file.'/'.$file_manager_perubahan_data_detail->files);
                     if (File::exists($from_file)) {
                         $to_file = public_path('berkas/'.$file_manager_perubahan_data_detail->file_manager_perubahan_data->departemen->departemen.
-                                    '/'.$file_manager_perubahan_data_detail->kategori_file.'/'.'Asli'.'/'.$file_manager_perubahan_data_detail->files);
+                                    '/'.$file_manager_perubahan_data_detail->kategori_file.'/'.$file_manager_perubahan_data_detail->files);
                         $files = rename($from_file,$to_file);
                     }
 
