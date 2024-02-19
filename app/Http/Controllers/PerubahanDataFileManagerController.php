@@ -574,6 +574,8 @@ class PerubahanDataFileManagerController extends Controller
         //     }
         // }
 
+        $input['remaks'] = $request->remaks;
+
         $file_manager_perubahan_data->update($input);
         if ($file_manager_perubahan_data) {
             return redirect()->back()->with('success', 'Dokumen Berhasil '.$message);
