@@ -41,7 +41,7 @@ class TestingController extends Controller
         //                     ->resolution(300)
         //                     ->save();
 
-        $barcode = \Storage::disk('barcode')->put('test3.png',base64_decode(DNS2D::getBarcodePNG("Dokumen telah diverifikasi oleh sistem tanggal ".Carbon::now()->isoFormat('dddd, D MMMM YYYY'), "QRCODE", 6,6)));
+        $barcode = \Storage::disk('barcode')->put('barcode.png',base64_decode(DNS2D::getBarcodePNG("Dokumen telah diverifikasi oleh sistem tanggal ".Carbon::now()->isoFormat('dddd, D MMMM YYYY'), "QRCODE", 6,6)));
         ImageWatermarker::input(public_path('berkas/SOPIT.pdf'))
                         // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
                         // ->watermark(public_path('berkas/Terkendali-Rahasia-barcode.png'))
