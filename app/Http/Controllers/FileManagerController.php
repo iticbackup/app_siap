@@ -21,6 +21,7 @@ use \Carbon\Carbon;
 use Validator;
 use DataTables;
 use File;
+use DNS2D;
 
 class FileManagerController extends Controller
 {
@@ -246,9 +247,11 @@ class FileManagerController extends Controller
                                 ->resolution(270) // 300 dpi
                                 ->save();
             }elseif($file_manager_kategori->kategori != 'FR' && $file_manager_kategori->kategori != 'ITI'){
+                $barcode = \Storage::disk('barcode')->put('test2.png',base64_decode(DNS2D::getBarcodePNG("Dokumen telah diverifikasi oleh sistem tanggal ".Carbon::now()->format('d-m-Y'), "QRCODE")));
                 ImageWatermarker::input(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.'Asli'.'/'.$fileName))
                                 // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
-                                ->watermark(public_path('berkas/Terkendali-Rahasia-barcode.png'))
+                                ->watermark(public_path('barcode/test2.png'))
+                                // ->watermark(public_path('berkas/Terkendali-Rahasia-barcode.png'))
                                 ->output(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.$fileName))
                                 ->position(Position::BOTTOM_CENTER, -11.5, -2)
                                 // ->asBackground()

@@ -9,6 +9,7 @@ use FilippoToso\PdfWatermarker\Watermarks\ImageWatermark;
 use FilippoToso\PdfWatermarker\PdfWatermarker;
 use FilippoToso\PdfWatermarker\Facades\TextWatermarker;
 use FilippoToso\PdfWatermarker\Support\Position;
+
 use \Carbon\Carbon;
 use DNS1D;
 use DNS2D;
@@ -40,15 +41,40 @@ class TestingController extends Controller
         //                     ->resolution(300)
         //                     ->save();
 
-        // return ImageWatermarker::input(public_path('berkas/SOPIT.pdf'))
+        $barcode = \Storage::disk('barcode')->put('test3.png',base64_decode(DNS2D::getBarcodePNG("Dokumen telah diverifikasi oleh sistem tanggal ".Carbon::now()->isoFormat('dddd, D MMMM YYYY'), "QRCODE", 6,6)));
+        ImageWatermarker::input(public_path('berkas/SOPIT.pdf'))
+                        // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
+                        // ->watermark(public_path('berkas/Terkendali-Rahasia-barcode.png'))
+                        ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
+                        ->output(public_path('berkas/output.pdf'))
+                        ->position(Position::BOTTOM_CENTER, 5.5, -2)
+                        // ->asBackground()
+                        // ->pageRange(3, 4)
+                        ->resolution(300) // 300 dpi
+                        ->save();
+        
+        // barcode stamp
+        ImageWatermarker::input(public_path('berkas/output.pdf'))
+                        // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
+                        ->watermark(public_path('barcode/test3.png'))
+                        // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
+                        ->output(public_path('berkas/output1.pdf'))
+                        ->position(Position::BOTTOM_CENTER, -92, -5)
+                        // ->asBackground()
+                        // ->pageRange(3, 4)
+                        ->resolution(300) // 300 dpi
+                        ->save();
+
+        // return ImageWatermarker::input(public_path('berkas/IT.PPIC.SOP.12.pdf'))
         //                 // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
         //                 ->watermark(public_path('berkas/Terkendali-Rahasia-barcode.png'))
-        //                 ->output(public_path('berkas/output.pdf'))
+        //                 // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
+        //                 ->output(public_path('berkas/IT.PPIC.SOP.12.pdf'))
         //                 ->position(Position::BOTTOM_CENTER, -11.5, -2)
         //                 // ->asBackground()
         //                 // ->pageRange(3, 4)
         //                 ->resolution(270) // 300 dpi
-        //                 ->stream();
+        //                 ->save();
 
         // dd(Carbon::createFromDate(2023,10,14)->format('Y-m-d'));
 
@@ -66,8 +92,20 @@ class TestingController extends Controller
         //                 ->stream();
         // return '<img src="data:image/png;base64,' . DNS2D::getBarcodePNG('4', 'QRCODE') . '" alt="barcode"   />';
         // return DNS2D::getBarcodeSVG('4445645656', 'QRCODE');
+        // return \Storage::disk('public')->put('test.png',DNS2D::getBarcodeHTML('4445645656', 'QRCODE'));
+        
+        // $data['barcode'] = DNS2D::getBarcodeHTML("Dokumen telah diverifikasi oleh sistem tanggal ".Carbon::now()->format('d-m-Y'), "QRCODE");
+        // return response(view('barcode.layout',$data));
+        // return response(view('barcode.layout',$data))->header('Content-type','image/png');
 
-        dd($request->device());
+        // \Storage::disk('barcode')->put('test.png',DNS2D::getBarcodePNG("Dokumen telah diverifikasi oleh sistem tanggal 21-02-2024", "QRCODE"));
+        // \Storage::disk('barcode')->put('test.png',base64_decode(DNS2D::getBarcodePNG("Dokumen telah diverifikasi oleh sistem tanggal 21-02-2024", "QRCODE")));
+        // return \Storage::disk('local')->put('example.txt', 'Contents');
+        
+        // return \Storage::disk('barcode')->put('test11.png',base64_decode(view('barcode.layout',$data)));
+
+        // dd($request->device());
+       
     }
     
 }

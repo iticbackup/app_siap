@@ -286,7 +286,17 @@
                                 var x = document.getElementById('title_file_manager');
                                 x.style.display = "none";
 
-                                document.getElementById('text_file_manager').innerHTML = '<h5>'+result.kategori+'<h5>';
+                                // document.getElementById('text_file_manager').innerHTML = '<h5>'+result.kategori+'<h5>';
+                                document.getElementById('text_file_manager').innerHTML = "<h5>"+result.kategori+"</h5>"+
+                                                                                        "@can('filemanager_upload')"+
+                                                                                        "<div>"+
+                                                                                            '<div class="button-items">' +
+                                                                                                '<button onclick="uploadBerkas(`' + result.kategori_id +
+                                                                                            '`)" class="btn btn-outline-primary btn-sm add-file"><i class="las la-cloud-upload-alt me-2 font-15"></i>Upload File</button>' +
+                                                                                                '<button onclick="uploadBerkasFR(`' + result.kategori_id +
+                                                                                            '`)" class="btn btn-outline-danger btn-sm add-file"><i class="las la-cloud-upload-alt me-2 font-15"></i>Upload FR</button>' +
+                                                                                        "</div>"+
+                                                                                        "@endcan";
                             }
                         }
                         const dataFileManagerList = result.data;
@@ -330,6 +340,10 @@
                                                                                         ")'><i class='fas fa-eye'></i> Preview</button>" +
                                                                                     "<a class='btn btn-primary' href='{{ url('file_manager/download/') }}" + '/' +
                                                                                     value.id + "'><i class='fas fa-download'></i> Download</a>" +
+                                                                                    "@can('filemanager_delete')"+
+                                                                                    '<button onclick="hapus_file(`' + value.id + '`)" class="btn btn-danger">' +
+                                                                                    "<i class='fas fa-trash'></i>" + "</button>" +
+                                                                                    "@endcan"+
                                                                                     // '<button onclick="alert(`'+"Fitur ini sedang maintenance"+'`)" class="btn btn-danger">'+"<i class='fas fa-trash'></i>"+"</button>"+
                                                                                     "</div>" +
                                                                                 "</td>";
