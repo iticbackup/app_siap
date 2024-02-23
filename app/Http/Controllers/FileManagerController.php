@@ -237,26 +237,69 @@ class FileManagerController extends Controller
             // $file_asli->move(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.'Asli'), $fileNameAsli);
 
             if ($file_manager_kategori->kategori == 'ITI') {
+                // old
+                // ImageWatermarker::input(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.'Asli'.'/'.$fileName))
+                //                 // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
+                //                 ->watermark(public_path('berkas/Terkendali-barcode.png'))
+                //                 ->output(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.$fileName))
+                //                 ->position(Position::BOTTOM_CENTER, -11.5, -2)
+                //                 // ->asBackground()
+                //                 // ->pageRange(3, 4)
+                //                 ->resolution(270) // 300 dpi
+                //                 ->save();
+
+                // new
+                $barcode = \Storage::disk('barcode')->put('barcode.png',base64_decode(DNS2D::getBarcodePNG("Dokumen telah diverifikasi oleh DCC pada tanggal ".Carbon::create($explode_validasi[1])->isoFormat('dddd, D MMMM YYYY')." dan MR pada tanggal ".Carbon::create($explode_validasi[3])->isoFormat('dddd, D MMMM YYYY'), "QRCODE", 6,6)));
                 ImageWatermarker::input(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.'Asli'.'/'.$fileName))
-                                // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
-                                ->watermark(public_path('berkas/Terkendali-barcode.png'))
+                                ->watermark(public_path('berkas/Terkendali-barcode1.png'))
                                 ->output(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.$fileName))
-                                ->position(Position::BOTTOM_CENTER, -11.5, -2)
+                                ->position(Position::BOTTOM_CENTER, 45.5, -2)
                                 // ->asBackground()
                                 // ->pageRange(3, 4)
-                                ->resolution(270) // 300 dpi
+                                ->resolution(300) // 300 dpi
+                                ->save();
+                // barcode stamp
+                ImageWatermarker::input(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.$fileName))
+                                ->watermark(public_path('barcode/barcode.png'))
+                                ->output(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.$fileName))
+                                ->position(Position::BOTTOM_CENTER, -92, -5)
+                                // ->asBackground()
+                                // ->pageRange(3, 4)
+                                ->resolution(300) // 300 dpi
                                 ->save();
             }elseif($file_manager_kategori->kategori != 'FR' && $file_manager_kategori->kategori != 'ITI'){
-                $barcode = \Storage::disk('barcode')->put('test2.png',base64_decode(DNS2D::getBarcodePNG("Dokumen telah diverifikasi oleh sistem tanggal ".Carbon::now()->format('d-m-Y'), "QRCODE")));
+                // old
+                // $barcode = \Storage::disk('barcode')->put('test2.png',base64_decode(DNS2D::getBarcodePNG("Dokumen telah diverifikasi oleh sistem tanggal ".Carbon::now()->format('d-m-Y'), "QRCODE")));
+                // ImageWatermarker::input(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.'Asli'.'/'.$fileName))
+                //                 // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
+                //                 ->watermark(public_path('barcode/test2.png'))
+                //                 // ->watermark(public_path('berkas/Terkendali-Rahasia-barcode.png'))
+                //                 ->output(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.$fileName))
+                //                 ->position(Position::BOTTOM_CENTER, -11.5, -2)
+                //                 // ->asBackground()
+                //                 // ->pageRange(3, 4)
+                //                 ->resolution(270) // 300 dpi
+                //                 ->save();
+                
+                // new
+                $barcode = \Storage::disk('barcode')->put('barcode.png',base64_decode(DNS2D::getBarcodePNG("Dokumen telah diverifikasi oleh DCC pada tanggal ".Carbon::create($explode_validasi[1])->isoFormat('dddd, D MMMM YYYY')." dan MR pada tanggal ".Carbon::create($explode_validasi[3])->isoFormat('dddd, D MMMM YYYY'), "QRCODE", 6,6)));
                 ImageWatermarker::input(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.'Asli'.'/'.$fileName))
-                                // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
-                                ->watermark(public_path('barcode/test2.png'))
-                                // ->watermark(public_path('berkas/Terkendali-Rahasia-barcode.png'))
+                                ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
                                 ->output(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.$fileName))
-                                ->position(Position::BOTTOM_CENTER, -11.5, -2)
+                                ->position(Position::BOTTOM_CENTER, 5.5, -2)
                                 // ->asBackground()
                                 // ->pageRange(3, 4)
-                                ->resolution(270) // 300 dpi
+                                ->resolution(300) // 300 dpi
+                                ->save();
+
+                // barcode stamp
+                ImageWatermarker::input(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.$fileName))
+                                ->watermark(public_path('barcode/barcode.png'))
+                                ->output(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.$fileName))
+                                ->position(Position::BOTTOM_CENTER, -92, -5)
+                                // ->asBackground()
+                                // ->pageRange(3, 4)
+                                ->resolution(300) // 300 dpi
                                 ->save();
             }
             // elseif($file_manager_kategori->kategori == 'FR'){

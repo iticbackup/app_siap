@@ -433,7 +433,7 @@
                             contentType: false,
                             processData: false,
                             beforeSend: function() {
-                                $('.modalLoading').modal('show');
+                                $('#loadingscreen').modal('show');
                                 // document.getElementById('view_download').innerHTML =
                                 //     "<div class='spinner-border spinner-border-custom-2 text-primary' role='status'></div>";
                             },
@@ -444,7 +444,7 @@
                                         message: result.message_content
                                     });
                                     setTimeout(() => {
-                                        $('.modalLoading').modal('hide');
+                                        $('#loadingscreen').modal('hide');
                                         window.location.href =
                                             result.link;
                                     }, 5000);
@@ -453,6 +453,7 @@
                                         title: result.success,
                                         message: result.error
                                     });
+                                    $('#loadingscreen').modal('hide');
                                 }
                             },
                             error: function(request, status, error) {
@@ -460,6 +461,7 @@
                                     title: 'Error',
                                     message: error,
                                 });
+                                $('#loadingscreen').modal('hide');
                             }
                         });
                     }, false], // true to focus

@@ -33,37 +33,42 @@ class TestingController extends Controller
 
     public function testing2(Request $request)
     {
-        // return ImageWatermarker::input(public_path('berkas/SOPIT.pdf'))
-        //                     ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
-        //                     ->output(public_path('berkas/output.pdf'))
-        //                     ->position(Position::BOTTOM_CENTER, -50, -10)
-        //                     ->asBackground()
-        //                     ->resolution(300)
-        //                     ->save();
+        return ImageWatermarker::input(public_path('berkas/IT.PPIC.ITI.01.pdf'))
+                            ->watermark(public_path('berkas/Terkendali-Rahasia-barcode.png'))
+                            ->output(public_path('berkas/output.pdf'))
+                            ->position(Position::BOTTOM_CENTER, -20, -2)
+                            ->asBackground()
+                            ->resolution(300)
+                            ->save();
 
-        $barcode = \Storage::disk('barcode')->put('barcode.png',base64_decode(DNS2D::getBarcodePNG("Dokumen telah diverifikasi oleh sistem tanggal ".Carbon::now()->isoFormat('dddd, D MMMM YYYY'), "QRCODE", 6,6)));
-        ImageWatermarker::input(public_path('berkas/SOPIT.pdf'))
-                        // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
-                        // ->watermark(public_path('berkas/Terkendali-Rahasia-barcode.png'))
-                        ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
-                        ->output(public_path('berkas/output.pdf'))
-                        ->position(Position::BOTTOM_CENTER, 5.5, -2)
-                        // ->asBackground()
-                        // ->pageRange(3, 4)
-                        ->resolution(300) // 300 dpi
-                        ->save();
+        // $barcode = \Storage::disk('barcode')->put('barcode.png',base64_decode(DNS2D::getBarcodePNG("Dokumen telah diverifikasi oleh sistem tanggal ".Carbon::now()->isoFormat('dddd, D MMMM YYYY'), "QRCODE", 6,6)));
+        // ImageWatermarker::input(public_path('berkas/SOPIT.pdf'))
+        //                 // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
+        //                 // ->watermark(public_path('berkas/Terkendali-Rahasia-barcode.png'))
+        //                 // Terkendali
+        //                 ->watermark(public_path('berkas/Terkendali-barcode1.png'))
+        //                 // End Terkendali
+        //                 // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
+        //                 ->output(public_path('berkas/output.pdf'))
+        //                 // Terkendali
+        //                 ->position(Position::BOTTOM_CENTER, 45.5, -2)
+        //                 // End Terkendali
+        //                 // ->asBackground()
+        //                 // ->pageRange(3, 4)
+        //                 ->resolution(300) // 300 dpi
+        //                 ->save();
         
-        // barcode stamp
-        ImageWatermarker::input(public_path('berkas/output.pdf'))
-                        // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
-                        ->watermark(public_path('barcode/test3.png'))
-                        // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
-                        ->output(public_path('berkas/output1.pdf'))
-                        ->position(Position::BOTTOM_CENTER, -92, -5)
-                        // ->asBackground()
-                        // ->pageRange(3, 4)
-                        ->resolution(300) // 300 dpi
-                        ->save();
+        // // barcode stamp
+        // ImageWatermarker::input(public_path('berkas/output.pdf'))
+        //                 // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
+        //                 ->watermark(public_path('barcode/test3.png'))
+        //                 // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))
+        //                 ->output(public_path('berkas/output1.pdf'))
+        //                 ->position(Position::BOTTOM_CENTER, -92, -5)
+        //                 // ->asBackground()
+        //                 // ->pageRange(3, 4)
+        //                 ->resolution(300) // 300 dpi
+        //                 ->save();
 
         // return ImageWatermarker::input(public_path('berkas/IT.PPIC.SOP.12.pdf'))
         //                 // ->watermark(public_path('berkas/Terkendali-Rahasia-Edit.png'))

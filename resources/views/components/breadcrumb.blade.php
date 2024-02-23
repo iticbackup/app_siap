@@ -14,7 +14,7 @@
                         @endif
                     </ol>
                 </div><!--end col-->
-                <div class="col-auto align-self-center">
+                {{-- <div class="col-auto align-self-center">
                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
                         <span class="ay-name" id="Day_Name">Today:</span>&nbsp;
                         <span class="" id="Select_date">Jan 11</span>
@@ -23,7 +23,7 @@
                     <a href="#" class="btn btn-sm btn-outline-primary">
                         <i data-feather="download" class="align-self-center icon-xs"></i>
                     </a>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
