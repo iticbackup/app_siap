@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="preview_file">
-                
+                <canvas id="the-canvas"></canvas>
             </div>
         </div>
     </div>

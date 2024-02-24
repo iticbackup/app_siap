@@ -146,6 +146,7 @@
     <script src="{{ URL::asset('public/assets/plugins/dropify/js/dropify.min.js') }}"></script>
     <script src="{{ URL::asset('public/assets/js/pages/jquery.form-upload.init.js') }}"></script>
     <script src="{{ URL::asset('public/assets/plugins/sweet-alert2/sweetalert2.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js" integrity="sha512-Z8CqofpIcnJN80feS2uccz+pXWgZzeKxDsDNMD/dJ6997/LSRY+W4NmEt9acwR+Gt9OHN0kkI1CTianCwoqcjQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
         $.ajaxSetup({
