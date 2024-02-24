@@ -498,7 +498,7 @@ class PerubahanDataFileManagerController extends Controller
                     //             '/'.$file_manager_perubahan_data_detail->kategori_file.'/'.$file_manager_perubahan_data_detail->files);
                     if (File::exists($from_file)) {
                         $to_file = public_path('berkas/'.$file_manager_perubahan_data_detail->file_manager_perubahan_data->departemen->departemen.
-                                    '/'.$file_manager_perubahan_data_detail->kategori_file.'/'.$file_manager_perubahan_data_detail->files);
+                                    '/'.$file_manager_perubahan_data_detail->kategori_file.'/'.'Asli'.'/'.$file_manager_perubahan_data_detail->files);
                         $files = rename($from_file,$to_file);
                     }
 
@@ -568,6 +568,10 @@ class PerubahanDataFileManagerController extends Controller
                                             ->save();
                         }
                     }
+                    // elseif($file_manager_perubahan_data_detail->kategori_file == 'PK'){
+                    //     $barcode = \Storage::disk('barcode')->put('barcode.png',base64_decode(DNS2D::getBarcodePNG("Dokumen telah diverifikasi oleh DCC pada tanggal ".Carbon::create($explode_validasi[1])->isoFormat('dddd, D MMMM YYYY')." dan MR pada tanggal ".Carbon::create($explode_validasi[3])->isoFormat('dddd, D MMMM YYYY'), "QRCODE", 6,6)));
+
+                    // }
 
 
                     $file_manager_category = $this->file_manager_category->where('departemen_id',$file_manager_perubahan_data_detail->file_manager_perubahan_data->departemen_id)

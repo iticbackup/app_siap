@@ -249,7 +249,7 @@ class FileManagerController extends Controller
                 //                 ->save();
 
                 // new
-                $barcode = \Storage::disk('barcode')->put('barcode.png',base64_decode(DNS2D::getBarcodePNG("Dokumen telah diverifikasi oleh DCC pada tanggal ".Carbon::create($explode_validasi[1])->isoFormat('dddd, D MMMM YYYY')." dan MR pada tanggal ".Carbon::create($explode_validasi[3])->isoFormat('dddd, D MMMM YYYY'), "QRCODE", 6,6)));
+                $barcode = \Storage::disk('barcode')->put('barcode.png',base64_decode(DNS2D::getBarcodePNG("Dokumen telah diverifikasi oleh sistem pada tanggal ".Carbon::now()->isoFormat('dddd, D MMMM YYYY'), "QRCODE", 6,6)));
                 ImageWatermarker::input(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.'Asli'.'/'.$fileName))
                                 ->watermark(public_path('berkas/Terkendali-barcode1.png'))
                                 ->output(public_path('berkas/'.$file_manager_kategori->departemen->departemen.'/'.$file_manager_kategori->kategori.'/'.$fileName))
