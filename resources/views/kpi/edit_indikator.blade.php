@@ -40,6 +40,12 @@
                         <label for="">Indikator :</label>
                         <textarea name="indikator" class="form-control" id="" cols="30" rows="3" required>{{ $kpi_indikator->indikator }}</textarea>
                     </div>
+                    <div class="col-md-1">
+                        <div class="mb-3">
+                            <label for="">Bobot :</label>
+                            <input type="text" name="bobot" class="form-control" placeholder="Bobot (%)" value="{{ $kpi_indikator->bobot }}" id="">
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Update</button>

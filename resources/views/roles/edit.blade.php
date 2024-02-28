@@ -102,7 +102,13 @@
                                 <br />
                                 <div class="row">
                                     @foreach ($permission as $value)
-                                    <div class="col-3">
+                                    {{-- @php
+                                        $explode_permission = explode('-',$value->name);
+                                    @endphp --}}
+                                    {{-- <div class="col-6">
+                                        <div>{{ $explode_permission[0] }}</div>
+                                    </div> --}}
+                                    <div class="col-6">
                                         <label>{{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermissions) ? true : false, ['class' => 'name']) }}
                                             {{ ucwords($value->name) }}</label>
                                     </div>

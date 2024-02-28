@@ -543,7 +543,7 @@ class KpiController extends Controller
                                 ->whereMonth('periode',$format_date->format('m'))
                                 ->get();
         if ($data['kpis']->isEmpty()) {
-            return redirect()->back()->with('error','Data Belum Tersedia');
+            return redirect()->back()->with('error','KPI Indikator departemen belum tersedia, silahkan input terlebih dahulu!');
         }
         $data['kpi_bobots'] = $this->kpi_bobot->all();
         $data['date'] = $date;

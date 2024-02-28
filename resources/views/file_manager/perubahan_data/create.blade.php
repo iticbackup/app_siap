@@ -128,6 +128,7 @@
                                                 <option value="IK">IK</option>
                                                 <option value="ITI">ITI</option>
                                                 <option value="FR">FR</option>
+                                                <option value="SMK3">SMK3</option>
                                             </select>
                                         </div>
                                     </div>
@@ -199,7 +200,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Tanggal Formulir Dibuat</label>
-                                <input type="date" name="tanggal_formulir" class="form-control" required id="" oninvalid="this.setCustomValidity('Input Tanggal Wajib Diisi')" oninput="this.setCustomValidity('')">
+                                <input type="date" name="tanggal_formulir" class="form-control" required value="{{ date('Y-m-d') }}" readonly oninvalid="this.setCustomValidity('Input Tanggal Wajib Diisi')" oninput="this.setCustomValidity('')">
                             </div>
                         </div>
                         <hr style="border-top: 1px dashed rgb(0, 17, 255);">

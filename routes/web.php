@@ -12,16 +12,15 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes([
     'register' => false, // Registration Routes...
     'reset' => false, // Password Reset Routes...
     'verify' => false, // Email Verification Routes...
 ]);
+
+Route::get('/', function () {
+    return view('welcome');
+});
 
 // Route::resource('login', App\Http\Controllers\Auth\LoginController::class);
 Route::prefix('docs')->group(function () {
@@ -47,10 +46,6 @@ Route::get('testing', function(){
 });
 
 Route::group(['middleware' => ['auth']], function() {
-    // Route::get('testing', function(){
-    //     $array = array('2023-09-02,2023-09-03');
-    //     return implode(',',$array);
-    // });
     Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('activity_log', [App\Http\Controllers\UserController::class, 'activity_log'])->name('activity_log');
     Route::resource('roles', App\Http\Controllers\RoleController::class);

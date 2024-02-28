@@ -51,57 +51,43 @@
                         </thead>
                         <tbody>
                             @for ($i = $start_date; $i <= $end_date; $i++)
-                                @php
-                                    $date_now = \Carbon\Carbon::today()->format('d-m-Y');
-                                    $start_month = \Carbon\Carbon::create($i . '-' . '01')->format('d-m-Y');
-                                    $finish_month = \Carbon\Carbon::create($i . '-' . '10')->format('d-m-Y');
-                                    $convert_date_now = strtotime($date_now);
-                                    $convert_start_month = strtotime($start_month);
-                                    $convert_finish_month = strtotime($finish_month);
-                                    $explode_start_month = explode('-', $date_now);
-                                    $explode_finish = explode('-', $finish_month);
-                                @endphp
-                                <tr>
-                                    <td class="text-center"><span
-                                            class="badge badge-outline-primary">{{ $start_month . ' s/d ' . $finish_month }}</span>
-                                    </td>
-                                    <td class="text-center">
-                                        @if ($convert_finish_month <= $convert_date_now)
-                                            <span class="badge bg-success"><i class="fas fa-check"></i> FINISH</span>
-                                        @elseif($convert_start_month <= $convert_date_now)
-                                            <span class="badge bg-warning">OPEN</span>
-                                        @else
-                                            <span class="badge bg-primary">CLOSE</span>
-                                        @endif
-                                        {{-- @if ($explode_start_month[2] . $explode_start_month[1] . $explode_start_month[0] <= $explode_finish[2] . $explode_finish[1] . $explode_finish[0])
+                            @php
+                                $date_now = \Carbon\Carbon::today()->format('d-m-Y');
+                                // $start_month = \Carbon\Carbon::create($i.'-'.'01')->subMonth()->format('d-m-Y');
+                                $start_month = \Carbon\Carbon::create($i.'-'.'01')->format('d-m-Y');
+                                $finish_month = \Carbon\Carbon::create($i.'-'.'10')->format('d-m-Y');
+                                $convert_date_now = strtotime($date_now);
+                                $convert_finish_month = strtotime($finish_month);
+                                $explode_start_month = explode('-',$date_now);
+                                $explode_finish = explode('-',$finish_month);
+                            @endphp
+                            <tr>
+                                <td class="text-center"><span class="badge badge-outline-primary">{{ $start_month.' sd '.$finish_month }}</span></td>
+                                <td class="text-center">
+                                    @if ($explode_start_month[2].$explode_start_month[1].$explode_start_month[0] <= $explode_finish[2].$explode_finish[1].$explode_finish[0])
                                         <span class="badge bg-warning">Process</span>
                                     @else
                                         <span class="badge bg-success">Selesai</span>
-                                    @endif --}}
-                                    </td>
-                                    <td>
-                                        <div class="btn-group">
-                                            @if ($convert_finish_month <= $convert_date_now)
-                                                @if (auth()->user()->nik != '000000' && auth()->user()->nik != '1910125')
-                                                    <a href="{{ route('kpi_date', ['date' => $finish_month]) }}"
-                                                        class="btn btn-outline-info"><i class="fas fa-plus"></i> Input
-                                                        KPI</a>
-                                                @endif
+                                    @endif
+                                    {{-- {{ dd($explode_start_month[2].$explode_start_month[1].$explode_start_month[0].' - '.$explode_finish[2].$explode_finish[1].$explode_finish[0]) }} --}}
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        {{-- @if (auth()->user()->nik != '1910125' && auth()->user()->nik != '0000000')
+                                            @if ($convert_date_now <= $convert_finish_month)
+                                            <a href="{{ route('kpi_date',['date' => $finish_month]) }}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Input KPI</a>
                                             @endif
-                                            @if ($convert_start_month <= $convert_date_now)
-                                            <a href="{{ route('kpi.input_detail_kpi_departemen',['date' => $finish_month]) }}" class="btn btn-outline-primary">KPI Departemen</a>
-                                            @endif
-                                        </div>
-                                        {{-- <div class="btn-group">
-                                        @if ($explode_start_month[2] . $explode_start_month[1] . $explode_start_month[0] <= $explode_finish[2] . $explode_finish[1] . $explode_finish[0])
+                                        @endif --}}
+                                        @if ($explode_start_month[2].$explode_start_month[1].$explode_start_month[0] <= $explode_finish[2].$explode_finish[1].$explode_finish[0])
                                             @if (auth()->user()->nik != '000000' && auth()->user()->nik != '1910125')
                                             <a href="{{ route('kpi_date',['date' => $finish_month]) }}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Input KPI</a>
                                             @endif
                                         @endif
                                         <a href="{{ route('kpi.input_detail_kpi_departemen',['date' => $finish_month]) }}" class="btn btn-outline-primary">KPI Departemen</a>
-                                    </div> --}}
-                                    </td>
-                                </tr>
+                                        {{-- <a href="{{ route('kpi.input_date_kpi_detail',['date' => $finish_month]) }}" class="btn btn-outline-primary"><i class="fas fa-eye"></i> Detail KPI</a> --}}
+                                    </div>
+                                </td>
+                            </tr>
                             @endfor
 
                         </tbody>

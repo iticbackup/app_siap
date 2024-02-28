@@ -132,6 +132,10 @@
                 <a href="{{ route('b_module') }}" class="{{ Request::is('b_modules') ? 'active' : '' }}"><i
                         class="mdi mdi-file-table"></i> Module</a>
             </li>
+            <li class="{{ Request::is('maintenance') ? 'active' : '' }}">
+                <a href="#" class="{{ Request::is('maintenance') ? 'active' : '' }}"><i
+                        class="mdi mdi-file-table"></i> Maintenance</a>
+            </li>
             {{-- @can('user-management-list') --}}
             <li>
                 <a href="javascript: void(0);"> <i data-feather="file-text"
