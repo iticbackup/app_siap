@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <form action="{{ route('kpi_indikator_update',['departemen_user_id' => $kpi_team->departemen_user_id, 'id' => $kpi_indikator->id]) }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('kpi.kpi_indikator_update',['departemen_user_id' => $kpi_team->departemen_user_id, 'id' => $kpi_indikator->id]) }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
                     <div class="mb-3">
@@ -49,7 +49,7 @@
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Update</button>
-                    <a href="{{ route('kpi_indikator_buat', $kpi_team->departemen_user_id) }}" class="btn btn-secondary">Back</a>
+                    <a href="{{ route('kpi.kpi_indikator_buat', $kpi_team->departemen_user_id) }}" class="btn btn-secondary">Back</a>
                 </div>
                 </form>
             </div>

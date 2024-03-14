@@ -24,6 +24,7 @@
 
     @include('kpi.departemen.modalBuatTeam')
     @include('kpi.departemen.modalDetailTeam')
+    @include('kpi.departemen.modalEditTeam')
 
     <div class="row">
         <div class="col-12">
@@ -108,12 +109,13 @@
             // $('.modalBuatTeam').modal('show');
             $.ajax({
                 type: 'GET',
-                url: "{{ url('kpi/departemen/') }}" + '/' + id,
+                url: "{{ url('kpi/departemen/detail/') }}" + '/' + id,
                 contentType: "application/json;  charset=utf-8",
                 cache: false,
                 success: (result) => {
                     document.getElementById('title_kpi_team').innerHTML = 'Buat Team '+result.kpi.departemen;
-                    
+                    // $('.departemen_user_id').append("<option value=''>-- Select Team --</option>");
+
                     const departemen_user = result.departemen_user;
                     var txt_departemen_user = "";
                     departemen_user.forEach(data_departemen_user);
@@ -136,6 +138,7 @@
 
         function detail_team(id) {
             // $('.modalBuatTeam').modal('show');
+            // alert(id);
             $.ajax({
                 type: 'GET',
                 url: "{{ url('kpi/departemen/') }}" + '/' + id + '/team',
@@ -144,7 +147,8 @@
                 success: (result) => {
                     // alert(result);
                     document.getElementById('detail_title_kpi_team').innerHTML = 'Detail Team';
-                    
+                    $('#kpi_departemen_ids').val(id);
+
                     const kpi_team = result.data;
                     var txt_kpi_team = "";
                     kpi_team.forEach(detail_kpi_team);
@@ -154,32 +158,91 @@
                         //                     '<div>'+'Nama Team'+'</div>'+
                         //                     '<div>'+'<input type="text" class="form-control" readonly value="'+value.departemen_user.team+'">'+'</div>'+
                         //                 '</div>';
-                        if (value.jabatan == "Verifikator") {
-                            txt_kpi_team += '<tr>'+
-                                                '<td class="text-center">'+(index+1)+'</td>'+
-                                                '<td>'+value.departemen_user.team+'</td>'+
-                                                '<td>'+
-                                                    '<select class="form-control">'+
-                                                        '<option value="Verifikator" selected>'+'Verifikator'+'</option>'+
-                                                        '<option value="Staff">'+'Staff'+'</option>'+
-                                                    '</select>'+
-                                                '</td>'+
-                                            '</tr>';
+                        if (value.is_verifikasi == "Y") {
+                            // if (value.is_verifikasi_culture == "y") {
+                            //     var selected = 'selected';
+                            // }else{
+                            //     var selected = null;
+                            // }
+                            if (value.is_verifikasi_culture == "y"){
+                                txt_kpi_team += '<tr>'+
+                                                    '<td class="text-center">'+(index+1)+'</td>'+
+                                                    '<td>'+value.team+'</td>'+
+                                                    '<td>'+
+                                                        '<select name="edit_status_'+index+'" class="form-control">'+
+                                                            '<option value="Y" selected>'+'Ya'+'</option>'+
+                                                            '<option value="N">'+'Tidak'+'</option>'+
+                                                        '</select>'+
+                                                    '</td>'+
+                                                    '<td>'+
+                                                        '<select name="edit_culture_verifikasi_status_'+index+'" class="form-control">'+
+                                                            '<option value="">'+'-- Pilih Culture Validasi --'+'</option>'+
+                                                            '<option value="y" selected>'+'Ya'+'</option>'+
+                                                            '<option value="n">'+'Tidak'+'</option>'+
+                                                        '</select>'+
+                                                    '</td>'+
+                                                '</tr>';
+                            }else{
+                                txt_kpi_team += '<tr>'+
+                                                    '<td class="text-center">'+(index+1)+'</td>'+
+                                                    '<td>'+value.team+'</td>'+
+                                                    '<td>'+
+                                                        '<select name="edit_status_'+index+'" class="form-control">'+
+                                                            '<option value="Y">'+'Ya'+'</option>'+
+                                                            '<option value="N">'+'Tidak'+'</option>'+
+                                                        '</select>'+
+                                                    '</td>'+
+                                                    '<td>'+
+                                                        '<select name="edit_culture_verifikasi_status_'+index+'" class="form-control">'+
+                                                            '<option value="">'+'-- Pilih Culture Validasi --'+'</option>'+
+                                                            '<option value="y">'+'Ya'+'</option>'+
+                                                            '<option value="n" selected>'+'Tidak'+'</option>'+
+                                                        '</select>'+
+                                                    '</td>'+
+                                                '</tr>';
+                            }
                         } else {
-                            txt_kpi_team += '<tr>'+
-                                                '<td class="text-center">'+(index+1)+'</td>'+
-                                                '<td>'+value.departemen_user.team+'</td>'+
-                                                '<td>'+
-                                                    '<select class="form-control">'+
-                                                        '<option value="Verifikator">'+'Verifikator'+'</option>'+
-                                                        '<option value="Staff" selected>'+'Staff'+'</option>'+
-                                                    '</select>'+
-                                                '</td>'+
-                                            '</tr>';
+                            if (value.is_verifikasi_culture == "y"){
+                                txt_kpi_team += '<tr>'+
+                                                    '<td class="text-center">'+(index+1)+'</td>'+
+                                                    '<td>'+value.team+'</td>'+
+                                                    '<td>'+
+                                                        '<select name="edit_status_'+index+'" class="form-control">'+
+                                                            '<option value="Y">'+'Ya'+'</option>'+
+                                                            '<option value="N" selected>'+'Tidak'+'</option>'+
+                                                        '</select>'+
+                                                    '</td>'+
+                                                    '<td>'+
+                                                        '<select name="edit_culture_verifikasi_status_'+index+'" class="form-control">'+
+                                                            '<option value="">'+'-- Pilih Culture Validasi --'+'</option>'+
+                                                            '<option value="y" selected>'+'Ya'+'</option>'+
+                                                            '<option value="n">'+'Tidak'+'</option>'+
+                                                        '</select>'+
+                                                    '</td>'+
+                                                '</tr>';
+                            }else{
+                                txt_kpi_team += '<tr>'+
+                                                    '<td class="text-center">'+(index+1)+'</td>'+
+                                                    '<td>'+value.team+'</td>'+
+                                                    '<td>'+
+                                                        '<select name="edit_status_'+index+'" class="form-control">'+
+                                                            '<option value="Y">'+'Ya'+'</option>'+
+                                                            '<option value="N" selected>'+'Tidak'+'</option>'+
+                                                        '</select>'+
+                                                    '</td>'+
+                                                    '<td>'+
+                                                        '<select name="edit_culture_verifikasi_status_'+index+'" class="form-control">'+
+                                                            '<option value="">'+'-- Pilih Culture Validasi --'+'</option>'+
+                                                            '<option value="y">'+'Ya'+'</option>'+
+                                                            '<option value="n" selected>'+'Tidak'+'</option>'+
+                                                        '</select>'+
+                                                    '</td>'+
+                                                '</tr>';
+                            }
                         }
                         no++;
                     }
-                    // $('#kpi_departemen_id').val(id);
+                    
                     document.getElementById('detail_team_kpi').innerHTML = txt_kpi_team;
                     $('.modalDetailTeam').modal('show');
                 },
@@ -192,10 +255,72 @@
             });
         }
 
-        $('#form-simpan').submit(function(e) {
+        function edit_team(id) {
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('kpi/departemen/') }}" + '/' + id + '/team',
+                contentType: "application/json;  charset=utf-8",
+                cache: false,
+                success: (result) => {
+                    document.getElementById('edit_title_kpi_team').innerHTML = 'Edit Team';
+                    $('#edit_kpi_departemen_ids').val(id);
+                    const kpi_team = result.data;
+                    var txt_kpi_team = "";
+                    kpi_team.forEach(detail_kpi_team);
+
+                    function detail_kpi_team(value,index) {
+                        if (value.is_verifikasi == "Y") {
+                            var status_verifikasi = "Ya";
+                        }else{
+                            var status_verifikasi = "Tidak";
+                        }
+
+                        if (value.status == 'y') {
+                            txt_kpi_team += '<tr>'+
+                                                '<td class="text-center">'+(index+1)+'</td>'+
+                                                '<td class="text-center">'+value.team+'</td>'+
+                                                '<td class="text-center">'+value.jabatan+'</td>'+
+                                                '<td class="text-center">'+status_verifikasi+'</td>'+
+                                                '<td class="text-center">'+
+                                                    '<select name="status_active'+index+'" class="form-control">'+
+                                                        '<option value="">'+'-- Pilih Status --'+'</option>'+
+                                                        '<option value="y" selected>'+'Aktif'+'</option>'+
+                                                        '<option value="n">'+'Tidak Aktif'+'</option>'+
+                                                    '</select>'+
+                                                '</td>'+
+                                            '</tr>';
+                        } else {
+                            txt_kpi_team += '<tr>'+
+                                                '<td class="text-center">'+(index+1)+'</td>'+
+                                                '<td class="text-center">'+value.team+'</td>'+
+                                                '<td class="text-center">'+value.jabatan+'</td>'+
+                                                '<td class="text-center">'+status_verifikasi+'</td>'+
+                                                '<td class="text-center">'+
+                                                    '<select name="status_active'+index+'" class="form-control">'+
+                                                        '<option value="">'+'-- Pilih Status --'+'</option>'+
+                                                        '<option value="y">'+'Aktif'+'</option>'+
+                                                        '<option value="n" selected>'+'Tidak Aktif'+'</option>'+
+                                                    '</select>'+
+                                                '</td>'+
+                                            '</tr>';
+                        }
+                    }
+                    document.getElementById('edit_team_kpi').innerHTML = txt_kpi_team;
+                    $('.modalEditTeam').modal('show');
+                },
+                error: function(request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            })
+        }
+
+        $('#form-update').submit(function(e) {
             e.preventDefault();
             let formData = new FormData(this);
-            // $('#image-input-error').text('');
+            $('#image-input-error').text('');
             $.ajax({
                 type: 'POST',
                 url: "{{ route('kpi.kpi_departemen_detail_simpan') }}",
@@ -209,6 +334,43 @@
                             message: result.message_content
                         });
                         table.ajax.reload();
+                        $('#modalDetailTeam').modal('hide');
+                    } else {
+                        iziToast.error({
+                            title: result.success,
+                            message: result.error
+                        });
+                    }
+                },
+                error: function(request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            });
+            // alert('test');
+        });
+
+        $('#form-team-update').submit(function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            $('#image-input-error').text('');
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('kpi.kpi_detail_team_update') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: (result) => {
+                    // console.log(result);
+                    if (result.success != false) {
+                        iziToast.success({
+                            title: result.message_title,
+                            message: result.message_content
+                        });
+                        table.ajax.reload();
+                        $('#modalEditTeam').modal('hide');
                     } else {
                         iziToast.error({
                             title: result.success,

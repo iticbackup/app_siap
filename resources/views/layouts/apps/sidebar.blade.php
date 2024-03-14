@@ -80,7 +80,7 @@
                         <i class="ti-control-record"></i>Bobot</a>
                     </li> --}}
                     @can('kpi_indikator')
-                    <li class="nav-item"><a class="nav-link" href="{{ route('kpi.kpi_indikator') }}">
+                    <li class="nav-item"><a class="nav-link" href="{{ route('kpi_indikator') }}">
                         <i class="ti-control-record"></i>Indikator</a>
                     </li>
                     @endcan
@@ -90,7 +90,7 @@
                     </li>
                     @endcan
                     <li class="nav-item"><a class="nav-link" href="{{ route('kpi') }}">
-                        <i class="ti-control-record"></i>Data KPI</a>
+                        <i class="ti-control-record"></i>Laporan KPI</a>
                     </li>
                 </ul>
             </li>

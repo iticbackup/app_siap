@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <form action="{{ route('kpi_indikator_simpan',['departemen_user_id' => $kpi_team->departemen_user_id]) }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('kpi.kpi_indikator_simpan',['departemen_user_id' => $kpi_team->departemen_user_id]) }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
                         <div class="mb-3">
@@ -65,8 +65,8 @@
                                             <td class="text-center">{{ $kpi_indikator->bobot }}</td>
                                             <td class="text-center">
                                                 <div class="btn-group">
-                                                    <a href="{{ route('kpi_indikator_edit',['departemen_user_id' => $kpi_team->departemen_user_id, 'id' => $kpi_indikator->id]) }}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
-                                                    <a href="{{ route('kpi_indikator_delete',['departemen_user_id' => $kpi_team->departemen_user_id, 'id' => $kpi_indikator->id]) }}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                                    <a href="{{ route('kpi.kpi_indikator_edit',['departemen_user_id' => $kpi_team->departemen_user_id, 'id' => $kpi_indikator->id]) }}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+                                                    <a href="{{ route('kpi.kpi_indikator_delete',['departemen_user_id' => $kpi_team->departemen_user_id, 'id' => $kpi_indikator->id]) }}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -78,14 +78,10 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="mb-3">
-                            <label for=""><b>Informasi:</b></label>
-                            <p><span class="badge bg-primary">Indikator KPI Team tidak akan berubah dari data sebelumnya.</span></p>
-                        </div>
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
-                        <a href="{{ route('kpi_indikator') }}" class="btn btn-secondary">Back</a>
+                        <a href="{{ route('kpi.kpi_indikator') }}" class="btn btn-secondary">Back</a>
                     </div>
                 </form>
             </div>

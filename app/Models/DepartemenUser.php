@@ -25,8 +25,14 @@ class DepartemenUser extends Model
     {
         return $this->belongsTo(\App\Models\Departemen::class, 'departemen_id');
     }
+
     public function rekap_pelatihan_seminar_peserta()
     {
         return $this->hasMany(\App\Models\RekapPelatihanSeminarPeserta::class, 'peserta');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'nik', 'nik');
     }
 }

@@ -145,28 +145,53 @@ Route::group(['middleware' => ['auth']], function() {
         Route::post('download/periode', [App\Http\Controllers\PerubahanDataFileManagerController::class, 'download_report'])->name('perubahan_data.download_report');
     });
 
+    // Route::prefix('kpi')->group(function () {
+    //     Route::get('/', [App\Http\Controllers\KpiController::class, 'index'])->name('kpi');
+    //     Route::get('create', [App\Http\Controllers\KpiController::class, 'buat_kpi'])->name('kpi.buat_kpi');
+    //     Route::get('indikator', [App\Http\Controllers\KpiController::class, 'kpi_indikator'])->name('kpi.kpi_indikator');
+    //     Route::get('indikator/team/{departemen_user_id}', [App\Http\Controllers\KpiController::class, 'kpi_indikator_buat'])->name('kpi.kpi_indikator_buat');
+    //     Route::post('indikator/team/{departemen_user_id}/simpan', [App\Http\Controllers\KpiController::class, 'kpi_indikator_simpan'])->name('kpi.kpi_indikator_simpan');
+    //     Route::get('indikator/team/{departemen_user_id}/{id}/edit', [App\Http\Controllers\KpiController::class, 'kpi_indikator_edit'])->name('kpi.kpi_indikator_edit');
+    //     Route::post('indikator/team/{departemen_user_id}/{id}/edit', [App\Http\Controllers\KpiController::class, 'kpi_indikator_update'])->name('kpi.kpi_indikator_update');
+    //     Route::get('indikator/team/{departemen_user_id}/{id}/delete', [App\Http\Controllers\KpiController::class, 'kpi_indikator_delete'])->name('kpi.kpi_indikator_delete');
+        
+    //     Route::prefix('departemen')->group(function () {
+    //         Route::get('/', [App\Http\Controllers\KpiController::class, 'kpi_departemen'])->name('kpi.kpi_departemen');
+    //         Route::get('{date}', [App\Http\Controllers\KpiController::class, 'input_date_kpi'])->name('kpi_date');
+    //         Route::post('{date}/simpan', [App\Http\Controllers\KpiController::class, 'input_date_kpi_simpan'])->name('kpi.input_date_kpi_simpan');
+    //         Route::get('{date}/departemen', [App\Http\Controllers\KpiController::class, 'input_detail_kpi_departemen'])->name('kpi.input_detail_kpi_departemen');
+    //         Route::get('{date}/departemen/{id_departemen}/detail', [App\Http\Controllers\KpiController::class, 'input_date_kpi_detail'])->name('kpi.input_date_kpi_detail');
+    //         Route::get('{date}/departemen/{id_departemen}/validasi', [App\Http\Controllers\KpiController::class, 'input_date_kpi_validasi'])->name('kpi.input_date_kpi_validasi');
+    //         Route::post('{date}/departemen/{id_departemen}/validasi/simpan', [App\Http\Controllers\KpiController::class, 'input_date_kpi_validasi_simpan'])->name('kpi.input_date_kpi_validasi_simpan');
+    //         Route::get('{date}/departemen/{id_departemen}/print', [App\Http\Controllers\KpiController::class, 'kpi_print'])->name('kpi.kpi_print');
+    //         Route::get('{id}', [App\Http\Controllers\KpiController::class, 'kpi_departemen_detail'])->name('kpi.kpi_departemen_detail');
+    //         Route::get('{kpi_departemen_id}/team', [App\Http\Controllers\KpiController::class, 'kpi_detail_team'])->name('kpi.kpi_detail_team');
+    //         Route::post('simpan', [App\Http\Controllers\KpiController::class, 'kpi_departemen_detail_simpan'])->name('kpi.kpi_departemen_detail_simpan');
+    //     });
+    // });
     Route::prefix('kpi')->group(function () {
-        Route::get('/', [App\Http\Controllers\KpiController::class, 'index'])->name('kpi');
-        Route::get('create', [App\Http\Controllers\KpiController::class, 'buat_kpi'])->name('kpi.buat_kpi');
-        Route::get('indikator', [App\Http\Controllers\KpiController::class, 'kpi_indikator'])->name('kpi.kpi_indikator');
-        Route::get('indikator/team/{departemen_user_id}', [App\Http\Controllers\KpiController::class, 'kpi_indikator_buat'])->name('kpi.kpi_indikator_buat');
-        Route::post('indikator/team/{departemen_user_id}/simpan', [App\Http\Controllers\KpiController::class, 'kpi_indikator_simpan'])->name('kpi.kpi_indikator_simpan');
-        Route::get('indikator/team/{departemen_user_id}/{id}/edit', [App\Http\Controllers\KpiController::class, 'kpi_indikator_edit'])->name('kpi.kpi_indikator_edit');
-        Route::post('indikator/team/{departemen_user_id}/{id}/edit', [App\Http\Controllers\KpiController::class, 'kpi_indikator_update'])->name('kpi.kpi_indikator_update');
-        Route::get('indikator/team/{departemen_user_id}/{id}/delete', [App\Http\Controllers\KpiController::class, 'kpi_indikator_delete'])->name('kpi.kpi_indikator_delete');
+        Route::get('/', [App\Http\Controllers\KPIController::class, 'index'])->name('kpi');
+        
+        Route::get('indikator', [App\Http\Controllers\KPIController::class, 'kpi_indikator'])->name('kpi_indikator');
+        Route::get('indikator/team/{departemen_user_id}', [App\Http\Controllers\KPIController::class, 'kpi_indikator_buat'])->name('kpi_indikator_buat');
+        Route::post('indikator/team/{departemen_user_id}/simpan', [App\Http\Controllers\KPIController::class, 'kpi_indikator_simpan'])->name('kpi_indikator_simpan');
+        Route::get('indikator/team/{departemen_user_id}/{id}/edit', [App\Http\Controllers\KPIController::class, 'kpi_indikator_edit'])->name('kpi_indikator_edit');
+        Route::post('indikator/team/{departemen_user_id}/{id}/edit', [App\Http\Controllers\KPIController::class, 'kpi_indikator_update'])->name('kpi_indikator_update');
+        Route::get('indikator/team/{departemen_user_id}/{id}/delete', [App\Http\Controllers\KPIController::class, 'kpi_indikator_delete'])->name('kpi_indikator_delete');
+        
+        Route::get('{id}/{departemen_id}', [App\Http\Controllers\KPIController::class, 'detail_kpi'])->name('kpi_detail_kpi');
+        Route::get('{id}/{departemen_id}/validasi', [App\Http\Controllers\KPIController::class, 'detail_validasi'])->name('kpi_detail_validasi');
+        Route::post('{id}/{departemen_id}/validasi/simpan', [App\Http\Controllers\KPIController::class, 'validasi_simpan'])->name('kpi_validasi_simpan');
+        Route::get('{id}/{departemen_id}/{date}/print', [App\Http\Controllers\KPIController::class, 'kpi_print'])->name('kpi_print');
         
         Route::prefix('departemen')->group(function () {
-            Route::get('/', [App\Http\Controllers\KpiController::class, 'kpi_departemen'])->name('kpi.kpi_departemen');
-            Route::get('{date}', [App\Http\Controllers\KpiController::class, 'input_date_kpi'])->name('kpi_date');
-            Route::post('{date}/simpan', [App\Http\Controllers\KpiController::class, 'input_date_kpi_simpan'])->name('kpi.input_date_kpi_simpan');
-            Route::get('{date}/departemen', [App\Http\Controllers\KpiController::class, 'input_detail_kpi_departemen'])->name('kpi.input_detail_kpi_departemen');
-            Route::get('{date}/departemen/{id_departemen}/detail', [App\Http\Controllers\KpiController::class, 'input_date_kpi_detail'])->name('kpi.input_date_kpi_detail');
-            Route::get('{date}/departemen/{id_departemen}/validasi', [App\Http\Controllers\KpiController::class, 'input_date_kpi_validasi'])->name('kpi.input_date_kpi_validasi');
-            Route::post('{date}/departemen/{id_departemen}/validasi/simpan', [App\Http\Controllers\KpiController::class, 'input_date_kpi_validasi_simpan'])->name('kpi.input_date_kpi_validasi_simpan');
-            Route::get('{date}/departemen/{id_departemen}/print', [App\Http\Controllers\KpiController::class, 'kpi_print'])->name('kpi.kpi_print');
-            Route::get('{id}', [App\Http\Controllers\KpiController::class, 'kpi_departemen_detail'])->name('kpi.kpi_departemen_detail');
-            Route::get('{kpi_departemen_id}/team', [App\Http\Controllers\KpiController::class, 'kpi_detail_team'])->name('kpi.kpi_detail_team');
-            Route::post('simpan', [App\Http\Controllers\KpiController::class, 'kpi_departemen_detail_simpan'])->name('kpi.kpi_departemen_detail_simpan');
+            Route::get('/', [App\Http\Controllers\KPIController::class, 'kpi_departemen'])->name('kpi.kpi_departemen');
+            Route::post('simpan', [App\Http\Controllers\KPIController::class, 'kpi_departemen_detail_simpan'])->name('kpi.kpi_departemen_detail_simpan');
+            Route::get('detail/{id}', [App\Http\Controllers\KPIController::class, 'kpi_departemen_detail'])->name('kpi.kpi_departemen_detail');
+            Route::get('{kpi_departemen_id}/team', [App\Http\Controllers\KPIController::class, 'kpi_detail_team'])->name('kpi.kpi_detail_team');
+            Route::post('team/update', [App\Http\Controllers\KPIController::class, 'kpi_detail_team_update'])->name('kpi.kpi_detail_team_update');
+            Route::get('{departemen_id}/{date}', [App\Http\Controllers\KPIController::class, 'buat_kpi'])->name('kpi_buat_kpi');
+            Route::post('{departemen_id}/{date}/simpan', [App\Http\Controllers\KPIController::class, 'input_date_kpi_simpan'])->name('kpi_input_date_kpi_simpan');
         });
     });
     

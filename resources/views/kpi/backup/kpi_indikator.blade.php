@@ -76,7 +76,7 @@
         var table = $('#datatables').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('kpi_indikator') }}",
+            ajax: "{{ route('kpi.kpi_indikator') }}",
             columns: [
                 {
                     data: 'departemen_user_id',

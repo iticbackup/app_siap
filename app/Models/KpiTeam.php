@@ -19,6 +19,7 @@ class KpiTeam extends Model
         'kpi_departemen_id',
         'jabatan',
         'is_verifikasi',
+        'status',
     ];
 
     public function kpi()
