@@ -327,6 +327,23 @@ class KPIController extends Controller
         return view('kpi.input_date_kpi',$data);
     }
 
+    public function buat_kpi_team($departemen_id,$date,$team_id)
+    {
+        if ($date != Carbon::now()->format('d-m-Y')) {
+            return redirect()->back();
+        }
+        $data['date'] = $date;
+        $data['departemen_id'] = $departemen_id;
+        $data['kpi_bobots'] = $this->kpi_bobot->all();
+        $data['periode'] = Carbon::create($date)->subMonth();
+        $data['kpi_teams'] = $this->kpi_team->where('id',$team_id)
+                                            ->where('kpi_departemen_id',$departemen_id)
+                                            ->where('status','y')
+                                            ->get();
+        $data['kpi_cultures'] = $this->kpi_culture->get();
+        return view('kpi.input_date_kpi',$data);
+    }
+
     public function input_date_kpi_simpan(Request $request,$departemen_id,$date)
     {
         $no_id = 0;
@@ -421,16 +438,27 @@ class KPIController extends Controller
 
     }
 
-    public function detail_kpi($id,$departemen_id)
+    public function detail_kpi($kpi_team_id,$periode)
     {
-        $data['kpi'] = $this->kpi->find($id);
-        if (empty($data['kpi'])) {
+        // $data['kpi'] = $this->kpi->find($id);
+        // if (empty($data['kpi'])) {
+        //     return redirect()->back()->with('error','Data Tidak Ditemukan');
+        // }
+        // $data['departemen_id'] = $departemen_id;
+        // $data['kpi_bobots'] = $this->kpi_bobot->all();
+        
+        // return view('kpi.detail_kpi',$data);
+
+        $data['kpis'] = $this->kpi->where('kpi_team_id',$kpi_team_id)
+                                ->where('periode','LIKE','%'.$periode.'%')
+                                ->get();
+        if ($data['kpis']->isEmpty()) {
             return redirect()->back()->with('error','Data Tidak Ditemukan');
         }
-        $data['departemen_id'] = $departemen_id;
+
+        // $data['departemen_id'] = $departemen_id;
         $data['kpi_bobots'] = $this->kpi_bobot->all();
-        
-        return view('kpi.detail_kpi',$data);
+        return view('kpi.detail_kpi_array',$data);
     }
 
     public function detail_validasi($id,$departemen_id)
@@ -610,5 +638,14 @@ class KPIController extends Controller
                                 // dd($id);
         $data['kpi_bobots'] = $this->kpi_bobot->all();
         return view('kpi.kpi_print',$data);
+    }
+
+    public function kpi_testing()
+    {
+        $data_kpi = $this->kpi->get()->shuffle();
+        foreach ($data_kpi as $key => $kpi) {
+            $datakpi[] = $kpi;
+        }
+        return $datakpi;
     }
 }

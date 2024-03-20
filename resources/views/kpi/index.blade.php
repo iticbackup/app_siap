@@ -46,6 +46,7 @@
                                     data-bs-parent="#accordionFlushExample">
                                     <div class="accordion-body">
                                         @foreach ($departemen->kpi_team as $kpi_team)
+                                        @if ($kpi_team->departemen_user->status == 'Y')
                                         <h5>Nama : {{ $kpi_team->departemen_user->team }}</h5>
                                         <table class="table table-striped table-bordered table-responsive kpi">
                                             <thead>
@@ -90,7 +91,7 @@
                                                         $convert_finish_month = strtotime($finish_month);
                                                         // dd($convert_finish_month);
 
-                                                        $kpi = \App\Models\Kpi::where('kpi_team_id',$kpi_team->id)->where('periode','LIKE','%'.$i.'%')->first();
+                                                        $kpi = \App\Models\Kpi::where('kpi_team_id',$kpi_team->id)->where('periode','LIKE','%'.$i.'%')->orderBy('created_at','desc')->first();
                                                         if (!empty($kpi)) {
                                                             if ($kpi->nilai > 95) {
                                                                 $color_progress = 'success';
@@ -125,20 +126,37 @@
                                                                 @elseif(!$kpi->nilai)
                                                                 <span class="badge bg-warning">Sedang diverifikasi</span>
                                                                 @else
-                                                                <div class="progress" style="height: 20px;">
-                                                                    <div class="progress-bar bg-{{ $color_progress }} progress-bar-striped" role="progressbar" style="width: {{ $nilai }}%" aria-valuenow="{{ $nilai }}" aria-valuemin="0" aria-valuemax="100">{{ $nilai }}%</div>
-                                                                </div>
+                                                                    @php
+                                                                        $explode_status_mengetahui = explode('|',$kpi->status_mengetahui);
+                                                                        $explode_status_penilai = explode('|',$kpi->status_penilai);
+                                                                    @endphp
+                                                                    @if ($explode_status_mengetahui[0]=='n' && $explode_status_penilai[0]=='n')
+                                                                    <div><span class="badge bg-danger"><i class="fas fa-times"></i> Rejected</span></div>
+                                                                    @elseif($explode_status_mengetahui[0]=='y' && $explode_status_penilai[0]=='n')
+                                                                    <div><span class="badge bg-danger"><i class="fas fa-times"></i> Rejected</span></div>
+                                                                    @elseif($explode_status_mengetahui[0]=='n' && $explode_status_penilai[0]=='y')
+                                                                    <div><span class="badge bg-danger"><i class="fas fa-times"></i> Rejected</span></div>
+                                                                    @else
+                                                                    <div class="progress" style="height: 20px;">
+                                                                        <div class="progress-bar bg-{{ $color_progress }} progress-bar-striped" role="progressbar" style="width: {{ $nilai }}%" aria-valuenow="{{ $nilai }}" aria-valuemin="0" aria-valuemax="100">{{ $nilai }}%</div>
+                                                                    </div>
+                                                                    @endif
                                                                 @endif
                                                             </td>
                                                             <td class="text-center">
                                                                 @if (!empty($kpi))
                                                                 <div class="btn-group">
-                                                                    <a href="{{ route('kpi_detail_kpi',['id' => $kpi->id, 'departemen_id' => $departemen->id]) }}" class="btn btn-sm" style="background-color: #337357; color: white"><i class="fas fa-eye"></i> Lihat KPI</a>
-                                                                    {{-- @if ($kpi->status_mengetahui == null && $kpi->status_penilai == null)
-                                                                    <a href="{{ route('kpi_detail_validasi',['id' => $kpi->id, 'departemen_id' => $departemen->id]) }}" class="btn btn-primary btn-sm"><i class="fas fa-check"></i> Go Verification</a>
-                                                                    @elseif($kpi->status_mengetahui != null && $kpi->status_penilai = null)
-                                                                    <a href="{{ route('kpi_detail_validasi',['id' => $kpi->id, 'departemen_id' => $departemen->id]) }}" class="btn btn-primary btn-sm"><i class="fas fa-check"></i> Go Verification</a>
-                                                                    @endif --}}
+                                                                    <a href="{{ route('kpi_detail_kpi',['kpi_team_id' => $kpi_team->id, 'periode' => $i]) }}" class="btn btn-sm" style="background-color: #337357; color: white"><i class="fas fa-eye"></i> Lihat KPI</a>
+                                                                    
+                                                                    @php
+                                                                        $explode_status_mengetahui = explode('|',$kpi->status_mengetahui);
+                                                                        $explode_status_penilai = explode('|',$kpi->status_penilai);
+                                                                    @endphp
+
+                                                                    @if ($explode_status_mengetahui[0]=='n' && $explode_status_penilai[0]=='n')
+                                                                    <a href="{{ route('kpi_buat_kpi_team',['departemen_id' => $departemen->id, 'date' => $date, 'team_id' => $kpi_team->id]) }}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Buat KPI</a>
+                                                                    @endif
+
                                                                     @if (empty($kpi->status_mengetahui) && empty($kpi->status_penilai))
                                                                     <a href="{{ route('kpi_detail_validasi',['id' => $kpi->id, 'departemen_id' => $departemen->id]) }}" class="btn btn-primary btn-sm"><i class="fas fa-check"></i> Go Verification</a> 
                                                                     @elseif(!empty($kpi->status_mengetahui) && empty($kpi->status_penilai))
@@ -146,9 +164,15 @@
                                                                     @elseif(empty($kpi->status_mengetahui) && !empty($kpi->status_penilai))
                                                                     <a href="{{ route('kpi_detail_validasi',['id' => $kpi->id, 'departemen_id' => $departemen->id]) }}" class="btn btn-primary btn-sm"><i class="fas fa-check"></i> Go Verification</a> 
                                                                     @endif
+                                                                    
+                                                                    @if ($explode_status_mengetahui[0]=='y' && $explode_status_penilai[0]=='y')
                                                                     <a href="{{ route('kpi_print',['id' => $kpi->id, 'departemen_id' => $departemen->id, 'date' => $kpi->periode]) }}" class="btn btn-sm" style="background-color: #1B3C73; color: white"><i class="fas fa-print"></i> Print</a>
+                                                                    @endif
                                                                 </div>
                                                                 @endif
+                                                                {{-- <div class="btn-group">
+                                                                    <a href="{{ route('kpi_detail_kpi',['kpi_team_id' => $kpi_team->id, 'periode' => $i]) }}" class="btn btn-sm" style="background-color: #337357; color: white"><i class="fas fa-eye"></i> Lihat KPI</a>
+                                                                </div> --}}
                                                             </td>
                                                         @else
                                                             @if ($convert_finish_month >= $convert_date_now)
@@ -198,6 +222,7 @@
                                             </tbody>
                                         </table>
                                         <hr>
+                                        @endif
                                         @endforeach
                                     </div>
                                 </div>

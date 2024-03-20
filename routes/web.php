@@ -179,10 +179,12 @@ Route::group(['middleware' => ['auth']], function() {
         Route::post('indikator/team/{departemen_user_id}/{id}/edit', [App\Http\Controllers\KPIController::class, 'kpi_indikator_update'])->name('kpi_indikator_update');
         Route::get('indikator/team/{departemen_user_id}/{id}/delete', [App\Http\Controllers\KPIController::class, 'kpi_indikator_delete'])->name('kpi_indikator_delete');
         
-        Route::get('{id}/{departemen_id}', [App\Http\Controllers\KPIController::class, 'detail_kpi'])->name('kpi_detail_kpi');
+        // Route::get('{id}/{departemen_id}', [App\Http\Controllers\KPIController::class, 'detail_kpi'])->name('kpi_detail_kpi');
         Route::get('{id}/{departemen_id}/validasi', [App\Http\Controllers\KPIController::class, 'detail_validasi'])->name('kpi_detail_validasi');
         Route::post('{id}/{departemen_id}/validasi/simpan', [App\Http\Controllers\KPIController::class, 'validasi_simpan'])->name('kpi_validasi_simpan');
         Route::get('{id}/{departemen_id}/{date}/print', [App\Http\Controllers\KPIController::class, 'kpi_print'])->name('kpi_print');
+
+        Route::get('{kpi_team_id}/{periode}', [App\Http\Controllers\KPIController::class, 'detail_kpi'])->name('kpi_detail_kpi');
         
         Route::prefix('departemen')->group(function () {
             Route::get('/', [App\Http\Controllers\KPIController::class, 'kpi_departemen'])->name('kpi.kpi_departemen');
@@ -192,7 +194,11 @@ Route::group(['middleware' => ['auth']], function() {
             Route::post('team/update', [App\Http\Controllers\KPIController::class, 'kpi_detail_team_update'])->name('kpi.kpi_detail_team_update');
             Route::get('{departemen_id}/{date}', [App\Http\Controllers\KPIController::class, 'buat_kpi'])->name('kpi_buat_kpi');
             Route::post('{departemen_id}/{date}/simpan', [App\Http\Controllers\KPIController::class, 'input_date_kpi_simpan'])->name('kpi_input_date_kpi_simpan');
+            Route::get('{departemen_id}/{date}/{team_id}', [App\Http\Controllers\KPIController::class, 'buat_kpi_team'])->name('kpi_buat_kpi_team');
         });
+
+        Route::get('testing', [App\Http\Controllers\KPIController::class, 'kpi_testing']);
+
     });
     
     Route::prefix('kpi_culture')->group(function () {

@@ -471,6 +471,7 @@ class PerubahanDataFileManagerController extends Controller
                         'link' => route('rekap_pelatihan.rekap_pelatihan_detail',['id' => $file_manager_perubahan_data['id']]),
                         'status' => 'REJECTED'
                     ]);
+                    $input['remaks'] = $request->remaks;
                 }
             }
         }
@@ -601,6 +602,7 @@ class PerubahanDataFileManagerController extends Controller
                     'link' => route('rekap_pelatihan.rekap_pelatihan_detail',['id' => $file_manager_perubahan_data['id']]),
                     'status' => 'REJECTED'
                 ]);
+                $input['remaks'] = $request->remaks;
                 foreach ($file_manager_perubahan_data->file_manager_perubahan_data_detail as $key => $file_manager_perubahan_data_detail) {
                     $from_file = public_path('berkas/'.$file_manager_perubahan_data_detail->file_manager_perubahan_data->departemen->departemen.
                                 '/'.$file_manager_perubahan_data_detail->kategori_file.'/'.'Perubahan'.'/'.$file_manager_perubahan_data_detail->files);
@@ -622,7 +624,7 @@ class PerubahanDataFileManagerController extends Controller
         //     }
         // }
 
-        $input['remaks'] = $request->remaks;
+        // $input['remaks'] = $request->remaks;
 
         $file_manager_perubahan_data->update($input);
         if ($file_manager_perubahan_data) {

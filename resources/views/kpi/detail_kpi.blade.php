@@ -441,14 +441,20 @@
                 <div class="card-footer">
                     <a href="{{ route('kpi') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
                     @if (empty($kpi->status_mengetahui) && empty($kpi->status_penilai))
-                    <a href="{{ route('kpi_detail_validasi',['id' => $kpi->id, 'departemen_id' => $departemen_id]) }}" class="btn btn-primary btn-sm"><i class="fas fa-check"></i> Go Verification</a> 
+                    <a href="{{ route('kpi_detail_validasi',['id' => $kpi->id, 'departemen_id' => $departemen_id]) }}" class="btn btn-primary"><i class="fas fa-check"></i> Go Verification</a> 
                     @elseif(!empty($kpi->status_mengetahui) && empty($kpi->status_penilai))
-                    <a href="{{ route('kpi_detail_validasi',['id' => $kpi->id, 'departemen_id' => $departemen_id]) }}" class="btn btn-primary btn-sm"><i class="fas fa-check"></i> Go Verification</a> 
+                    <a href="{{ route('kpi_detail_validasi',['id' => $kpi->id, 'departemen_id' => $departemen_id]) }}" class="btn btn-primary"><i class="fas fa-check"></i> Go Verification</a> 
                     @elseif(empty($kpi->status_mengetahui) && !empty($kpi->status_penilai))
-                    <a href="{{ route('kpi_detail_validasi',['id' => $kpi->id, 'departemen_id' => $departemen_id]) }}" class="btn btn-primary btn-sm"><i class="fas fa-check"></i> Go Verification</a> 
+                    <a href="{{ route('kpi_detail_validasi',['id' => $kpi->id, 'departemen_id' => $departemen_id]) }}" class="btn btn-primary"><i class="fas fa-check"></i> Go Verification</a> 
                     @else
                     {{-- <p>{{ $kpi->id.'-'.$departemen_id }}</p> --}}
-                    <a href="{{ route('kpi_print',['id' => $kpi->id, 'departemen_id' => $departemen_id, 'date' => $kpi->periode]) }}" class="btn" target="_blank" style="background-color: #1B3C73; color: white"><i class="mdi mdi-printer"></i> Print Dokumen</a>
+                    @php
+                        $explode_status_mengetahui = explode('|',$kpi->status_mengetahui);
+                        $explode_status_penilai = explode('|',$kpi->status_penilai);
+                    @endphp
+                        @if ($explode_status_mengetahui[0]=='y' && $explode_status_penilai[0]=='y')
+                        <a href="{{ route('kpi_print',['id' => $kpi->id, 'departemen_id' => $departemen_id, 'date' => $kpi->periode]) }}" class="btn" target="_blank" style="background-color: #1B3C73; color: white"><i class="mdi mdi-printer"></i> Print Dokumen</a>
+                        @endif
                     @endif
                     {{-- <a href="{{ route('kpi.input_date_kpi_validasi',['date' => $date, 'id_departemen' => $id_departemen]) }}" class="btn btn-primary"><i class="fas fa-check"></i> Go Verification</a>
                     <a href="{{ route('kpi.kpi_print',['date' => $date, 'id_departemen' => $id_departemen]) }}" class="btn btn-info" target="_blank"><i class="mdi mdi-printer"></i> Print</a> --}}
