@@ -449,6 +449,7 @@ class PerubahanDataFileManagerController extends Controller
             //                 '/'.$file_manager_perubahan_data_detail->kategori_file.'/'.$file_manager_perubahan_data_detail->files);
             //     $files = rename($from_file,$to_file);
             // }
+            $input['remaks'] = $request->remakss;
         }
 
         if (empty($file_manager_perubahan_data->represtative_signature)) {
@@ -471,7 +472,7 @@ class PerubahanDataFileManagerController extends Controller
                         'link' => route('rekap_pelatihan.rekap_pelatihan_detail',['id' => $file_manager_perubahan_data['id']]),
                         'status' => 'REJECTED'
                     ]);
-                    $input['remaks'] = $request->remaks;
+                    $input['remaks'] = $request->remakss;
                 }
             }
         }

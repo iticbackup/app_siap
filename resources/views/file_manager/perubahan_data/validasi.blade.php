@@ -228,7 +228,7 @@
                         </div>
                         <div class="mb-3" id="remaks" style="display: none">
                             <label for="">Remaks</label>
-                            <textarea name="remaks" class="form-control" id="" cols="30" rows="5"></textarea>
+                            <textarea name="remakss" class="form-control" id="" cols="30" rows="5"></textarea>
                         </div>
                         @endif
                     @endif
