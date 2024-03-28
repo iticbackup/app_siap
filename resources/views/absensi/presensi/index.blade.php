@@ -92,71 +92,104 @@
                                     </div>
                                 </td>
                                 @php
-                                    $no = 1;
+                                    // $no = 1;
                                 @endphp
-                                @foreach ($weeks as $week)
+                                @foreach ($weeks as $key_week => $week)
                                     @php
-                                        $fin_pro_masuk = \App\Models\FinPro::where('pin',$biodata_karyawan->pin)
-                                                                    ->where('scan_date','LIKE','%'.$week.'%')
-                                                                    ->whereTime('scan_date','<=','11:59')
-                                                                    ->orderBy('scan_date','desc')
-                                                                    ->limit($no)
-                                                                    ->first();
-                                        if (empty($fin_pro_masuk)) {
-                                            $jam_masuk = null;
-                                            $cek_jam_masuk = null;
-                                        }else{
-                                            $jam_masuk = '<div class="card radius-10 bg-success bg-gradient">'.
-                                                            '<div class="card-body">'.
-                                                                '<div class="text-white">Jam Masuk</div>'.
-                                                                '<div class="text-white" style="font-weight: bold">'.\Carbon\Carbon::create($fin_pro_masuk->scan_date)->format('H:i').'</div>'.
-                                                            '</div>'.
-                                                        '</div>';
-                                            $cek_jam_masuk = \Carbon\Carbon::create($fin_pro_masuk->scan_date)->format('H:i');
-                                        }
+                                        $fin_pro_dates = $fin_pro->where('pin',$biodata_karyawan->pin)
+                                                                ->where('scan_date','LIKE','%'.$week.'%')
+                                                                ->where(function($query){
+                                                                    $query->whereTime('scan_date','<=','11:59')
+                                                                        ->orWhereTime('scan_date','>=','12:00');
+                                                                })
+                                                                // ->whereTime('scan_date','<=','11:59')
+                                                                // ->orWhereTime('scan_date','>=','12:00')
+                                                                ->orderBy('scan_date','asc')
+                                                                ->take(2)
+                                                                ->get();
+                                                                // dd($fin_pro_date);
 
-                                        $fin_pro_pulang = \App\Models\FinPro::where('pin',$biodata_karyawan->pin)
-                                                                    ->where('scan_date','LIKE','%'.$week.'%')
-                                                                    ->whereTime('scan_date','>=','12:00')
-                                                                    ->orderBy('scan_date','desc')
-                                                                    ->limit($no)
-                                                                    ->first();
-                                        if (empty($fin_pro_pulang)) {
-                                            $jam_pulang = null;
-                                            $cek_jam_pulang = null;
-                                        }else{
-                                            $jam_pulang = '<div class="card radius-10 bg-success bg-gradient">'.
-                                                            '<div class="card-body">'.
-                                                                '<div class="text-white">Jam Pulang</div>'.
-                                                                '<div class="text-white" style="font-weight: bold">'.\Carbon\Carbon::create($fin_pro_pulang->scan_date)->format('H:i').'</div>'.
-                                                            '</div>'.
-                                                        '</div>';
-                                            $cek_jam_pulang = \Carbon\Carbon::create($fin_pro_pulang->scan_date)->format('H:i');
-                                        }
-
-                                        $awal = strtotime($cek_jam_masuk);
-                                        $akhir = strtotime($cek_jam_pulang);
-
-                                        $diff = $akhir - $awal;
-
-                                        $jam = floor($diff / (60 * 60));
-                                        $menit = $diff - $jam * (60 * 60);
-                                        $detik = $diff % 60;
-
-                                        $selisih_jam = $jam . ':' . floor($menit / 60);
-
-                                        if ($awal == 0 && $akhir == 0) {
-                                            $total_jam = 0;
-                                        } elseif ($awal > 0 && $akhir == 0) {
-                                            $total_jam = 0;
-                                        } else {
-                                            $total_jam = $selisih_jam;
-                                        }
-
-                                        $no++;
-
+                                    // $no++;
                                     @endphp
                                     <td class="text-center" style="vertical-align: middle">
+                                        @foreach ($fin_pro_dates as $fin_pro_date)
+                                        @php
+                                            if (\Carbon\Carbon::create($fin_pro_date->scan_date)->format('H:i') <= '11:59') {
+                                                $jam_kerja = '<div class="card radius-10 bg-success bg-gradient">'.
+                                                                '<div class="card-body">'.
+                                                                    '<div class="text-white">Jam Masuk</div>'.
+                                                                    '<div class="text-white" style="font-weight: bold">'.\Carbon\Carbon::create($fin_pro_date->scan_date)->format('H:i').'</div>'.
+                                                                '</div>'.
+                                                            '</div>';
+                                            }elseif(\Carbon\Carbon::create($fin_pro_date->scan_date)->format('H:i') >= '12:00'){
+                                                $jam_kerja = '<div class="card radius-10 bg-success bg-gradient">'.
+                                                                '<div class="card-body">'.
+                                                                    '<div class="text-white">Jam Pulang</div>'.
+                                                                    '<div class="text-white" style="font-weight: bold">'.\Carbon\Carbon::create($fin_pro_date->scan_date)->format('H:i').'</div>'.
+                                                                '</div>'.
+                                                            '</div>';
+                                            }
+
+                                        @endphp
+                                            <div>{!! $jam_kerja !!}</div>
+                                        @endforeach
+
+                                        @php
+                                            if ($fin_pro_dates->isEmpty()) {
+                                                $masuk_jam_kerja = null;
+                                                $pulang_jam_kerja = null;
+                                            }else{
+                                                if (empty($fin_pro_dates[0])) {
+                                                    $masuk_jam_kerja = 0;
+                                                }else{
+                                                    $masuk_jam_kerja = \Carbon\Carbon::create($fin_pro_dates[0]['scan_date'])->format('H:i');
+                                                }
+
+                                                if (empty($fin_pro_dates[1])) {
+                                                    $pulang_jam_kerja = 0;
+                                                }else{
+                                                    $pulang_jam_kerja = \Carbon\Carbon::create($fin_pro_dates[1]['scan_date'])->format('H:i');
+                                                }
+                                            }
+
+                                            $awal = strtotime($masuk_jam_kerja);
+                                            $akhir = strtotime($pulang_jam_kerja);
+
+                                            $diff = $akhir - $awal;
+
+                                            $jam = floor($diff / (60 * 60));
+                                            $menit = $diff - $jam * (60 * 60);
+                                            $detik = $diff % 60;
+
+                                            if (
+                                                $week == \Carbon\Carbon::create($week)->endOfWeek(\Carbon\Carbon::SATURDAY)->format('Y-m-d') ||
+                                                $week == \Carbon\Carbon::create($week)->endOfWeek(\Carbon\Carbon::SUNDAY)->format('Y-m-d')
+                                            ) {
+                                                $selisih_jam = $jam . ':' . floor($menit / 60);
+                                            }else{
+                                                $selisih_jam = $jam-1 . ':' . floor($menit / 60);
+                                            }
+
+                                            if ($awal == 0 && $akhir == 0) {
+                                                $total_jam = 0;
+                                            } elseif ($awal > 0 && $akhir == 0) {
+                                                $total_jam = 0;
+                                            } else {
+                                                $total_jam = $selisih_jam;
+                                            }
+                                        @endphp
+                                        @if ($masuk_jam_kerja != null && $pulang_jam_kerja != null)
+                                        <div class="card radius-10 bg-primary bg-gradient">
+                                            <div class="card-body">
+                                                <div class="text-white">Total Jam Kerja</div>
+                                                <div class="text-white" style="font-weight: bold">{{ $total_jam }}</div>
+                                            </div>
+                                        </div>
+                                        @endif
+                                        {{-- <div>{{ $masuk_jam_kerja }}</div>
+                                        <div>{{ $pulang_jam_kerja }}</div> --}}
+                                    </td>
+                                    {{-- <td class="text-center" style="vertical-align: middle">
                                         <div>{!! $jam_masuk !!}</div>
                                         <div>{!! $jam_pulang !!}</div>
                                         @if ($cek_jam_masuk != null && $cek_jam_pulang != null)
@@ -169,7 +202,7 @@
                                             </div>
                                         </div>
                                         @endif
-                                    </td>
+                                    </td> --}}
                                 @endforeach
                             </tr>
                             @endforeach

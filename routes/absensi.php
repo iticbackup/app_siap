@@ -57,6 +57,7 @@ Route::prefix('absensi')->group(function () {
             Route::get('detail/{nik}', [App\Http\Controllers\Absensi\PresensiController::class, 'detail'])->name('presensi.detail');
             Route::get('detail/{nik}/search', [App\Http\Controllers\Absensi\PresensiController::class, 'search_detail'])->name('presensi.search_detail');
             Route::get('detail/{nik}/cetak', [App\Http\Controllers\Absensi\PresensiController::class, 'detail_print'])->name('presensi.detail_print');
+            Route::get('detail/{nik}/download_excel', [App\Http\Controllers\Absensi\PresensiController::class, 'download_excel'])->name('presensi.download_excel');
             Route::get('detail/{nik}/{tanggal}', [App\Http\Controllers\Absensi\PresensiController::class, 'detail_ijin_jam_kerja'])->name('presensi.detail_ijin_jam_kerja');
             Route::post('detail/{nik}/ijin_keluar_masuk/simpan', [App\Http\Controllers\Absensi\PresensiController::class, 'detail_ijin_jam_kerja_simpan'])->name('presensi.detail_ijin_jam_kerja_simpan');
         });

@@ -119,9 +119,6 @@
                                         }elseif($presensi_info_masuk->status == 13){
                                             $jam_masuk = '-';
                                             $status_masuk = $presensi_info_masuk->presensi_status->status_info;
-                                        }elseif($presensi_info_masuk->status == 14){
-                                            $jam_masuk = '-';
-                                            $status_masuk = '<div style="color: red">'.$presensi_info_masuk->presensi_status->status_info.'</div>';
                                         }
                                     }
                                 }else{
@@ -146,9 +143,6 @@
                                         }elseif($presensi_info_masuk->status == 13){
                                             $jam_masuk = '-';
                                             $status_masuk = $presensi_info_masuk->presensi_status->status_info;
-                                        }elseif($presensi_info_masuk->status == 14){
-                                            $jam_masuk = '-';
-                                            $status_masuk = '<div style="color: red">'.$presensi_info_masuk->presensi_status->status_info.'</div>';
                                         }
                                     }
                                 }
@@ -181,9 +175,6 @@
                                             $jam_pulang = '-';
                                             $status_pulang = $presensi_info_pulang->presensi_status->status_info;
                                         }elseif($presensi_info_pulang->status == 13){
-                                            $jam_pulang = '-';
-                                            $status_pulang = $presensi_info_pulang->presensi_status->status_info;
-                                        }elseif($presensi_info_pulang->status == 14){
                                             $jam_pulang = '-';
                                             $status_pulang = $presensi_info_pulang->presensi_status->status_info;
                                         }
@@ -245,9 +236,9 @@
                                 <td class="text-center" style="vertical-align: middle">{{ $no }}</td>
                                 <td class="text-center" style="vertical-align: middle">{{ \Carbon\Carbon::create($week)->isoFormat('dddd, DD MMMM YYYY') }}</td>
                                 <td class="text-center" style="vertical-align: middle">{{ $jam_masuk }}</td>
-                                <td class="text-center" style="vertical-align: middle">{!! $status_masuk !!}</td>
+                                <td class="text-center" style="vertical-align: middle">{{ $status_masuk }}</td>
                                 <td class="text-center" style="vertical-align: middle">{{ $jam_pulang }}</td>
-                                <td class="text-center" style="vertical-align: middle">{!! $status_pulang !!}</td>
+                                <td class="text-center" style="vertical-align: middle">{{ $status_pulang }}</td>
                                 <td class="text-center" style="vertical-align: middle">{{ $total_jam }}</td>
                                 <td class="text-center" style="vertical-align: middle"><button class="btn" style="color: green" onclick="edit_ijin_jam_kerja(`{{ $biodata_karyawan->nik }}`,`{{ $week }}`)"><i class="bx bxs-calendar-plus"></i></button></td>
                                 {{-- <td class="text-center" style="vertical-align: middle">{{ $jam_masuk }}</td>

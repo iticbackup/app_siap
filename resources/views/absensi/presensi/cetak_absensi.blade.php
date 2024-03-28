@@ -51,7 +51,7 @@
 <table style="width: 100%;border-collapse: collapse;">
     <thead>
         <tr>
-            <th style="border: 1px solid;">Tanggal</th>
+            <th style="border: 1px solid; width: 30%">Tanggal</th>
             <th style="border: 1px solid;">Jam Masuk</th>
             <th style="border: 1px solid; width: 15%">Status</th>
             <th style="border: 1px solid;">Jam Pulang</th>
@@ -177,6 +177,10 @@
                             $jam_masuk = '-';
                             $status_masuk = $presensi_info_masuk->presensi_status->status_info;
                         }
+                        elseif($presensi_info_masuk->status == 14){
+                            $jam_masuk = '-';
+                            $status_masuk = '<div style="color: red">'.$presensi_info_masuk->presensi_status->status_info.'</div>';
+                        }
                     }
                 }else{
                     $presensi_info_masuk = \App\Models\PresensiInfo::where('pin', $biodata_karyawan->pin)
@@ -200,6 +204,9 @@
                         }elseif($presensi_info_masuk->status == 13){
                             $jam_masuk = '-';
                             $status_masuk = $presensi_info_masuk->presensi_status->status_info;
+                        }elseif($presensi_info_masuk->status == 14){
+                            $jam_masuk = '-';
+                            $status_masuk = '<div style="color: red">'.$presensi_info_masuk->presensi_status->status_info.'</div>';
                         }
                     }
                 }
@@ -234,6 +241,9 @@
                         }elseif($presensi_info_pulang->status == 13){
                             $jam_pulang = '-';
                             $status_pulang = $presensi_info_pulang->presensi_status->status_info;
+                        }elseif($presensi_info_pulang->status == 14){
+                            $jam_pulang = '-';
+                            $status_pulang = '<div style="color: red">'.$presensi_info_pulang->presensi_status->status_info.'</div>';
                         }
                     }
                 }else{
@@ -258,6 +268,9 @@
                         }elseif($presensi_info_pulang->status == 13){
                             $jam_pulang = '-';
                             $status_pulang = $presensi_info_pulang->presensi_status->status_info;
+                        }elseif($presensi_info_pulang->status == 14){
+                            $jam_pulang = '-';
+                            $status_pulang = '<div style="color: red">'.$presensi_info_pulang->presensi_status->status_info.'</div>';
                         }
                     }
                 }
@@ -266,29 +279,55 @@
                 $akhir = strtotime($jam_pulang);
 
                 $diff = $akhir - $awal;
+                // $diff = ($akhir - $awal)/3600;
+                // dd($diff);
 
+                // $jam = floor($diff / (60 * 60));
                 $jam = floor($diff / (60 * 60));
                 $menit = $diff - $jam * (60 * 60);
                 $detik = $diff % 60;
+                if (
+                    $week == \Carbon\Carbon::create($week)->endOfWeek(\Carbon\Carbon::SATURDAY)->format('Y-m-d') ||
+                    $week == \Carbon\Carbon::create($week)->endOfWeek(\Carbon\Carbon::SUNDAY)->format('Y-m-d')
+                ){
+                    $selisih_jam = $jam . ':' . floor($menit / 60);
+                }else{
+                    $selisih_jam = $jam-1 . ':' . floor($menit / 60);
+                }
+                // dd($jam-1);
 
-                $selisih_jam = $jam . ':' . floor($menit / 60);
+                // dd(\Carbon\Carbon::create($week)->endOfWeek(\Carbon\Carbon::SATURDAY)->format('Y-m-d'));
+                // dd(floor($diff / (60 * 60)));
+                // dd(floor($menit / 60));
+
+                // if ($week == \Carbon\Carbon::create($week)->endOfWeek(\Carbon\Carbon::SATURDAY)->format('Y-m-d')) {
+                //     $selisih_jam = $jam . ':' . (floor($menit / 60));
+                // }else{
+                //     $selisih_jam = $jam . ':' . floor($menit / 60);
+                // }
+                // $selisih_jam = $jam . ':' . floor($menit / 60);
 
                 if ($awal == 0 && $akhir == 0) {
                     $total_jam = 0;
                 } elseif ($awal > 0 && $akhir == 0) {
                     $total_jam = 0;
                 } else {
+                    // if ($week == \Carbon\Carbon::SATURDAY()) {
+                    //     $total_jam = $selisih_jam-;
+                    // }else{
+                    //     $total_jam = $selisih_jam;
+                    // }
                     $total_jam = $selisih_jam;
                 }
 
                 $no ++;
             @endphp
             <tr>
-                <td style="border: 1px solid; text-align: center">{{ \Carbon\Carbon::create($week)->isoFormat('LL') }}</td>
+                <td style="border: 1px solid; text-align: center">{{ \Carbon\Carbon::create($week)->isoFormat('dddd, DD MMMM YYYY') }}</td>
                 <td style="border: 1px solid; text-align: center">{{ $jam_masuk }}</td>
-                <td style="border: 1px solid; text-align: center">{{ $status_masuk }}</td>
+                <td style="border: 1px solid; text-align: center">{!! $status_masuk !!}</td>
                 <td style="border: 1px solid; text-align: center">{{ $jam_pulang }}</td>
-                <td style="border: 1px solid; text-align: center">{{ $status_pulang }}</td>
+                <td style="border: 1px solid; text-align: center">{!! $status_pulang !!}</td>
                 <td style="border: 1px solid; text-align: center">{{ $total_jam }}</td>
             </tr>
         @endforeach

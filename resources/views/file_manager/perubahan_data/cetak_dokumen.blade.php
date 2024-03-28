@@ -189,7 +189,14 @@
         }
 
         ul{
-            margin: 1%
+            margin: 0px;
+        }
+        ol{
+            margin: 0px
+        }
+        p{
+            /* line-height: 0px; */
+            margin: 0px
         }
     </style>
 </head>

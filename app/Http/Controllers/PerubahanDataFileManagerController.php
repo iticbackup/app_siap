@@ -82,10 +82,20 @@ class PerubahanDataFileManagerController extends Controller
                             ->addColumn('status', function($row){
                                 if (empty($row->status)) {
                                     // return '<span class="badge bg-warning">ON PROCESS</span>';
-                                    if ($row->is_open == 'y') {
-                                        return '<span class="badge bg-primary">OPEN</span>';
-                                    }else{
-                                        return '<span class="badge bg-warning">WAITING VERIFICATION</span>';
+                                    // if ($row->is_open == 'y') {
+                                    //     return '<span class="badge bg-primary">OPEN</span>';
+                                    // }else{
+                                    //     return '<span class="badge bg-warning">WAITING VERIFICATION</span>';
+                                    // }
+                                    switch ($row->is_open) {
+                                        case 'y':
+                                            return '<span class="badge bg-primary">OPEN</span>';
+                                            break;
+                                        case 'n':
+                                            return '<span class="badge bg-warning">WAITING VERIFICATION</span>';
+                                            break;
+                                        default:
+                                            break;
                                     }
                                 }else{
                                     $explode_validasi = explode('|',$row->status);

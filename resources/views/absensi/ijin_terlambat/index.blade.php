@@ -101,7 +101,12 @@
                                         <td style="vertical-align: middle" class="text-center">
                                             <div class="card">
                                                 <div class="card-body">
-                                                    {{ $ijin_terlambat->presensi_status->status_info }}
+                                                    @if (!empty($ijin_terlambat->presensi_status->status_info))
+                                                        {{ $ijin_terlambat->presensi_status->status_info }}
+                                                    @else
+                                                    -
+                                                    @endif
+                                                    {{-- {{ $ijin_terlambat->presensi_status->status_info }} --}}
                                                 </div>
                                             </div>
                                         </td>

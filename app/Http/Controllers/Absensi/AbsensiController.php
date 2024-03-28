@@ -18,6 +18,23 @@ use DataTables;
 use DB;
 class AbsensiController extends Controller
 {
+    function __construct(
+        FinPro $fin_pro,
+        BiodataKaryawan $biodata_karyawan,
+        DepartemenUser $departemen_user,
+        IticDepartemen $itic_departemen,
+        EmpJabatan $emp_jabatan,
+        EmpPosisi $emp_posisi,
+        PresensiInfo $presensi_info
+    ){
+        $this->fin_pro = $fin_pro;
+        $this->biodata_karyawan = $biodata_karyawan;
+        $this->departemen_user = $departemen_user;
+        $this->itic_departemen = $itic_departemen;
+        $this->emp_jabatan = $emp_jabatan;
+        $this->emp_posisi = $emp_posisi;
+        $this->presensi_info = $presensi_info;
+    }
     public function index(Request $request)
     {
         // if ($request->ajax()) {
@@ -208,7 +225,7 @@ class AbsensiController extends Controller
         //                     ->toJson();
         // }
         if (auth()->user()->nik == 0000000) {
-            $data['biodata_karyawans'] = BiodataKaryawan::with('departemen','posisi')
+            $data['biodata_karyawans'] = $this->biodata_karyawan->with('departemen','posisi')
                                                         // ->select([
                                                         //     'id','nik','nama','alamat','id_posisi','id_jabatan',
                                                         //     'pin'
@@ -230,19 +247,26 @@ class AbsensiController extends Controller
             $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
             for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
                 $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
-                $total_absen_masuk = FinPro::where('scan_date','LIKE','%'.$i.'%')->whereTime('scan_date','<=','11:59')->count();
+                $total_absen_masuk = $this->fin_pro->where('scan_date','LIKE','%'.$i.'%')
+                                                    ->whereTime('scan_date','<=','11:59')
+                                                    ->orderBy('scan_date','desc')
+                                                    ->take(1)
+                                                    ->count();
                 // dd($total_absen_masuk);
                 $data['hasil'][] = $total_absen_masuk;
             }
+
+            $data['fin_pro'] = $this->fin_pro;
+            $data['presensi_info'] = $this->presensi_info;
             return view('absensi.home.index',$data);
         }else{
-            $akses_departemen = DepartemenUser::whereIn('departemen_id',[3,4])->where('nik',auth()->user()->nik)->first();
+            $akses_departemen = $this->departemen_user->whereIn('departemen_id',[3,4])->where('nik',auth()->user()->nik)->first();
             // dd($akses_departemen);
             if (empty($akses_departemen)) {
                 return redirect()->back()->with('error','Maaf Anda Tidak Bisa Akses Halaman Absensi');
             }else{
                 if ($akses_departemen->nik == auth()->user()->nik) {
-                    $data['biodata_karyawans'] = BiodataKaryawan::where(function($query) {
+                    $data['biodata_karyawans'] = $this->biodata_karyawan->where(function($query) {
                                                                     return $query->where('nik','!=','1000001')
                                                                                 ->where('nik','!=','1000002')
                                                                                 ->where('nik','!=','1000003');
@@ -255,10 +279,16 @@ class AbsensiController extends Controller
                     $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
                     for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
                         $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
-                        $total_absen_masuk = FinPro::where('scan_date','LIKE','%'.$i.'%')->whereTime('scan_date','<=','11:59')->count();
+                        $total_absen_masuk = $this->fin_pro->where('scan_date','LIKE','%'.$i.'%')
+                                                            ->whereTime('scan_date','<=','11:59')
+                                                            ->orderBy('scan_date','desc')
+                                                            ->take(1)
+                                                            ->count();
                         // dd($total_absen_masuk);
                         $data['hasil'][] = $total_absen_masuk;
                     }
+                    $data['fin_pro'] = $this->fin_pro;
+                    $data['presensi_info'] = $this->presensi_info;
                     return view('absensi.home.index',$data);
                 }else{
                     return redirect()->back()->with('error','Maaf Anda Tidak Bisa Akses Halaman Absensi');
@@ -273,14 +303,13 @@ class AbsensiController extends Controller
 
     public function input_modal_nofinger_jam_masuk_absensi($date_live,$pin,$inoutmode)
     {
-        $presensi_info = PresensiInfo::where('scan_date','LIKE','%'.$date_live.'%')
-                                        ->where('pin',$pin)
-                                        ->where('inoutmode',$inoutmode)
-                                        // ->orderBy('scan_date','asc')
-                                        ->first();
+        $presensi_info = $this->presensi_info->where('scan_date','LIKE','%'.$date_live.'%')
+                                            ->where('pin',$pin)
+                                            ->where('inoutmode',$inoutmode)
+                                            ->first();
         // dd($presensi_info);
         if (empty($presensi_info)){
-            $biodata_karyawan = BiodataKaryawan::where('pin',$pin)->first();
+            $biodata_karyawan = $this->biodata_karyawan->where('pin',$pin)->first();
             if (empty($biodata_karyawan)) {
                 return response()->json([
                     'success' => false,
@@ -329,12 +358,12 @@ class AbsensiController extends Controller
 
         $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->passes()) {
-            $presensi_info = PresensiInfo::where('scan_date','LIKE','%'.$request->tanggal_non_absen_masuk.'%')
+            $presensi_info = $this->presensi_info->where('scan_date','LIKE','%'.$request->tanggal_non_absen_masuk.'%')
                                         ->where('pin',$request->pin_non_absen_masuk)
                                         ->where('inoutmode',$request->inoutmode_non_absen_masuk)
                                         ->first();
             if (empty($presensi_info)) {
-                $norut = PresensiInfo::max('att_rec');
+                $norut = $this->presensi_info->max('att_rec');
                 $input['att_id'] = Carbon::now()->format('Y').$norut+1;
                 $input['scan_date'] = $request->tanggal_non_absen_masuk.' '.$request->jam_non_absen_masuk.':'.$request->menit_non_absen_masuk.':'.$request->detik_non_absen_masuk;
                 $input['pin'] = $request->pin_non_absen_masuk;
@@ -360,7 +389,7 @@ class AbsensiController extends Controller
         
                 $input['keterangan'] = $request->keterangan_jam_masuk_non_absen.'@'.$penyesuaian_jam_masuk_jam.'@'.$penyesuaian_jam_istirahat_jam.'@'.$penyesuaian_jam_pulang_jam;
     
-                $presensi_info = PresensiInfo::create($input);
+                $presensi_info = $this->presensi_info->create($input);
                 if ($presensi_info) {
                     $message_title="Berhasil !";
                     $message_content="Presensi Jam Masuk Berhasil Dibuat";
@@ -425,14 +454,14 @@ class AbsensiController extends Controller
 
     public function input_modal_nofinger_jam_pulang_absensi($date_live,$pin,$inoutmode)
     {
-        $presensi_info = PresensiInfo::where('scan_date','LIKE','%'.$date_live.'%')
-                                        ->where('pin',$pin)
-                                        ->where('inoutmode',$inoutmode)
-                                        // ->orderBy('scan_date','asc')
-                                        ->first();
+        $presensi_info = $this->presensi_info->where('scan_date','LIKE','%'.$date_live.'%')
+                                            ->where('pin',$pin)
+                                            ->where('inoutmode',$inoutmode)
+                                            // ->orderBy('scan_date','asc')
+                                            ->first();
         // dd($presensi_info);
         if (empty($presensi_info)){
-            $biodata_karyawan = BiodataKaryawan::where('pin',$pin)->first();
+            $biodata_karyawan = $this->biodata_karyawan->where('pin',$pin)->first();
             if (empty($biodata_karyawan)) {
                 return response()->json([
                     'success' => false,
@@ -481,12 +510,12 @@ class AbsensiController extends Controller
 
         $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->passes()) {
-            $presensi_info = PresensiInfo::where('scan_date','LIKE','%'.$request->jam_non_absen_keluar.'%')
+            $presensi_info = $this->presensi_info->where('scan_date','LIKE','%'.$request->jam_non_absen_keluar.'%')
                                         ->where('pin',$request->pin_non_absen_keluar)
                                         ->where('inoutmode',$request->inoutmode_non_absen_keluar)
                                         ->first();
             if (empty($presensi_info)) {
-                $norut = PresensiInfo::max('att_rec');
+                $norut = $this->presensi_info->max('att_rec');
                 $input['att_id'] = Carbon::now()->format('Y').$norut+1;
                 $input['scan_date'] = $request->tanggal_non_absen_keluar.' '.$request->jam_non_absen_keluar.':'.$request->menit_non_absen_keluar.':'.$request->detik_non_absen_keluar;
                 $input['pin'] = $request->pin_non_absen_keluar;
@@ -512,7 +541,7 @@ class AbsensiController extends Controller
         
                 $input['keterangan'] = $request->keterangan_jam_keluar_non_absen.'@'.$penyesuaian_jam_masuk_jam.'@'.$penyesuaian_jam_istirahat_jam.'@'.$penyesuaian_jam_pulang_jam;
     
-                $presensi_info = PresensiInfo::create($input);
+                $presensi_info = $this->presensi_info->create($input);
                 if ($presensi_info) {
                     $message_title="Berhasil !";
                     $message_content="Presensi Jam Pulang Berhasil Dibuat";
@@ -681,13 +710,13 @@ class AbsensiController extends Controller
     // }
 
     public function detail_jam_masuk($scan_date,$pin,$inoutmode){
-        $presensi_info = PresensiInfo::where('scan_date','LIKE','%'.$scan_date.'%')
-                                        ->where('pin',$pin)
-                                        ->where('inoutmode',$inoutmode)
-                                        // ->orderBy('scan_date','asc')
-                                        ->first();
+        $presensi_info = $this->presensi_info->where('scan_date','LIKE','%'.$scan_date.'%')
+                                            ->where('pin',$pin)
+                                            ->where('inoutmode',$inoutmode)
+                                            // ->orderBy('scan_date','asc')
+                                            ->first();
         if(empty($presensi_info)){
-            $fin_pro = FinPro::with('biodata_karyawan')
+            $fin_pro = $this->fin_pro->with('biodata_karyawan')
                             ->where('scan_date','LIKE','%'.$scan_date.'%')
                             ->where('pin',$pin)
                             ->where('inoutmode',$inoutmode)
@@ -751,11 +780,11 @@ class AbsensiController extends Controller
 
         $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->passes()) {
-            $presensi_info = PresensiInfo::where('scan_date','LIKE','%'.$request->detail_masuk_tanggal_masuk.'%')
+            $presensi_info = $this->presensi_info->where('scan_date','LIKE','%'.$request->detail_masuk_tanggal_masuk.'%')
                                         ->where('pin',$request->detail_masuk_pin)
                                         ->first();
             if (empty($presensi_info)) {
-                $norut = PresensiInfo::max('att_rec');
+                $norut = $this->presensi_info->max('att_rec');
                 $input['att_id'] = Carbon::now()->format('Y').$norut+1;
                 $input['scan_date'] = $request->detail_masuk_tanggal_masuk;
                 $input['pin'] = $request->detail_masuk_pin;
@@ -781,7 +810,7 @@ class AbsensiController extends Controller
         
                 $input['keterangan'] = $request->detail_masuk_keterangan_jam_masuk.'@'.$penyesuaian_jam_masuk_jam.'@'.$penyesuaian_jam_istirahat_jam.'@'.$penyesuaian_jam_pulang_jam;
     
-                $save_presensi_info = PresensiInfo::create($input);
+                $save_presensi_info = $this->presensi_info->create($input);
                 if ($save_presensi_info) {
                     $message_title="Berhasil !";
                     $message_content="Presensi Masuk Berhasil Dibuat";
@@ -879,13 +908,13 @@ class AbsensiController extends Controller
         //     ]
         // ]);
 
-        $presensi_info = PresensiInfo::where('scan_date','LIKE','%'.$scan_date.'%')
+        $presensi_info = $this->presensi_info->where('scan_date','LIKE','%'.$scan_date.'%')
                                         ->where('pin',$pin)
                                         ->where('inoutmode',$inoutmode)
                                         // ->orderBy('scan_date','asc')
                                         ->first();
         if(empty($presensi_info)){
-            $fin_pro = FinPro::with('biodata_karyawan')
+            $fin_pro = $this->fin_pro->with('biodata_karyawan')
                             ->where('scan_date','LIKE','%'.$scan_date.'%')
                             ->where('pin',$pin)
                             ->where('inoutmode',$inoutmode)
@@ -950,11 +979,11 @@ class AbsensiController extends Controller
         $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->passes()) {
-            $presensi_info = PresensiInfo::where('scan_date','LIKE','%'.$request->detail_masuk_tanggal_masuk.'%')
+            $presensi_info = $this->presensi_info->where('scan_date','LIKE','%'.$request->detail_masuk_tanggal_masuk.'%')
                                         ->where('pin',$request->detail_masuk_pin)
                                         ->first();
             if (empty($presensi_info)) {
-                $norut = PresensiInfo::max('att_rec');
+                $norut = $this->presensi_info->max('att_rec');
                 $input['att_id'] = Carbon::now()->format('Y').$norut+1;
                 $input['scan_date'] = $request->detail_keluar_tanggal_keluar;
                 $input['pin'] = $request->detail_keluar_pin;
@@ -979,7 +1008,7 @@ class AbsensiController extends Controller
                 }
 
                 $input['keterangan'] = $request->detail_keluar_keterangan_jam_keluar.'@'.$penyesuaian_jam_masuk_jam_keluar.'@'.$penyesuaian_jam_istirahat_jam_keluar.'@'.$penyesuaian_jam_pulang_jam_keluar;
-                $save_presensi_info = PresensiInfo::create($input);
+                $save_presensi_info = $this->presensi_info->create($input);
                 if ($save_presensi_info) {
                     $message_title="Berhasil !";
                     $message_content="Presensi Pulang Berhasil Dibuat";
@@ -1114,7 +1143,7 @@ class AbsensiController extends Controller
 
     public function search_name(Request $request)
     {
-        $data['biodata_karyawans'] = BiodataKaryawan::where(function($query) {
+        $data['biodata_karyawans'] = $this->biodata_karyawan->where(function($query) {
                                                         return $query->where('nik','!=','1000001')
                                                                     ->where('nik','!=','1000002')
                                                                     ->where('nik','!=','1000003');
@@ -1141,7 +1170,7 @@ class AbsensiController extends Controller
         $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
         for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
             $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
-            $total_absen_masuk = FinPro::where('scan_date','LIKE','%'.$i.'%')->where('inoutmode',1)->count();
+            $total_absen_masuk = $this->fin_pro->where('scan_date','LIKE','%'.$i.'%')->where('inoutmode',1)->count();
             // dd($total_absen_masuk);
             $data['hasil'][] = $total_absen_masuk;
         }

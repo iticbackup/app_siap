@@ -59,7 +59,9 @@
                 </div> --}}
                     <div class="row align-items-center" style="margin-bottom: 1%">
                         <div class="col">
-                            <h4 class="card-title">Daftar Hadir Karyawan - Time <span id="time"></span></h4>
+                            <h4 class="card-title">Daftar Hadir Karyawan</h4>
+                            <div id="time">
+                            </div>
                         </div>
                         <div class="col-auto">
                             <form action="{{ route('absensi.search_name') }}" method="get">
@@ -106,13 +108,13 @@
                                 @php
                                     // dd($biodata_karyawan);
                                     $date_live = \Carbon\Carbon::now()->format('Y-m-d');
-                                    $mesin_jam_masuk = \App\Models\FinPro::where('scan_date', 'LIKE', '%'.$date_live.'%')
+                                    $mesin_jam_masuk = $fin_pro->where('scan_date', 'LIKE', '%'.$date_live.'%')
                                                                         ->whereTime('scan_date','<=','11:59:59')
                                                                         ->where('pin', $biodata_karyawan->pin)
-                                                                        ->orderBy('scan_date','desc')
+                                                                        ->orderBy('scan_date','asc')
                                                                         ->first();
                                     if (empty($mesin_jam_masuk)) {
-                                        $presensi_info_masuk = \App\Models\PresensiInfo::where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                        $presensi_info_masuk = $presensi_info->where('scan_date', 'LIKE', '%' . $date_live . '%')
                                                                                 ->where('pin', $biodata_karyawan->pin)
                                                                                 ->whereTime('scan_date','<=','11:59:59')
                                                                                 ->first();
@@ -130,12 +132,12 @@
                                             }
                                         }
                                     }else{
-                                        $absen_masuk = \App\Models\PresensiInfo::with('presensi_status')
-                                                                                ->where('scan_date', 'LIKE', '%' . $date_live . '%')
-                                                                                ->where('pin', $biodata_karyawan->pin)
-                                                                                ->whereTime('scan_date','<=','11:59:59')
-                                                                                // ->where('inoutmode', $inoutmode)
-                                                                                ->first();
+                                        $absen_masuk = $presensi_info->with('presensi_status')
+                                                                    ->where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                                    ->where('pin', $biodata_karyawan->pin)
+                                                                    ->whereTime('scan_date','<=','11:59:59')
+                                                                    // ->where('inoutmode', $inoutmode)
+                                                                    ->first();
                                         if (empty($absen_masuk)) {
                                             $date_jam_masuk = \Carbon\Carbon::create($mesin_jam_masuk->scan_date)->format('H:i');
                                             $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`' . $mesin_jam_masuk->scan_date . '`,`' . $mesin_jam_masuk->pin . '`,`' . $mesin_jam_masuk->inoutmode . '`)" style="color: blue">' . $date_jam_masuk . '</a>';
@@ -145,18 +147,18 @@
                                         }
                                     }
 
-                                    $mesin_jam_pulang = \App\Models\FinPro::where('scan_date', 'LIKE', '%'.$date_live.'%')
-                                                                        ->whereTime('scan_date','>=','12:00:00')
-                                                                        ->where('pin', $biodata_karyawan->pin)
-                                                                        ->orderBy('scan_date','desc')
-                                                                        ->first();
+                                    $mesin_jam_pulang = $fin_pro->where('scan_date', 'LIKE', '%'.$date_live.'%')
+                                                                ->whereTime('scan_date','>=','12:00:00')
+                                                                ->where('pin', $biodata_karyawan->pin)
+                                                                ->orderBy('scan_date','desc')
+                                                                ->first();
 
                                     if (empty($mesin_jam_pulang)) {
-                                        $presensi_info_2 = \App\Models\PresensiInfo::where('scan_date', 'LIKE', '%' . $date_live . '%')
-                                                                                ->where('pin', $biodata_karyawan->pin)
-                                                                                ->whereTime('scan_date','>=','12:00:00')
-                                                                                ->orderBy('scan_date','desc')
-                                                                                ->first();
+                                        $presensi_info_2 = $fin_pro->where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                                    ->where('pin', $biodata_karyawan->pin)
+                                                                    ->whereTime('scan_date','>=','12:00:00')
+                                                                    ->orderBy('scan_date','desc')
+                                                                    ->first();
                                         if (empty($presensi_info_2)) {
                                             $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)"><i class="bx bxs-plus-circle bx-sm bx-tada text-success"></i></a>';
                                         } else {
@@ -173,12 +175,12 @@
                                             }
                                         }
                                     }else{
-                                        $absen_keluar = \App\Models\PresensiInfo::with('presensi_status')
-                                                                                ->where('scan_date', 'LIKE', '%' . $date_live . '%')
-                                                                                ->where('pin', $biodata_karyawan->pin)
-                                                                                ->whereTime('scan_date','>=','12:00:00')
-                                                                                ->orderBy('scan_date','desc')
-                                                                                ->first();
+                                        $absen_keluar = $presensi_info->with('presensi_status')
+                                                                        ->where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                                        ->where('pin', $biodata_karyawan->pin)
+                                                                        ->whereTime('scan_date','>=','12:00:00')
+                                                                        ->orderBy('scan_date','desc')
+                                                                        ->first();
                                         if (empty($absen_keluar)) {
                                             $date_jam_keluar = \Carbon\Carbon::create($mesin_jam_pulang->scan_date)->format('H:i');
                                             $jam_keluar = '<a type="button" onclick="detail_absensi_jam_keluar(`' . $mesin_jam_pulang->scan_date . '`,`' . $mesin_jam_pulang->pin . '`,`' . $mesin_jam_pulang->inoutmode . '`)" style="color: blue">' . $date_jam_keluar . '</a>';
