@@ -69,6 +69,7 @@
 <body class="dark-sidenav">
     @include('layouts.apps.loading')
     @include('layouts.apps.sidebar')
+    @include('layouts.apps.modalLoading')
     <div class="page-wrapper">
         @include('layouts.apps.topbar')
         <div class="page-content">

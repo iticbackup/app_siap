@@ -342,7 +342,8 @@
                     if (result.success != false) {
                         iziToast.success({
                             title: result.message_title,
-                            message: result.message_content
+                            message: result.message_content,
+                            position: 'topRight',
                         });
 
                         // $("input[type=text]").val('');
@@ -373,6 +374,7 @@
                     iziToast.error({
                         title: 'Error',
                         message: error,
+                        position: 'topRight',
                     });
                 }
             });
@@ -381,43 +383,6 @@
         $('#formulir_simpan').submit(function(e) {
             e.preventDefault();
             let formData = new FormData(this);
-            // // alert(formData);
-            // // $('#image-input-error').text('');
-            // $.ajax({
-            //     type: 'POST',
-            //     url: "{{ route('perubahan_data.detail_form_simpan', ['id' => $file_manager_perubahan_data->id]) }}",
-            //     data: formData,
-            //     contentType: false,
-            //     processData: false,
-            //     beforeSend: function() {
-            //         // $('.modalLoading').modal('show');
-            //         // document.getElementById('view_download').innerHTML =
-            //         //     "<div class='spinner-border spinner-border-custom-2 text-primary' role='status'></div>";
-            //     },
-            //     success: (result) => {
-            //         if (result.success != false) {
-            //             iziToast.success({
-            //                 title: result.message_title,
-            //                 message: result.message_content
-            //             });
-
-            //             table.ajax.reload(null, false);
-
-            //         }else{
-            //             iziToast.error({
-            //                 title: result.success,
-            //                 message: result.error
-            //             });
-            //         }
-            //     },
-            //     error: function(request, status, error) {
-            //         iziToast.error({
-            //             title: 'Error',
-            //             message: error,
-            //         });
-            //     }
-            // });
-
             iziToast.show({
                 theme: 'dark',
                 icon: 'icon-person',
@@ -434,7 +399,8 @@
                             contentType: false,
                             processData: false,
                             beforeSend: function() {
-                                $('#loadingscreen').modal('show');
+                                // $('#loadingscreen').modal('show');
+                                $('#modalLoading').modal('show');
                                 // document.getElementById('view_download').innerHTML =
                                 //     "<div class='spinner-border spinner-border-custom-2 text-primary' role='status'></div>";
                             },
@@ -442,27 +408,33 @@
                                 if (result.success != false) {
                                     iziToast.success({
                                         title: result.message_title,
-                                        message: result.message_content
+                                        message: result.message_content,
+                                        position: 'topRight',
                                     });
                                     setTimeout(() => {
-                                        $('#loadingscreen').modal('hide');
+                                        // $('#loadingscreen').modal('hide');
+                                        $('#modalLoading').modal('hide');
                                         window.location.href =
                                             result.link;
                                     }, 5000);
                                 } else {
                                     iziToast.error({
                                         title: result.success,
-                                        message: result.error
+                                        message: result.error,
+                                        position: 'topRight',
                                     });
-                                    $('#loadingscreen').modal('hide');
+                                    // $('#loadingscreen').modal('hide');
+                                    $('#modalLoading').modal('hide');
                                 }
                             },
                             error: function(request, status, error) {
                                 iziToast.error({
                                     title: 'Error',
                                     message: error,
+                                    position: 'topRight',
                                 });
-                                $('#loadingscreen').modal('hide');
+                                // $('#loadingscreen').modal('hide');
+                                $('#modalLoading').modal('hide');
                             }
                         });
                     }, false], // true to focus
@@ -504,6 +476,7 @@
                             contentType: false,
                             processData: false,
                             beforeSend: function() {
+                                $('#modalLoading').modal('show');
                                 // $('.modalLoading').modal('show');
                                 // document.getElementById('view_download').innerHTML =
                                 //     "<div class='spinner-border spinner-border-custom-2 text-primary' role='status'></div>";
@@ -512,26 +485,32 @@
                                 if (result.success != false) {
                                     iziToast.success({
                                         title: result.message_title,
-                                        message: result.message_content
+                                        message: result.message_content,
+                                        position: 'topRight',
                                     });
                                     // setTimeout(() => {
                                     //     $('.modalLoading').modal('hide');
                                     //     window.location.href =
                                     //         result.link;
                                     // }, 5000);
+                                    $('#modalLoading').modal('hide');
                                     table.ajax.reload();
                                 } else {
                                     iziToast.error({
                                         title: result.success,
-                                        message: result.error
+                                        message: result.error,
+                                        position: 'topRight',
                                     });
+                                    $('#modalLoading').modal('hide');
                                 }
                             },
                             error: function(request, status, error) {
                                 iziToast.error({
                                     title: 'Error',
                                     message: error,
+                                    position: 'topRight',
                                 });
+                                $('#modalLoading').modal('hide');
                             }
                         });
                     }, false], // true to focus
@@ -559,8 +538,14 @@
         function save_change() {
             iziToast.success({
                 title: 'Save Change',
-                message: 'Data perubahan telah disimpan'
+                message: 'Data perubahan telah disimpan',
+                position: 'topRight',
             });
+            $('#modalLoading').modal('show');
+            setTimeout(() => {
+                $('#modalLoading').modal('hide');
+            }, 3000);
+            // $('#modalLoading').modal('show');
         }
     </script>
 @endsection
