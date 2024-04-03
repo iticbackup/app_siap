@@ -249,6 +249,17 @@ Route::group(['middleware' => ['auth']], function() {
         Route::post('update_personal_info', [App\Http\Controllers\ProfileController::class, 'personal_info_update'])->name('profile.personal_info');
         Route::post('update_password', [App\Http\Controllers\ProfileController::class, 'password_personal_update'])->name('profile.password_personal_update');
     });
+    
+    Route::prefix('fcm-token')->group(function () {
+        Route::patch('/', [App\Http\Controllers\UserController::class, 'updateToken'])->name('fcmToken');
+    });
+
+    Route::get('get_token', function(Request $request){
+        $token = auth()->user()->createToken('myAppToken')->plainTextToken;
+        return $token;
+        // return auth()->user()->update(['fcm_token'=>request()->token]);
+    });
+    Route::post('/send-notification',[App\Http\Controllers\UserController::class,'notification'])->name('notification');
 
     Route::get('testing', [App\Http\Controllers\TestingController::class, 'testing2'])->name('testing_pdf');
 

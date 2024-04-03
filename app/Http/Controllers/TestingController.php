@@ -14,6 +14,9 @@ use \Carbon\Carbon;
 use DNS1D;
 use DNS2D;
 
+// use Notification;
+// use App\Notifications\SendPushNotification;
+
 class TestingController extends Controller
 {
     public function testing_pdf()
@@ -113,5 +116,10 @@ class TestingController extends Controller
         // dd($request->device());
        
     }
+
+    // public function testingNotification()
+    // {
+    //     Notification::send(null,new SendPushNotification('Success','OKE',$fcmTokens));
+    // }
     
 }

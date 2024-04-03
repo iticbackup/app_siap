@@ -20,18 +20,33 @@
                             <div class="input-group">
                                 <div class="mb-3">
                                     <label for="">Cari NIK / Karyawan</label>
+                                    @if (!empty($_GET['cari']))
+                                    <input type="search" name="cari" class="form-control"
+                                        value="{{ $_GET['cari'] }}" placeholder="Search..." id="">
+                                    @else
                                     <input type="search" name="cari" class="form-control"
                                         value="{{ old('cari') }}" placeholder="Search..." id="">
+                                    @endif
                                 </div>
                                 <div class="mb-3">
                                     <label for="">Mulai Bulan</label>
+                                    @if (!empty($_GET['cari_tanggal_awal']))
                                     <input type="date" name="cari_tanggal_awal" class="form-control"
-                                        value="{{ old('cari_tanggal') }}" id="">
+                                        value="{{ $_GET['cari_tanggal_awal'] }}" id="">
+                                    @else
+                                    <input type="date" name="cari_tanggal_awal" class="form-control"
+                                        value="{{ old('cari_tanggal_awal') }}" id="">
+                                    @endif
                                 </div>
                                 <div class="mb-3">
                                     <label for="">Sampai Bulan</label>
+                                    @if (!empty($_GET['cari_tanggal_akhir']))
                                     <input type="date" name="cari_tanggal_akhir" class="form-control"
-                                        value="{{ old('cari_tanggal') }}" id="">
+                                        value="{{ $_GET['cari_tanggal_akhir'] }}" id="">
+                                    @else
+                                    <input type="date" name="cari_tanggal_akhir" class="form-control"
+                                        value="{{ old('cari_tanggal_akhir') }}" id="">
+                                    @endif
                                 </div>
                                 <div class="mb-3">
                                     <br>
@@ -74,6 +89,8 @@
                                 //     $posisi = $cek_posisi->nama_posisi;
                                 // }
                             @endphp
+
+                            @if (!empty($biodata_karyawan->nik))
                             <tr>
                                 <td class="text-center" style="vertical-align: middle">
                                     <div class="btn-group">
@@ -85,8 +102,24 @@
                                         <div class="card-body">
                                             <div><b>NIK  :</b> {{ $biodata_karyawan->nik }}</div>
                                             <div><b>Nama :</b> {{ $biodata_karyawan->nama }}</div>
-                                            <div><b>Departemen :</b> {{ $biodata_karyawan->departemen->nama_departemen >= 1 ? $biodata_karyawan->departemen->nama_unit : $biodata_karyawan->departemen->nama_departemen }}</div>
-                                            <div><b>Posisi :</b> {{ $biodata_karyawan->posisi->nama_posisi }}</div>
+                                            <div>
+                                                <b>Departemen :</b>
+                                                @if ($biodata_karyawan->satuan_kerja == 0 || $biodata_karyawan->id_posisi == 0 || $biodata_karyawan->id_jabatan == 0)
+                                                -
+                                                @else
+                                                {{ $biodata_karyawan->departemen->nama_departemen >= 1 ? $biodata_karyawan->departemen->nama_unit : $biodata_karyawan->departemen->nama_departemen }}
+                                                @endif
+                                            </div>
+                                            {{-- <div><b>Departemen :</b> {{ $biodata_karyawan->departemen->nama_departemen >= 1 ? $biodata_karyawan->departemen->nama_unit : $biodata_karyawan->departemen->nama_departemen }}</div> --}}
+                                            <div>
+                                                <b>Posisi :</b> 
+                                                @if ($biodata_karyawan->satuan_kerja == 0 || $biodata_karyawan->id_posisi == 0 || $biodata_karyawan->id_jabatan == 0)
+                                                -
+                                                @else
+                                                {{ $biodata_karyawan->posisi->nama_posisi }}
+                                                @endif
+                                            </div>
+                                            {{-- <div><b>Posisi :</b> {{ $biodata_karyawan->posisi->nama_posisi }}</div> --}}
                                             {{-- {{ $biodata_karyawan->nik.' - '.$biodata_karyawan->nama }} --}}
                                         </div>
                                     </div>
@@ -165,9 +198,17 @@
                                                 $week == \Carbon\Carbon::create($week)->endOfWeek(\Carbon\Carbon::SATURDAY)->format('Y-m-d') ||
                                                 $week == \Carbon\Carbon::create($week)->endOfWeek(\Carbon\Carbon::SUNDAY)->format('Y-m-d')
                                             ) {
-                                                $selisih_jam = $jam . ':' . floor($menit / 60);
+                                                if (floor($menit / 60) <= 9) {
+                                                    $selisih_jam = $jam . ':' . '0'.floor($menit / 60);
+                                                }else{
+                                                    $selisih_jam = $jam . ':' . floor($menit / 60);
+                                                }
                                             }else{
-                                                $selisih_jam = $jam-1 . ':' . floor($menit / 60);
+                                                if (floor($menit / 60) <= 9) {
+                                                    $selisih_jam = $jam-1 . ':' . '0'.floor($menit / 60);
+                                                }else{
+                                                    $selisih_jam = $jam-1 . ':' . floor($menit / 60);
+                                                }
                                             }
 
                                             if ($awal == 0 && $akhir == 0) {
@@ -205,6 +246,7 @@
                                     </td> --}}
                                 @endforeach
                             </tr>
+                            @endif
                             @endforeach
                         </tbody>
                     </table>

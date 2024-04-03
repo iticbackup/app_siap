@@ -39,9 +39,10 @@ class PresensiController extends Controller
             $data['weeks'][] = $i;
         }
         $data['biodata_karyawans'] = $this->biodata_karyawan->where(function($query) {
-                                                                return $query->where('nik','!=','1000001')
-                                                                            ->where('nik','!=','1000002')
-                                                                            ->where('nik','!=','1000003');
+                                                                $query->where('nik','>','1000003');
+                                                                // return $query->where('nik','!=','1000001')
+                                                                //             ->where('nik','!=','1000002')
+                                                                //             ->where('nik','!=','1000003');
                                                             })
                                                             // ->where('pin',1298)
                                                             ->where('status_karyawan','!=','R')
@@ -176,22 +177,40 @@ class PresensiController extends Controller
 
     public function search(Request $request)
     {
-        $start_month_now = Carbon::create($request->cari_tanggal_awal)->startOfMonth()->format('Y-m-d');
-        $end_month_now = Carbon::create($request->cari_tanggal_akhir)->endOfMonth()->format('Y-m-d');
+        // $start_month_now = Carbon::create($request->cari_tanggal_awal)->startOfMonth()->format('Y-m-d');
+        // $end_month_now = Carbon::create($request->cari_tanggal_akhir)->endOfMonth()->format('Y-m-d');
+        // for ($i=$start_month_now; $i <= $end_month_now; $i++) { 
+        //     $data['weeks'][] = $i;
+        // }
+        // $data['biodata_karyawans'] = $this->biodata_karyawan->where(function($query) {
+        //                                                         return $query->where('nik','!=','1000001')
+        //                                                                     ->where('nik','!=','1000002')
+        //                                                                     ->where('nik','!=','1000003');
+        //                                                     })
+        //                                                     ->where('nik','LIKE','%'.$request->cari.'%')
+        //                                                     ->orWhere('nama','LIKE','%'.$request->cari.'%')
+        //                                                     ->orwhere('status_karyawan','!=','R')
+        //                                                     ->orderBy('satuan_kerja','asc')
+        //                                                     ->paginate(20)->withQueryString();
+        // $data['fin_pro'] = $this->fin_pro;
+        $start_month_now = Carbon::create($_GET['cari_tanggal_awal'])->format('Y-m-d');
+        $end_month_now = Carbon::create($_GET['cari_tanggal_akhir'])->format('Y-m-d');
         for ($i=$start_month_now; $i <= $end_month_now; $i++) { 
             $data['weeks'][] = $i;
         }
-        $data['biodata_karyawans'] = $this->biodata_karyawan->where(function($query) {
-                                                                return $query->where('nik','!=','1000001')
-                                                                            ->where('nik','!=','1000002')
-                                                                            ->where('nik','!=','1000003');
-                                                            })
+        $data['biodata_karyawans'] = $this->biodata_karyawan->whereNotIn('nik',array('1000001','1000002','1000003'))
+                                                            // ->where(function($query) use($request){
+                                                            //     $query->where('nama','LIKE','%'.$request->cari.'%')
+                                                            //         ->orWhere('nik','LIKE','%'.$request->cari.'%');
+                                                            // })
+                                                            // ->search()
                                                             ->where('nik','LIKE','%'.$request->cari.'%')
-                                                            ->orWhere('nama','LIKE','%'.$request->cari.'%')
-                                                            // ->where('status_karyawan','!=','R')
-                                                            // ->orderBy('satuan_kerja','asc')
+                                                            ->orwhere('nama','LIKE','%'.$request->cari.'%')
+                                                            // ->orwhere('status_karyawan','!=','R')
+                                                            ->orderBy('nama','asc')
                                                             ->paginate(20)->withQueryString();
         $data['fin_pro'] = $this->fin_pro;
+        // dd($data);
         return view('absensi.presensi.index',$data);
     }
 

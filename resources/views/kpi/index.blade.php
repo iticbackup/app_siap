@@ -175,15 +175,13 @@
                                                                 </div> --}}
                                                             </td>
                                                         @else
-                                                            @if ($convert_finish_month >= $convert_date_now)
-                                                                <td class="text-center">Tanggal Pengumpulan : {{ \Carbon\Carbon::create($start_month)->addMonth()->format('d-m-Y') . ' s/d ' . \Carbon\Carbon::create($finish_month)->addMonth()->format('d-m-Y') }}</td>
-                                                                <td class="text-center">-</td>
-                                                                <td class="text-center">-</td>
+                                                            @php
+                                                                $valid_date_now = \Carbon\Carbon::create($date_now)->subMonth()->format('d-m-Y');
+                                                                $convert_valid_date_now = strtotime($valid_date_now);
+                                                            @endphp
+                                                            @if ($convert_finish_month >= $convert_valid_date_now)
+                                                                <td class="text-center" colspan="3"><i class="mdi mdi-calendar-text-outline text-primary"></i> Tanggal Pengumpulan KPI : <b>{{ \Carbon\Carbon::create($start_month)->addMonth()->format('d-m-Y') . ' s/d ' . \Carbon\Carbon::create($finish_month)->addMonth()->format('d-m-Y') }}</b></td>
                                                                 <td class="text-center"><a href="{{ route('kpi_buat_kpi',['departemen_id' => $departemen->id, 'date' => $date]) }}" class="btn btn-primary btn-md"><i class="fas fa-plus"></i> Buat KPI</a></td>
-                                                                {{-- <td class="text-center" colspan="3">Tanggal Pengumpulan : {{ \Carbon\Carbon::create($start_month)->addMonth()->format('d-m-Y') . ' s/d ' . \Carbon\Carbon::create($finish_month)->addMonth()->format('d-m-Y') }}</td>
-                                                                <td class="text-center">
-                                                                    <a href="{{ route('kpi_buat_kpi',['departemen_id' => $departemen->id, 'date' => $date]) }}" class="btn btn-primary btn-md"><i class="fas fa-plus"></i> Buat KPI</a>
-                                                                </td> --}}
                                                             @else
                                                                 <td class="text-center"><span class="badge bg-danger">Tidak Mengumpulkan</span></td>
                                                                 <td class="text-center">-</td>

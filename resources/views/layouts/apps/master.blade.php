@@ -99,6 +99,66 @@
     <script src="https://mannatthemes.com/dastone/default/assets/js/moment.js"></script>
     <script src="https://mannatthemes.com/dastone/plugins/daterangepicker/daterangepicker.js"></script>
     <script src="https://mannatthemes.com/dastone/default/assets/js/app.js"></script> --}}
+
+    {{-- <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+    const firebaseConfig = {
+        apiKey: "AIzaSyCbUWkgQ6udgnUldAuwnqAub53eW6lXS9E",
+        authDomain: "app-siap.firebaseapp.com",
+        projectId: "app-siap",
+        storageBucket: "app-siap.appspot.com",
+        messagingSenderId: "596272474074",
+        appId: "1:596272474074:web:6fe5475895cb115d2c02e3"
+    };
+    const app = initializeApp(firebaseConfig);
+    </script> --}}
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyCbUWkgQ6udgnUldAuwnqAub53eW6lXS9E",
+            authDomain: "app-siap.firebaseapp.com",
+            projectId: "app-siap",
+            storageBucket: "app-siap.appspot.com",
+            messagingSenderId: "596272474074",
+            appId: "1:596272474074:web:6fe5475895cb115d2c02e3"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        const messaging = firebase.messaging();
+
+        function initFirebaseMessagingRegistration() {
+            messaging.requestPermission().then(function () {
+                return messaging.getToken()
+            }).then(function(token) {
+                
+                axios.post("{{ route('fcmToken') }}",{
+                    _method:"PATCH",
+                    token
+                }).then(({data})=>{
+                    console.log(data)
+                }).catch(({response:{data}})=>{
+                    console.error(data)
+                })
+
+            }).catch(function (err) {
+                console.log(`Token Error :: ${err}`);
+            });
+        }
+
+        initFirebaseMessagingRegistration();
+    
+        messaging.onMessage(function({data:{body,title}}){
+            new Notification(title, {body});
+        });
+    </script>
     @yield('script')
 </body>
 

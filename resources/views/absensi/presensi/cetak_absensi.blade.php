@@ -290,9 +290,17 @@
                     $week == \Carbon\Carbon::create($week)->endOfWeek(\Carbon\Carbon::SATURDAY)->format('Y-m-d') ||
                     $week == \Carbon\Carbon::create($week)->endOfWeek(\Carbon\Carbon::SUNDAY)->format('Y-m-d')
                 ){
-                    $selisih_jam = $jam . ':' . floor($menit / 60);
+                    if (floor($menit / 60) <= 9) {
+                        $selisih_jam = $jam . ':' . '0'.floor($menit / 60);
+                    }else{
+                        $selisih_jam = $jam . ':' . floor($menit / 60);
+                    }
                 }else{
-                    $selisih_jam = $jam-1 . ':' . floor($menit / 60);
+                    if (floor($menit / 60) <= 9) {
+                        $selisih_jam = $jam-1 . ':' . '0'.floor($menit / 60);
+                    }else{
+                        $selisih_jam = $jam-1 . ':' . floor($menit / 60);
+                    }
                 }
                 // dd($jam-1);
 
