@@ -243,18 +243,18 @@ class AbsensiController extends Controller
                                                         // ->get();
             // dd($data);
             $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
-            $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
-            $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
-            for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
-                $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
-                $total_absen_masuk = $this->fin_pro->where('scan_date','LIKE','%'.$i.'%')
-                                                    ->whereTime('scan_date','<=','11:59')
-                                                    ->orderBy('scan_date','desc')
-                                                    ->take(1)
-                                                    ->count();
-                // dd($total_absen_masuk);
-                $data['hasil'][] = $total_absen_masuk;
-            }
+            // $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
+            // $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
+            // for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
+            //     $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
+            //     $total_absen_masuk = $this->fin_pro->where('scan_date','LIKE','%'.$i.'%')
+            //                                         ->whereTime('scan_date','<=','11:59')
+            //                                         ->orderBy('scan_date','desc')
+            //                                         ->take(1)
+            //                                         ->count();
+            //     // dd($total_absen_masuk);
+            //     $data['hasil'][] = $total_absen_masuk;
+            // }
 
             $data['fin_pro'] = $this->fin_pro;
             $data['presensi_info'] = $this->presensi_info;
@@ -275,18 +275,18 @@ class AbsensiController extends Controller
                                                                 ->where('status_karyawan','!=','R')
                                                                 ->paginate(20);
                     $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
-                    $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
-                    $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
-                    for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
-                        $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
-                        $total_absen_masuk = $this->fin_pro->where('scan_date','LIKE','%'.$i.'%')
-                                                            ->whereTime('scan_date','<=','11:59')
-                                                            ->orderBy('scan_date','desc')
-                                                            ->take(1)
-                                                            ->count();
-                        // dd($total_absen_masuk);
-                        $data['hasil'][] = $total_absen_masuk;
-                    }
+                    // $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
+                    // $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
+                    // for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
+                    //     $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
+                    //     $total_absen_masuk = $this->fin_pro->where('scan_date','LIKE','%'.$i.'%')
+                    //                                         ->whereTime('scan_date','<=','11:59')
+                    //                                         ->orderBy('scan_date','desc')
+                    //                                         ->take(1)
+                    //                                         ->count();
+                    //     // dd($total_absen_masuk);
+                    //     $data['hasil'][] = $total_absen_masuk;
+                    // }
                     $data['fin_pro'] = $this->fin_pro;
                     $data['presensi_info'] = $this->presensi_info;
                     return view('absensi.home.index',$data);

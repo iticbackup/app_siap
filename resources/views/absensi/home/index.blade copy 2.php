@@ -43,8 +43,20 @@
             </div>
         @endif
         <div class="col">
+            {{-- <div class="row row-cols-1 row-cols-lg-3">
+                <div class="col-12 col-lg-12">
+                    <div class="card radius-10">
+                        <div class="card-body">
+                            <div id="chart13"></div>
+                        </div>
+                    </div>
+                </div>
+            </div> --}}
             <div class="card">
                 <div class="card-body">
+                    {{-- <div>
+                    <h5 class="card-title">Daftar Hadir Karyawan</h5>
+                </div> --}}
                     <div class="row align-items-center" style="margin-bottom: 1%">
                         <div class="col">
                             <h4 class="card-title">Daftar Hadir Karyawan</h4>
@@ -1075,6 +1087,72 @@
                     });
                 }
             });
+        });
+    </script>
+    <script>
+        Highcharts.chart('chart13', {
+            chart: {
+                zoomType: 'xy',
+                styledMode: true
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: 'Progress Absensi Periode ' + new Date().getFullYear()
+            },
+            xAxis: [{
+                categories: @json($periode),
+                crosshair: true
+            }],
+            yAxis: [{ // Primary yAxis
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                title: {
+                    text: 'Total Absensi',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                }
+            }, { // Secondary yAxis
+                title: {
+                    text: 'Total Absensi',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                x: 120,
+                verticalAlign: 'top',
+                y: 100,
+                floating: true,
+                backgroundColor: Highcharts.defaultOptions.legend.backgroundColor ||
+                    'rgba(255,255,255,0.25)'
+            },
+            series: [{
+                name: 'Total Absensi',
+                type: 'column',
+                yAxis: 1,
+                data: @json($hasil),
+
+            }]
         });
     </script>
     {{-- <script src="{{ $asset }}/assets/plugins/highcharts/js/highcharts.js"></script>

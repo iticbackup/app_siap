@@ -30,6 +30,7 @@ class RekapPelatihanSeminar extends Model
         'check_date',
         'file_sertifikat',
         'file_absensi',
+        'link',
     ];
 
     public function rekap_pelatihan_seminar_peserta()

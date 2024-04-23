@@ -28,6 +28,7 @@ class CreateRekapPelatihanSeminarTable extends Migration
             $table->string('status');
             $table->string('file_sertifikat')->nullable();
             $table->string('file_absensi')->nullable();
+            $table->text('link')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

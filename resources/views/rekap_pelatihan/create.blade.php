@@ -195,6 +195,10 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <label for="form-label">Link Join</label>
+                            <input type="text" name="link" class="form-control" placeholder="Link Join" id="">
+                        </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                         <a href="{{ route('rekap_pelatihan.rekap_pelatihan') }}" class="btn btn-secondary">Cancel</a>
                     </div>

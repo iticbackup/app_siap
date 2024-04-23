@@ -309,6 +309,11 @@ class RekapPelatihanController extends Controller
                                 // $btn.= '<button type="button" onclick="edit(`'.$row->id.'`)" class="btn btn-success btn-icon" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">
                                 //             <i class="fa fa-eye"></i> Detail
                                 //         </button>';
+                                if (!empty($row->link)) {
+                                    $btn.= '<a href="'.$row->link.'" class="btn btn-icon" style="background-color: #003C43; color: #fff" target="_blank">
+                                                <i class="fas fa-play"></i> Join
+                                            </a>';
+                                }
                                 $btn.= '<button type="button" onclick="show_canvas(`'.$row->id.'`)" class="btn btn-success btn-icon">
                                             <i class="fa fa-eye"></i> Detail
                                         </button>';
@@ -474,6 +479,7 @@ class RekapPelatihanController extends Controller
             // $input['peserta'] = json_encode($request->peserta);
             // $input['peserta'] = implode($pesertas);
             $input['status'] = $request->status;
+            $input['link'] = $request->link;
             // dd($input);
             $rekap_pelatihan = $this->rekap_pelatihan->create($input);
             if($rekap_pelatihan){
