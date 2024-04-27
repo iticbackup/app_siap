@@ -84,9 +84,6 @@
                         <i class="mdi mdi-calendar-text-outline alert-icon text-primary align-self-center font-30 me-3"></i>
                         <div class="media-body align-self-center">
                             <h5 class="mb-1 fw-bold mt-0">Reminder: {{ $reminder->tema }}</h5>
-                            {{-- <div class="mb-1">
-                                    <span>{{ $reminder->tema }}</span>
-                                </div> --}}
                             <span>Tanggal: {{ $date }} Pukul: {{ $pukul }}</span>
                         </div>
                     </div>
@@ -100,9 +97,6 @@
                         <i class="mdi mdi-progress-clock alert-icon text-warning align-self-center font-30 me-3"></i>
                         <div class="media-body align-self-center">
                             <h5 class="mb-1 fw-bold mt-0">On Progress: {{ $reminder->tema }}</h5>
-                            {{-- <div class="mb-1">
-                                    <span><b>{{ $reminder->tema }}</b></span>
-                                </div> --}}
                             <span>Tanggal: {{ $date }} Pukul: {{ $pukul }}</span>
                         </div>
                     </div>
@@ -111,8 +105,8 @@
                 </div>
             @endif
         @empty
+                
         @endforelse
-
 
         @if (auth()->user()->nik == 1207514 || auth()->user()->nik == 1711952 || auth()->user()->nik == 0000000)
             <div class="col-lg-6">

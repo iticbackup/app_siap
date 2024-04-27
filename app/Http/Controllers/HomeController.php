@@ -40,7 +40,14 @@ class HomeController extends Controller
     public function index()
     {
         $date = Carbon::now();
-        $data['reminders'] = $this->rekap_pelatihan->where('periode',$date->format('Y'))->where('status','Plan')->get();
+        $data['reminders'] = $this->rekap_pelatihan->with('rekap_pelatihan_seminar_peserta')
+                                                    ->whereHas('rekap_pelatihan_seminar_peserta',function($query){
+                                                        $query->where('peserta',auth()->user()->name);
+                                                    })
+                                                    ->where('periode',$date->format('Y'))
+                                                    ->where('status','Plan')
+                                                    ->get();
+        // dd($data['reminders']);
         $data['event_rekaps'] = $this->rekap_pelatihan->where('periode',$date->format('Y'))->get();
 
         foreach ($data['event_rekaps'] as $key => $event_rekap) {

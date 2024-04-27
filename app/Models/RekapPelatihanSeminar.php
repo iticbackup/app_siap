@@ -35,6 +35,6 @@ class RekapPelatihanSeminar extends Model
 
     public function rekap_pelatihan_seminar_peserta()
     {
-        return $this->hasMany(\App\Models\RekapPelatihanSeminarPeserta::class, 'id');
+        return $this->hasMany(\App\Models\RekapPelatihanSeminarPeserta::class, 'rekap_pelatihan_seminar_id');
     }
 }
