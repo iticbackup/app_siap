@@ -160,11 +160,15 @@ class HRGAController extends Controller
                                     return $nama;
                                 })
                                 ->addColumn('status_kerja', function($row){
-                                    $status_kontrak_karyawan = $this->hrga_status_kerja->select('pk')->where('hrga_biodata_karyawan_id', $row->id)->orderBy('id','desc')->first();
+                                    $status_kontrak_karyawan = $this->hrga_status_kerja->select('pk','ke')->where('hrga_biodata_karyawan_id', $row->id)->orderBy('id','desc')->first();
                                     if (empty($status_kontrak_karyawan)) {
                                         return $status_kontrak = '-';
                                     }else{
-                                        return $status_kontrak = $status_kontrak_karyawan->pk;
+                                        if ($status_kontrak_karyawan->pk == 'Kontrak') {
+                                            return '<span class="badge bg-warning text-dark">'.$status_kontrak = $status_kontrak_karyawan->pk.' ke-'.$status_kontrak_karyawan->ke.'</span>';
+                                        }else{
+                                            return '<span class="badge bg-primary">'.$status_kontrak = $status_kontrak_karyawan->pk.'</span>';
+                                        }
                                     }
                                 })
                                 ->addColumn('status_karyawan_resign', function($row){
@@ -184,13 +188,14 @@ class HRGAController extends Controller
                                 })
                                 ->addColumn('action', function($row){
                                     $btn = '<div class="button-items">';
+                                    $btn .= '<button class="btn btn-info" onclick="buat_kontrak(`'.$row->nik.'`)">'.'<i class="fas fa-eye"></i> '.'Detail Kontrak'.'</button>';
                                     $btn .= '<button class="btn btn-primary" onclick="detail(`'.$row->nik.'`)">'.'<i class="fas fa-eye"></i> '.'Detail'.'</button>';
                                     $btn .= '<button class="btn btn-warning" onclick="edit(`'.$row->nik.'`)">'.'<i class="fas fa-edit"></i> '.'Edit'.'</button>';
                                     $btn .= '</div>';
 
                                     return $btn;
                                 })
-                                ->rawColumns(['action','status_karyawan_resign','foto_karyawan'])
+                                ->rawColumns(['action','status_kerja','status_karyawan_resign','foto_karyawan'])
                                 ->make(true);
             // return DataTables::of($data)
             //                 ->addIndexColumn()
