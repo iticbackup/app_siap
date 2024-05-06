@@ -310,9 +310,11 @@ class RekapPelatihanController extends Controller
                                 //             <i class="fa fa-eye"></i> Detail
                                 //         </button>';
                                 if (!empty($row->link)) {
-                                    $btn.= '<a href="'.$row->link.'" class="btn btn-icon" style="background-color: #003C43; color: #fff" target="_blank">
-                                                <i class="fas fa-play"></i> Join
-                                            </a>';
+                                    if ($datelive <= $explode_tanggal[0]) {
+                                        $btn.= '<a href="'.$row->link.'" class="btn btn-icon" style="background-color: #003C43; color: #fff" target="_blank">
+                                                    <i class="fas fa-play"></i> Join
+                                                </a>';
+                                    }
                                 }
                                 $btn.= '<button type="button" onclick="show_canvas(`'.$row->id.'`)" class="btn btn-success btn-icon">
                                             <i class="fa fa-eye"></i> Detail
