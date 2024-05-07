@@ -258,12 +258,12 @@ class RekapPelatihanController extends Controller
                             ->addColumn('tanggal', function($row){
                                 $explode_tanggal = explode(',',$row->tanggal);
                                 if ($row->check_date == 'yes') {
-                                    return Carbon::create($explode_tanggal[0])->format('d').' , '.Carbon::create($explode_tanggal[1])->isoFormat('LL');
+                                    return Carbon::create($explode_tanggal[0])->format('d').' , '.Carbon::create($explode_tanggal[1])->isoFormat('DD MMMM YYYY').'<br><span class="badge bg-info">'.Carbon::create($explode_tanggal[0])->format('H:i').' - '.Carbon::create($explode_tanggal[1])->format('H:i').'</span>';
                                 }else{
                                     if (Carbon::create($explode_tanggal[0])->format('Y-m-d') == Carbon::create($explode_tanggal[1])->format('Y-m-d')) {
-                                        return Carbon::create($explode_tanggal[1])->isoFormat('LL');
+                                        return Carbon::create($explode_tanggal[1])->isoFormat('DD MMMM YYYY').'<br><span class="badge bg-info">'.Carbon::create($explode_tanggal[0])->format('H:i').' - '.Carbon::create($explode_tanggal[1])->format('H:i').'</span>';
                                     }else{
-                                        return Carbon::create($explode_tanggal[0])->format('d').' - '.Carbon::create($explode_tanggal[1])->isoFormat('LL');
+                                        return Carbon::create($explode_tanggal[0])->format('d').' - '.Carbon::create($explode_tanggal[1])->isoFormat('DD MMMM YYYY').'<br><span class="badge bg-info">'.Carbon::create($explode_tanggal[0])->format('H:i').' - '.Carbon::create($explode_tanggal[1])->format('H:i').'</span>';
                                     }
                                 }
                             })
@@ -354,7 +354,7 @@ class RekapPelatihanController extends Controller
                                 $btn.= '</div>';
                                 return $btn;
                             })
-                            ->rawColumns(['action','tema','status'])
+                            ->rawColumns(['action','tema','status','tanggal'])
                             ->make(true);
         }
         // $data['periode'] = $periode;
