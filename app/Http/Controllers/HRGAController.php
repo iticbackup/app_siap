@@ -165,9 +165,9 @@ class HRGAController extends Controller
                                         return $status_kontrak = '-';
                                     }else{
                                         if ($status_kontrak_karyawan->pk == 'Kontrak') {
-                                            return '<span class="badge bg-warning text-dark">'.$status_kontrak = $status_kontrak_karyawan->pk.' ke-'.$status_kontrak_karyawan->ke.'</span>';
+                                            return '<span class="badge bg-warning text-dark">'.$status_kontrak_karyawan->pk.' ke-'.$status_kontrak_karyawan->ke.'</span>';
                                         }else{
-                                            return '<span class="badge bg-primary">'.$status_kontrak = $status_kontrak_karyawan->pk.'</span>';
+                                            return '<span class="badge bg-primary">'.$status_kontrak_karyawan->pk.'</span>';
                                         }
                                     }
                                 })
@@ -1348,6 +1348,9 @@ class HRGAController extends Controller
                 'status_karyawan' => 'T'
             ]);
             $karyawan_resign = $this->hrga_karyawan_resign->create($input);
+            $this->biodata_karyawan->where('nik',$request->resign_nik)->update([
+                'status_karyawan' => 'R'
+            ]);
     
             if($karyawan_resign){
                 $message_title="Berhasil !";
