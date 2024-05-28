@@ -161,6 +161,7 @@ class IjinTerlambatController extends Controller
         $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->passes()) {
             $presensi_info = $this->presensi_info->where('att_rec',$request->edit_att_rec)->first();
+            // dd($request->edit_tanggal.' '.$request->edit_waktu_datang_jam.':'.$request->edit_waktu_datang_menit.':00');
             $input['status'] = $request->edit_status;
             if (!empty($request->edit_jam_masuk_jam) && !empty($request->edit_jam_masuk_menit)) {
                 $penyesuaian_jam_masuk_jam = $request->edit_jam_masuk_jam.':'.$request->edit_jam_masuk_menit;
@@ -179,6 +180,7 @@ class IjinTerlambatController extends Controller
             }else{
                 $penyesuaian_jam_pulang_jam = null;
             }
+            $input['scan_date'] = $request->edit_tanggal.' '.$request->edit_waktu_datang_jam.':'.$request->edit_waktu_datang_menit.':00';
             $input['keterangan'] = $request->edit_keterangan.'@'.$penyesuaian_jam_masuk_jam.'@'.$penyesuaian_jam_istirahat_jam.'@'.$penyesuaian_jam_pulang_jam;
             $presensi_info->update($input);
             if ($presensi_info) {
