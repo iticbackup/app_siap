@@ -44,7 +44,7 @@ class DepartemenController extends Controller
                                 //     $ul = '-';
                                 // }
                                 // return $ul;
-                                $departemen_users = $this->departemen_user->where('departemen_id',$row->id)->get();
+                                $departemen_users = $this->departemen_user->where('departemen_id',$row->id)->where('status','Y')->get();
                                 $ol = '<ul>';
                                 foreach ($departemen_users as $key => $value) {
                                     if ($value->staff == 'y') {

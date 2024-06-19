@@ -37,6 +37,7 @@
             $hitung_jml_hari_kali_jam = $rekap_pelatihan->jml_hari*$rekap_pelatihan->jml_jam_dlm_hari;
 
             $rekap_pelatihan_pesertas = \App\Models\RekapPelatihanSeminarPeserta::where('rekap_pelatihan_seminar_id',$rekap_pelatihan->id)->get();
+            // dd($rekap_pelatihan_pesertas);
             $hitung_total_peserta_kali_jam = $hitung_jml_hari_kali_jam*$rekap_pelatihan->total_peserta;
         @endphp
             <tr>
