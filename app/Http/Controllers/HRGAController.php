@@ -1215,7 +1215,7 @@ class HRGAController extends Controller
 
     public function riwayat_training_simpan(Request $request)
     {
-        $no = $this->hrga_riwayat_training->count();
+        $no = $this->hrga_riwayat_training->max('id');
         
         if (empty($request->nama_riwayat_training)) {
             foreach ($request->riwayat_training as $key => $value) {
