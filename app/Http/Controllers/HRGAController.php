@@ -543,7 +543,7 @@ class HRGAController extends Controller
 
     public function data_karyawan()
     {
-        $biodata_karyawan = $this->biodata_karyawan->get();
+        $biodata_karyawan = $this->biodata_karyawan->where('status_karyawan',null)->get();
         return $biodata_karyawan;
     }
 
