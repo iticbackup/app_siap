@@ -342,7 +342,7 @@ class AbsensiController extends Controller
                                                                         ->where('nik','!=','1000003');
                                                         })
                                                         // ->where('pin',1298)
-                                                        ->orderBy('satuan_kerja','asc')
+                                                        // ->orderBy('satuan_kerja','asc')
                                                         ->where('status_karyawan','!=','R')
                                                         // ->take(20)
                                                         ->paginate(20);
