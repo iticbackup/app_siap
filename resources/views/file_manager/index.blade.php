@@ -63,7 +63,10 @@
                         <ul>
                             @foreach ($departemens as $departemen)
                                 @php
-                                    $file_manager_kategoris = \App\Models\FileManagerCategory::where('departemen_id', $departemen->id)->get();
+                                    $file_manager_kategoris = \App\Models\FileManagerCategory::where(
+                                        'departemen_id',
+                                        $departemen->id,
+                                    )->get();
                                 @endphp
                                 <li data-jstree='{"icon":"fa fa-folder text-warning font-18"}'>{{ $departemen->departemen }}
                                     <ul>
@@ -146,7 +149,9 @@
     <script src="{{ URL::asset('public/assets/plugins/dropify/js/dropify.min.js') }}"></script>
     <script src="{{ URL::asset('public/assets/js/pages/jquery.form-upload.init.js') }}"></script>
     <script src="{{ URL::asset('public/assets/plugins/sweet-alert2/sweetalert2.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js" integrity="sha512-Z8CqofpIcnJN80feS2uccz+pXWgZzeKxDsDNMD/dJ6997/LSRY+W4NmEt9acwR+Gt9OHN0kkI1CTianCwoqcjQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"
+        integrity="sha512-Z8CqofpIcnJN80feS2uccz+pXWgZzeKxDsDNMD/dJ6997/LSRY+W4NmEt9acwR+Gt9OHN0kkI1CTianCwoqcjQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
         $.ajaxSetup({
@@ -252,7 +257,8 @@
                                     '</div>'
                                 '</div>';
 
-                                document.getElementById('text_file_manager').innerHTML = '<h5>'+result.kategori+'<h5>';
+                                document.getElementById('text_file_manager').innerHTML = '<h5>' + result
+                                    .kategori + '<h5>';
                             } else {
                                 var x = document.getElementById('title_file_manager');
                                 //    x.style.display = "none";
@@ -268,9 +274,10 @@
                                     '</div>'
                                 '</div>';
 
-                                document.getElementById('text_file_manager').innerHTML = '<h5>'+result.kategori+'<h5>';
+                                document.getElementById('text_file_manager').innerHTML = '<h5>' + result
+                                    .kategori + '<h5>';
                             }
-                        }else{
+                        } else {
                             if (result.kategori == 'ITI' || result.kategori == 'FR') {
                                 var x = document.getElementById('title_file_manager');
                                 x.style.display = "block";
@@ -282,22 +289,24 @@
                                     '</div>'
                                 '</div>';
 
-                                document.getElementById('text_file_manager').innerHTML = '<h5>'+result.kategori+'<h5>';
-                            }else{
+                                document.getElementById('text_file_manager').innerHTML = '<h5>' + result
+                                    .kategori + '<h5>';
+                            } else {
                                 var x = document.getElementById('title_file_manager');
                                 x.style.display = "none";
 
                                 // document.getElementById('text_file_manager').innerHTML = '<h5>'+result.kategori+'<h5>';
-                                document.getElementById('text_file_manager').innerHTML = "<h5>"+result.kategori+"</h5>"+
-                                                                                        "@can('filemanager_upload')"+
-                                                                                        "<div>"+
-                                                                                            '<div class="button-items">' +
-                                                                                                '<button onclick="uploadBerkas(`' + result.kategori_id +
-                                                                                            '`)" class="btn btn-outline-primary btn-sm add-file"><i class="las la-cloud-upload-alt me-2 font-15"></i>Upload File</button>' +
-                                                                                                '<button onclick="uploadBerkasFR(`' + result.kategori_id +
-                                                                                            '`)" class="btn btn-outline-danger btn-sm add-file"><i class="las la-cloud-upload-alt me-2 font-15"></i>Upload FR</button>' +
-                                                                                        "</div>"+
-                                                                                        "@endcan";
+                                document.getElementById('text_file_manager').innerHTML = "<h5>" + result
+                                    .kategori + "</h5>" +
+                                    "@can('filemanager_upload')" +
+                                    "<div>" +
+                                    '<div class="button-items">' +
+                                    '<button onclick="uploadBerkas(`' + result.kategori_id +
+                                '`)" class="btn btn-outline-primary btn-sm add-file"><i class="las la-cloud-upload-alt me-2 font-15"></i>Upload File</button>' +
+                                    '<button onclick="uploadBerkasFR(`' + result.kategori_id +
+                                '`)" class="btn btn-outline-danger btn-sm add-file"><i class="las la-cloud-upload-alt me-2 font-15"></i>Upload FR</button>' +
+                                    "</div>" +
+                                    "@endcan";
                             }
                         }
                         const dataFileManagerList = result.data;
@@ -307,47 +316,52 @@
                         function data_file_manager_list(value, index) {
                             txtFileManagerList = txtFileManagerList + "<tr>";
                             txtFileManagerList = txtFileManagerList + "<td>" +
-                                                                        "<span class='badge bg-primary'>" + value.no_dokumen + "</span>" + " - " +
-                                                                        "<span>" + value.title + "</span>" + "</td>";
+                                "<span class='badge bg-primary'>" + value.no_dokumen + "</span>" + " - " +
+                                "<span>" + value.title + "</span>" + "</td>";
                             if (result.status_aktif == true) {
                                 txtFileManagerList = txtFileManagerList + "<td>" +
-                                                                                "<div class='btn-group'>" +
-                                                                                "<button class='btn btn-success' onclick='preview_file(" + value.id +
-                                                                                ")'><i class='fas fa-eye'></i> Preview</button>" +
-                                                                                "<a class='btn btn-primary' href='{{ url('file_manager/download/') }}" + '/' +
-                                                                                value.id + "'><i class='fas fa-download'></i> Download</a>" +
-                                                                                '<button onclick="hapus_file(`' + value.id + '`)" class="btn btn-danger">' +
-                                                                                "<i class='fas fa-trash'></i>" + "</button>" +
-                                                                                // '<button onclick="alert(`'+"Fitur ini sedang maintenance"+'`)" class="btn btn-danger">'+"<i class='fas fa-trash'></i>"+"</button>"+
-                                                                                "</div>" +
-                                                                            "</td>";
-                            }else{
+                                    "<div class='btn-group'>" +
+                                    "<button class='btn btn-success' onclick='preview_file(" + value.id +
+                                    ")'><i class='fas fa-eye'></i> Preview</button>" +
+                                    "<a class='btn btn-primary' href='{{ url('file_manager/download/') }}" +
+                                    '/' +
+                                    value.id + "'><i class='fas fa-download'></i> Download</a>" +
+                                    '<button onclick="hapus_file(`' + value.id + '`)" class="btn btn-danger">' +
+                                    "<i class='fas fa-trash'></i>" + "</button>" +
+                                    // '<button onclick="alert(`'+"Fitur ini sedang maintenance"+'`)" class="btn btn-danger">'+"<i class='fas fa-trash'></i>"+"</button>"+
+                                    "</div>" +
+                                    "</td>";
+                            } else {
                                 if (result.kategori == 'ITI' || result.kategori == 'FR') {
                                     txtFileManagerList = txtFileManagerList + "<td>" +
-                                                                                    "<div class='btn-group'>" +
-                                                                                        "<button class='btn btn-success' onclick='preview_file(" + value.id +
-                                                                                        ")'><i class='fas fa-eye'></i> Preview</button>" +
-                                                                                    "<a class='btn btn-primary' href='{{ url('file_manager/download/') }}" + '/' +
-                                                                                    value.id + "'><i class='fas fa-download'></i> Download</a>" +
-                                                                                    '<button onclick="hapus_file(`' + value.id + '`)" class="btn btn-danger">' +
-                                                                                    "<i class='fas fa-trash'></i>" + "</button>" +
-                                                                                    // '<button onclick="alert(`'+"Fitur ini sedang maintenance"+'`)" class="btn btn-danger">'+"<i class='fas fa-trash'></i>"+"</button>"+
-                                                                                    "</div>" +
-                                                                                "</td>";
-                                }else{
+                                        "<div class='btn-group'>" +
+                                        "<button class='btn btn-success' onclick='preview_file(" + value.id +
+                                        ")'><i class='fas fa-eye'></i> Preview</button>" +
+                                        "<a class='btn btn-primary' href='{{ url('file_manager/download/') }}" +
+                                        '/' +
+                                        value.id + "'><i class='fas fa-download'></i> Download</a>" +
+                                        '<button onclick="hapus_file(`' + value.id +
+                                    '`)" class="btn btn-danger">' +
+                                        "<i class='fas fa-trash'></i>" + "</button>" +
+                                        // '<button onclick="alert(`'+"Fitur ini sedang maintenance"+'`)" class="btn btn-danger">'+"<i class='fas fa-trash'></i>"+"</button>"+
+                                        "</div>" +
+                                        "</td>";
+                                } else {
                                     txtFileManagerList = txtFileManagerList + "<td>" +
-                                                                                    "<div class='btn-group'>" +
-                                                                                        "<button class='btn btn-success' onclick='preview_file(" + value.id +
-                                                                                        ")'><i class='fas fa-eye'></i> Preview</button>" +
-                                                                                    "<a class='btn btn-primary' href='{{ url('file_manager/download/') }}" + '/' +
-                                                                                    value.id + "'><i class='fas fa-download'></i> Download</a>" +
-                                                                                    "@can('filemanager_delete')"+
-                                                                                    '<button onclick="hapus_file(`' + value.id + '`)" class="btn btn-danger">' +
-                                                                                    "<i class='fas fa-trash'></i>" + "</button>" +
-                                                                                    "@endcan"+
-                                                                                    // '<button onclick="alert(`'+"Fitur ini sedang maintenance"+'`)" class="btn btn-danger">'+"<i class='fas fa-trash'></i>"+"</button>"+
-                                                                                    "</div>" +
-                                                                                "</td>";
+                                        "<div class='btn-group'>" +
+                                        "<button class='btn btn-success' onclick='preview_file(" + value.id +
+                                        ")'><i class='fas fa-eye'></i> Preview</button>" +
+                                        "<a class='btn btn-primary' href='{{ url('file_manager/download/') }}" +
+                                        '/' +
+                                        value.id + "'><i class='fas fa-download'></i> Download</a>" +
+                                        "@can('filemanager_delete')" +
+                                        '<button onclick="hapus_file(`' + value.id +
+                                    '`)" class="btn btn-danger">' +
+                                        "<i class='fas fa-trash'></i>" + "</button>" +
+                                        "@endcan" +
+                                        // '<button onclick="alert(`'+"Fitur ini sedang maintenance"+'`)" class="btn btn-danger">'+"<i class='fas fa-trash'></i>"+"</button>"+
+                                        "</div>" +
+                                        "</td>";
                                 }
 
                             }
@@ -357,11 +371,11 @@
 
                         if (!result.data.length) {
                             // alert('data tidak ditemukan');
-                            document.getElementById('data-body').innerHTML = '<tr>'+
-                                                                                "<td colspan='2' class='text-center'>" +
-                                                                                    "Data Belum Tersedia" +
-                                                                                "</td>" +
-                                                                            '</tr>';
+                            document.getElementById('data-body').innerHTML = '<tr>' +
+                                "<td colspan='2' class='text-center'>" +
+                                "Data Belum Tersedia" +
+                                "</td>" +
+                                '</tr>';
                         }
                     } else {
 

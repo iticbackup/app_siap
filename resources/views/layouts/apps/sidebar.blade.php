@@ -106,6 +106,16 @@
                 <a href="{{ route('hrga.biodata_karyawan.buat_karyawan_baru') }}" class="{{ Request::is('hrga/buat_karyawan_baru') ? 'active' : '' }}"><i
                         class="mdi mdi-account-box-multiple"></i> Buat Karyawan Baru</a>
             </li>
+            <li>
+                <a href="javascript: void(0);"> <i data-feather="file-text"
+                    class="align-self-center menu-icon"></i><span>Sertifikasi</span><span class="menu-arrow"><i
+                        class="mdi mdi-chevron-right"></i></span></a>
+                <ul class="nav-second-level" aria-expanded="false">
+                    <li class="nav-item"><a class="nav-link" href="{{ route('hrga.sertifikasi.mesin_produksi') }}">
+                        <i class="ti-control-record"></i>Mesin Produksi</a>
+                    </li>
+                </ul>
+            </li>
             @endcan
 
             @php

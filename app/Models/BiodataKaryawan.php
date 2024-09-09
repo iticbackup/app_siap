@@ -66,4 +66,30 @@ class BiodataKaryawan extends Model
     {
         return $this->belongsTo(\App\Models\EmpPosisi::class, 'id_posisi','id_posisi');
     }
+
+    public function jabatan()
+    {
+        return $this->belongsTo(\App\Models\EmpJabatan::class, 'id_jabatan','id_jabatan');
+    }
+
+    public function get_fin_pro($date)
+    {
+        return $this->hasMany(\App\Models\FinPro::class, 'pin','pin')
+                    // ->select(
+                    //     'scan_date as tanggal',
+                    //     ''
+                    // )
+                    ->where('scan_date','LIKE','%'.$date.'%')
+                    // ->WhereTime('scan_date','<=','11:59')
+                    // ->orWhereTime('scan_date','>=','12:00')
+                    ->orderBy('scan_date','asc')
+                    ->get();
+    }
+
+    public function fin_pro($date)
+    {
+        return $this->belongsTo(\App\Models\FinPro::class, 'pin','pin')
+                    ->where('scan_date','LIKE','%'.$date.'%')
+                    ->first();
+    }
 }

@@ -41,9 +41,9 @@ Route::prefix('cek_dokumen')->group(function () {
 Route::get('modules', [App\Http\Controllers\ModulesController::class, 'f_index'])->name('f_module');
 Route::get('modules/{id}/download', [App\Http\Controllers\ModulesController::class, 'f_download'])->name('f_module.download');
 
-Route::get('testing', function(){
-    return request()->ip();
-});
+// Route::get('testing', function(){
+//     return request()->ip();
+// });
 
 Route::group(['middleware' => ['auth']], function() {
     Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -242,6 +242,26 @@ Route::group(['middleware' => ['auth']], function() {
             Route::get('{id}/detail', [App\Http\Controllers\HRGAController::class, 'rekap_pelatihan_detail'])->name('hrga.rekap_pelatihan_detail');
             Route::post('simpan', [App\Http\Controllers\HRGAController::class, 'rekap_pelatihan_detail_simpan'])->name('hrga.rekap_pelatihan_detail_simpan');
         });
+        Route::prefix('sertifikasi')->group(function () {
+            Route::prefix('mesin_produksi')->group(function () {
+                Route::get('/', [App\Http\Controllers\SertifikasiMesinProduksiController::class, 'index'])->name('hrga.sertifikasi.mesin_produksi');
+                Route::get('create', [App\Http\Controllers\SertifikasiMesinProduksiController::class, 'create'])->name('hrga.sertifikasi.mesin_produksi.create');
+                Route::post('simpan', [App\Http\Controllers\SertifikasiMesinProduksiController::class, 'simpan'])->name('hrga.sertifikasi.mesin_produksi.simpan');
+                Route::post('update', [App\Http\Controllers\SertifikasiMesinProduksiController::class, 'update'])->name('hrga.sertifikasi.mesin_produksi.update');
+                Route::get('download_pdf', [App\Http\Controllers\SertifikasiMesinProduksiController::class, 'download_pdf'])->name('hrga.sertifikasi.mesin_produksi.download_pdf');
+                Route::get('{id}', [App\Http\Controllers\SertifikasiMesinProduksiController::class, 'detail'])->name('hrga.sertifikasi.mesin_produksi.detail');
+                Route::get('{id}/delete', [App\Http\Controllers\SertifikasiMesinProduksiController::class, 'delete'])->name('hrga.sertifikasi.mesin_produksi.delete');
+                
+                Route::prefix('{id}/list')->group(function () {
+                    Route::get('/', [App\Http\Controllers\SertifikasiMesinProduksiController::class, 'list_mesin'])->name('hrga.sertifikasi.mesin_produksi.list_mesin');
+                    Route::post('simpan', [App\Http\Controllers\SertifikasiMesinProduksiController::class, 'list_simpan'])->name('hrga.sertifikasi.mesin_produksi.list_simpan');
+                    Route::post('update', [App\Http\Controllers\SertifikasiMesinProduksiController::class, 'update_list'])->name('hrga.sertifikasi.mesin_produksi.update_list');
+                    Route::get('{mesin_list_id}', [App\Http\Controllers\SertifikasiMesinProduksiController::class, 'detail_list'])->name('hrga.sertifikasi.mesin_produksi.detail_list');
+                    Route::get('{mesin_list_id}/delete', [App\Http\Controllers\SertifikasiMesinProduksiController::class, 'delete_list'])->name('hrga.sertifikasi.mesin_produksi.delete_list');
+                });
+
+            });
+        });
     });
 
     Route::prefix('profile')->group(function () {
@@ -261,6 +281,6 @@ Route::group(['middleware' => ['auth']], function() {
     });
     Route::post('/send-notification',[App\Http\Controllers\UserController::class,'notification'])->name('notification');
 
-    Route::get('testing', [App\Http\Controllers\TestingController::class, 'testing2'])->name('testing_pdf');
+    // Route::get('testing', [App\Http\Controllers\TestingController::class, 'testing2'])->name('testing_pdf');
 
 });
