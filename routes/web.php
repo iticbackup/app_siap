@@ -264,6 +264,16 @@ Route::group(['middleware' => ['auth']], function() {
         });
     });
 
+    Route::prefix('mesin_finger')->group(function () {
+        Route::prefix('device')->group(function () {
+            Route::get('/',[App\Http\Controllers\FinProController::class,'device'])->name('fin_pro.device');
+            Route::get('get_device',[App\Http\Controllers\FinProController::class,'get_device'])->name('fin_pro.get_device');
+            Route::post('simpan',[App\Http\Controllers\FinProController::class,'device_simpan'])->name('fin_pro.device_simpan');
+            Route::post('update',[App\Http\Controllers\FinProController::class,'device_update'])->name('fin_pro.device_update');
+            Route::get('{dev_id}',[App\Http\Controllers\FinProController::class,'device_detail'])->name('fin_pro.device_detail');
+        });
+    });
+
     Route::prefix('profile')->group(function () {
         Route::get('/', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
         Route::post('update_personal_info', [App\Http\Controllers\ProfileController::class, 'personal_info_update'])->name('profile.personal_info');

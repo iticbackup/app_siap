@@ -124,6 +124,15 @@
 
             {{-- @if (auth()->user()->assignRole('admin') == 'admin')
             @endif --}}
+
+            @can('fingerprint-list')
+            <li class="menu-label mt-0">Mesin Fingerprint</li>
+            <li class="{{ Request::is('mesin_finger/device') ? 'active' : '' }}">
+                <a href="{{ route('fin_pro.device') }}" class="{{ Request::is('mesin_finger/device') ? 'active' : '' }}"><i
+                        class="mdi mdi-tablet-ipad"></i> Device Fingerprint</a>
+            </li>
+            @endcan
+            
             @can('kt-developer')
             <li class="menu-label mt-0">Developer</li>
             <li class="{{ Request::is('periode') ? 'active' : '' }}">
