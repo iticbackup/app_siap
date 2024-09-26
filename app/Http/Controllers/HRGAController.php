@@ -1192,18 +1192,19 @@ class HRGAController extends Controller
     public function cek_riwayat_training_karyawan($nama)
     {
         $riwayat_training_karyawans = $this->rekap_pelatihan_seminar_peserta->with('hrga_rekap_pelatihan_karyawan')->where('peserta',$nama)->get();
+        // dd($riwayat_training_karyawans);
         if ($riwayat_training_karyawans->isEmpty()) {
             $data = null;
         }else{
             foreach ($riwayat_training_karyawans as $key => $riwayat_training_karyawan) {
-                $explode_tanggal = explode(',',$riwayat_training_karyawan->hrga_rekap_pelatihan_karyawan->tanggal);
+                $explode_tanggal = empty($riwayat_training_karyawan->hrga_rekap_pelatihan_karyawan) ? '-' : explode(',',$riwayat_training_karyawan->hrga_rekap_pelatihan_karyawan->tanggal);
                 $data[] = [
                     'no' => $key+1,
-                    'nama_pelatihan' => $riwayat_training_karyawan->hrga_rekap_pelatihan_karyawan->tema.'|'.Carbon::create($explode_tanggal[0])->format('d-m-Y H:i')
+                    'nama_pelatihan' => empty($riwayat_training_karyawan->hrga_rekap_pelatihan_karyawan->tema) ? '-' : $riwayat_training_karyawan->hrga_rekap_pelatihan_karyawan->tema.'|'.Carbon::create($explode_tanggal[0])->format('d-m-Y H:i')
                 ];
                 // $data[] = [
                 //     'no' => $key+1,
-                //     'nama_pelatihan' => $riwayat_training_karyawan->hrga_rekap_pelatihan_karyawan->tema
+                //     'nama_pelatihan' => empty($riwayat_training_karyawan->hrga_rekap_pelatihan_karyawan->tema) ? '-' : $riwayat_training_karyawan->hrga_rekap_pelatihan_karyawan->tema
                 // ];
             }
         }
