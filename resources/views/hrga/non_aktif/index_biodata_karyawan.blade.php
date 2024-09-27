@@ -26,6 +26,7 @@
     @endcomponent
 
     @include('hrga.non_aktif.modalDetail')
+    @include('hrga.non_aktif.modalEdit')
 
     <div class="row">
         <div class="col-md-12 col-xl-12">
@@ -136,7 +137,7 @@
         });
 
         function reload(){
-            table.ajax.reload();
+            table.ajax.reload(null,false);
         }
 
         function detail(nik) {
@@ -244,6 +245,101 @@
                 }
             });
         }
+
+        function edit(nik)
+        {
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('hrga/biodata_karyawan/non_aktif/') }}"+'/'+nik+'/edit',
+                contentType: "application/json;  charset=utf-8",
+                cache: false,
+                beforeSend: function() {
+
+                },
+                success: (result) => {
+                    $('#edit_nik').val(result.data.nik);
+                    document.getElementById('edit_nik_karyawan').innerHTML = result.data.nik;
+                    document.getElementById('edit_nama_karyawan').innerHTML = result.data.biodata_karyawan.nama;
+                    $('.modalEditDataKaryawan').modal('show');
+                },
+                error: function(request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            });
+        }
+
+        $('#form-update').submit(function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            Swal.fire({
+                title: 'Apakah Sudah Yakin?',
+                // text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '$success',
+                cancelButtonColor: '$danger',
+                confirmButtonText: 'Yes'
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('hrga.biodata_karyawan.non_aktif.update') }}",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Proses...',
+                                text: 'Data sedang diproses',
+                                imageHeight: 80,
+                                animation: false,
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            })
+                        },
+                        success: (result) => {
+                            if (result.success == true) {
+                                Swal.fire(
+                                    result.message_title,
+                                    result.message_content,
+                                    'success'
+                                );
+                                
+                                table.ajax.reload(null, false);
+
+                                $('.modalEditDataKaryawan').modal('hide');
+                            }else{
+                                var error = result.error;
+                                var txt_error = ""
+                                error.forEach(fun_error);
+
+                                function fun_error(value, index) {
+                                    txt_error += value;
+                                }
+
+                                Swal.fire(
+                                    'Gagal!',
+                                    txt_error,
+                                    'error'
+                                )
+                            }
+                        },
+                        error: function(request, status, error) {
+                            Swal.fire(
+                                'Error',
+                                error,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            })
+
+        });
 
     </script>
 @endsection

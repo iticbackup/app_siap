@@ -177,7 +177,7 @@ class HRGAController extends Controller
                                     }elseif($row->status_karyawan == 'R'){
                                         return '<span class="badge bg-danger">Resign</span>';
                                     }else{
-                                        return '<span class="badge bg-success">Aktif</span>';
+                                        return '<span class="badge bg-success">Karyawan Tetap</span>';
                                     }
                                     // $karyawan_resign = $this->hrga_karyawan_resign->where('hrga_biodata_karyawan_id',$row->id)->first();
                                     // if (empty($karyawan_resign)) {
@@ -498,8 +498,12 @@ class HRGAController extends Controller
                                 return '<span class="badge bg-danger">Non Aktif</span>'.'<span class="badge bg-dark">'.Carbon::create($row->tanggal_resign)->format('d-m-Y').'</span>';
                             })
                             ->addColumn('action', function($row){
+                                $karyawan_resign = $this->hrga_karyawan_resign->where('hrga_biodata_karyawan_id',$row->id)->first();
                                 $btn = '<div class="button-items">';
                                 $btn .= '<button class="btn btn-primary" onclick="detail(`'.$row->nik.'`)">'.'<i class="fas fa-eye"></i> '.'Detail'.'</button>';
+                                if (empty($karyawan_resign)) {
+                                    $btn .= '<button class="btn btn-warning" onclick="edit(`'.$row->nik.'`)">'.'<i class="fas fa-edit"></i> '.'Edit'.'</button>';
+                                }
                                 $btn .= '</div>';
 
                                 return $btn;
@@ -539,6 +543,81 @@ class HRGAController extends Controller
         }
 
         return view('hrga.non_aktif.index_biodata_karyawan');
+    }
+
+    public function edit_biodata_karyawan_non_aktif($nik)
+    {
+        $data = $this->hrga_biodata_karyawan->with('biodata_karyawan')->where('nik',$nik)->first();
+        
+        if (empty($data)) {
+            return response()->json([
+                'success' => false,
+                'message_title' => 'Gagal!',
+                'error' => 'Data Karyawan Tidak Ditemukan'
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
+
+    public function update_biodata_karyawan_non_aktif(Request $request)
+    {
+        $rules = [
+            'edit_tanggal_resign' => 'required',
+        ];
+
+        $messages = [
+            'edit_tanggal_resign.required'  => 'Tanggal Resign wajib diisi.',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->passes()) {
+
+            $biodata_karyawan = $this->hrga_biodata_karyawan->where('nik',$request->edit_nik)->first();
+            $biodata_karyawan->update([
+                'status_karyawan' => 'T',
+                'tanggal_resign' => $request->edit_tanggal_resign
+            ]);
+            
+            if($biodata_karyawan){
+
+                $this->biodata_karyawan->where('nik',$request->edit_nik)->update([
+                    'status_karyawan'=> 'R'
+                ]);
+
+                $no = $this->hrga_karyawan_resign->max('id');
+                $this->hrga_karyawan_resign->create([
+                    'id' => $no+1,
+                    'hrga_biodata_karyawan_id' => $biodata_karyawan->id,
+                    'tanggal_resign' => $request->edit_tanggal_resign,
+                ]);
+
+                $message_title="Berhasil !";
+                $message_content= "Karyawan Non Aktif NIK ".$biodata_karyawan->nik." Berhasil Diupdate";
+                $message_type="success";
+                $message_succes = true;
+            }
+
+            $array_message = array(
+                'success' => $message_succes,
+                'message_title' => $message_title,
+                'message_content' => $message_content,
+                'message_type' => $message_type,
+            );
+
+            return response()->json($array_message);
+        }
+
+        return response()->json(
+            [
+                'success' => false,
+                'error' => $validator->errors()->all()
+            ]
+        );
     }
 
     public function data_karyawan()
@@ -1046,7 +1125,7 @@ class HRGAController extends Controller
 
             $biodata_karyawan->update($input);
             $this->biodata_karyawan->where('nik',$request->edit_nik)->update([
-                'status_karyawan'=> $request->edit_status_karyawan == 'T' ? 'R' : null
+                'status_karyawan'=> $request->edit_status_karyawan == 'T' ? 'R' : 'A'
             ]);
 
             if($biodata_karyawan){

@@ -232,7 +232,11 @@ Route::group(['middleware' => ['auth']], function() {
             Route::post('riwayat_training/simpan', [App\Http\Controllers\HRGAController::class, 'riwayat_training_simpan'])->name('hrga.biodata_karyawan.riwayat_training_simpan');
             
             Route::get('aktif', [App\Http\Controllers\HRGAController::class, 'index_biodata_karyawan_aktif'])->name('hrga.biodata_karyawan.aktif');
-            Route::get('non_aktif', [App\Http\Controllers\HRGAController::class, 'index_biodata_karyawan_non_aktif'])->name('hrga.biodata_karyawan.non_aktif');
+            Route::prefix('non_aktif')->group(function () {
+                Route::get('/', [App\Http\Controllers\HRGAController::class, 'index_biodata_karyawan_non_aktif'])->name('hrga.biodata_karyawan.non_aktif');
+                Route::post('update', [App\Http\Controllers\HRGAController::class, 'update_biodata_karyawan_non_aktif'])->name('hrga.biodata_karyawan.non_aktif.update');
+                Route::get('{nik}/edit', [App\Http\Controllers\HRGAController::class, 'edit_biodata_karyawan_non_aktif'])->name('hrga.biodata_karyawan.non_aktif.edit');
+            });
 
             Route::get('buat_karyawan_baru', [App\Http\Controllers\HRGAController::class, 'buat_karyawan_baru'])->name('hrga.biodata_karyawan.buat_karyawan_baru');
             Route::post('buat_karyawan_baru/simpan', [App\Http\Controllers\HRGAController::class, 'buat_karyawan_baru_simpan'])->name('hrga.biodata_karyawan.buat_karyawan_baru.simpan');
