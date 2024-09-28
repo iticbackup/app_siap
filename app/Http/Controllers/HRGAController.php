@@ -36,6 +36,7 @@ use File;
 use Validator;
 use DataTables;
 use Excel;
+use PDF;
 
 class HRGAController extends Controller
 {
@@ -188,6 +189,7 @@ class HRGAController extends Controller
                                 })
                                 ->addColumn('action', function($row){
                                     $btn = '<div class="button-items">';
+                                    $btn .= '<a href='.route('hrga.biodata_karyawan.cetak_data_karyawan',['nik' => $row->nik]).' class="btn" style="background-color: #550527; color: white" target="_blank"><i class="fa fa-file-pdf"></i> Download PDF</a>';
                                     $btn .= '<button class="btn btn-info" onclick="buat_kontrak(`'.$row->nik.'`)">'.'<i class="fas fa-eye"></i> '.'Detail Kontrak'.'</button>';
                                     $btn .= '<button class="btn btn-primary" onclick="detail(`'.$row->nik.'`)">'.'<i class="fas fa-eye"></i> '.'Detail'.'</button>';
                                     $btn .= '<button class="btn btn-warning" onclick="edit(`'.$row->nik.'`)">'.'<i class="fas fa-edit"></i> '.'Edit'.'</button>';
@@ -1647,5 +1649,26 @@ class HRGAController extends Controller
         ]);
         // dd($data);
         // dd($request->all());
+    }
+
+    public function cetak_data_karyawan($nik)
+    {
+        $data['data_karyawan'] = $this->hrga_biodata_karyawan->where('nik',$nik)->first();
+
+        if (empty($data['data_karyawan']->log_posisi)) {
+            $data['masa_kerja'] = '-';
+            // $data['tanggal_masuk'] = '-';
+        }else{
+            // Masa Kerja
+            $awal = new DateTime($data['data_karyawan']->log_posisi->tanggal);
+            $akhir = new DateTime();
+            $diff = $awal->diff($akhir);
+            $data['masa_kerja'] = $diff->y.' Tahun '.$diff->m.' Bulan '.$diff->d.' Hari';
+            // $data['tanggal_masuk'] = Carbon::create($data['data_karyawan']->log_posisi->tanggal)->format('d-m-Y');
+        }
+
+        $pdf = PDF::loadView('hrga.cetak_data_karyawan', $data);
+        
+        return $pdf->stream();
     }
 }

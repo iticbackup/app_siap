@@ -224,6 +224,7 @@ Route::group(['middleware' => ['auth']], function() {
             Route::post('update', [App\Http\Controllers\HRGAController::class, 'update'])->name('hrga.biodata_karyawan.update');
             Route::get('{nik}/detail', [App\Http\Controllers\HRGAController::class, 'detail'])->name('hrga.biodata_karyawan.detail');
             Route::get('{nik}/detail_kontrak_kerja', [App\Http\Controllers\HRGAController::class, 'detail_kontrak_kerja'])->name('hrga.biodata_karyawan.detail_kontrak_kerja');
+            Route::get('{nik}/cetak', [App\Http\Controllers\HRGAController::class, 'cetak_data_karyawan'])->name('hrga.biodata_karyawan.cetak_data_karyawan');
             Route::post('kontrak_kerja/simpan', [App\Http\Controllers\HRGAController::class, 'kontrak_kerja_simpan'])->name('hrga.biodata_karyawan.kontrak_kerja_simpan');
             Route::post('riwayat_konseling/simpan', [App\Http\Controllers\HRGAController::class, 'riwayat_konseling_simpan'])->name('hrga.biodata_karyawan.riwayat_konseling_simpan');
             Route::get('download_rekap_excel/{tanggal}', [App\Http\Controllers\HRGAController::class, 'download_rekap_excel'])->name('hrga.biodata_karyawan.donwload_rekap_excel');
