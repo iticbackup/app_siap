@@ -55,7 +55,7 @@ class FileManagerController extends Controller
             'QHSE',
         );
         // dd(auth()->user()->nik);
-        if (auth()->user()->nik == '0000000' || auth()->user()->nik == '2007275' || auth()->user()->nik == '1711952' || auth()->user()->nik == '0000010') {
+        if (auth()->user()->nik == '0000000' || auth()->user()->nik == '1711952' || auth()->user()->nik == '0000010') {
             $data['departemens'] = $this->departemen->whereIn('departemen',$departemen)->get();
         }else{
             // $data['departemen_user'] = $this->departemen_user->where('nik',auth()->user()->nik)->first();
