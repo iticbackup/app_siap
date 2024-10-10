@@ -55,7 +55,7 @@ class PerubahanDataFileManagerController extends Controller
             if (auth()->user()->nik == '0000000' || 
             auth()->user()->nik == '1207514' || 
             auth()->user()->nik == '1711952' || 
-            auth()->user()->nik == '2007275' ||
+            // auth()->user()->nik == '2007275' ||
             auth()->user()->nik == '2207603' ||
             auth()->user()->nik == '0000010'
             ){
