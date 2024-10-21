@@ -48,7 +48,7 @@ ShouldAutoSize
     public function view(): View
     {
         $data['biodata_karyawan'] = $this->biodata_karyawan->where('nik',$this->nik)->first();
-        $cek_status_kerja = $this->itic_departemen->where('id_departemen', $data['biodata_karyawan']->satuan_kerja)->first();
+        $cek_status_kerja = $this->itic_departemen->where('id', $data['biodata_karyawan']->id_departemen)->first();
         
         $start_month_now = Carbon::create($this->cetak_tahun,$this->cetak_bulan)->startOfMonth()->format('Y-m-d');
         $end_month_now = Carbon::create($this->cetak_tahun,$this->cetak_bulan)->endOfMonth()->format('Y-m-d');

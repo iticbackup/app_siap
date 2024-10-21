@@ -78,18 +78,19 @@
                             <tbody>
                                 @forelse ($ijin_keluar_masuks as $ijin_keluar_masuk)
                                 @php
-                                    $cek_status_kerja = \App\Models\IticDepartemen::where('id_departemen',$ijin_keluar_masuk->biodata_karyawan->satuan_kerja)->first();
+                                    $cek_status_kerja = \App\Models\IticDepartemen::where('id',$ijin_keluar_masuk->biodata_karyawan->id_departemen)->first();
                                     if (empty($cek_status_kerja)) {
                                         $satuan_kerja = '-';
                                     }else{
-                                        if ($cek_status_kerja->nama_departemen >= 1) {
-                                            $satuan_kerja = $cek_status_kerja->nama_unit;
-                                        }else{
-                                            $satuan_kerja = $cek_status_kerja->nama_departemen;
-                                        }
+                                        // if ($cek_status_kerja->nama_departemen >= 1) {
+                                        //     $satuan_kerja = $cek_status_kerja->nama_unit;
+                                        // }else{
+                                        //     $satuan_kerja = $cek_status_kerja->nama_departemen;
+                                        // }
+                                        $satuan_kerja = $cek_status_kerja->nama_departemen;
                                     }
 
-                                    $cek_posisi = \App\Models\EmpPosisi::where('id_posisi',$ijin_keluar_masuk->biodata_karyawan->id_posisi)->first();
+                                    $cek_posisi = \App\Models\EmpPosisi::where('id',$ijin_keluar_masuk->biodata_karyawan->id_posisi)->first();
                                     if (empty($cek_posisi)) {
                                         $posisi = '-';
                                     }else{

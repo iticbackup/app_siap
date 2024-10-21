@@ -46,7 +46,7 @@ class PresensiController extends Controller
                                                             })
                                                             // ->where('pin',1298)
                                                             ->where('status_karyawan','!=','R')
-                                                            ->orderBy('satuan_kerja','asc')
+                                                            ->orderBy('id_departemen','asc')
                                                             ->limit(10)
                                                             // ->get();
                                                             ->paginate(10);
@@ -68,7 +68,7 @@ class PresensiController extends Controller
             $data['weeks'][] = $i;
         }
 
-        $cek_status_kerja = $this->itic_departemen->where('id_departemen', $data['biodata_karyawan']->satuan_kerja)->first();
+        $cek_status_kerja = $this->itic_departemen->where('id', $data['biodata_karyawan']->id_departemen)->first();
         if (empty($cek_status_kerja)) {
             $data['satuan_kerja'] = '-';
         } else {
@@ -155,7 +155,7 @@ class PresensiController extends Controller
             $data['weeks'][] = $i;
         }
 
-        $cek_status_kerja = $this->itic_departemen->where('id_departemen', $data['biodata_karyawan']->satuan_kerja)->first();
+        $cek_status_kerja = $this->itic_departemen->where('id', $data['biodata_karyawan']->id_departemen)->first();
         if (empty($cek_status_kerja)) {
             $data['satuan_kerja'] = '-';
         } else {
@@ -217,7 +217,7 @@ class PresensiController extends Controller
     public function detail_print(Request $request, $nik)
     {
         $data['biodata_karyawan'] = $this->biodata_karyawan->where('nik',$nik)->first();
-        $cek_status_kerja = $this->itic_departemen->where('id_departemen', $data['biodata_karyawan']->satuan_kerja)->first();
+        $cek_status_kerja = $this->itic_departemen->where('id', $data['biodata_karyawan']->id_departemen)->first();
         
         $start_month_now = Carbon::create($request->cetak_tahun,$request->cetak_bulan)->startOfMonth()->format('Y-m-d');
         $end_month_now = Carbon::create($request->cetak_tahun,$request->cetak_bulan)->endOfMonth()->format('Y-m-d');

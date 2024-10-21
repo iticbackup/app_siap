@@ -4,18 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-// use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BiodataKaryawan extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $connection= 'emp';
     protected $primaryKey = 'nik';
     public $table = 'biodata_karyawan';
     // public $timestamps = false;
     public $incrementing = false;
     // public $table = 'biodata_karyawan';
-    // protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at'];
     public $fillable = [
         // 'nik',
         // 'nama',
@@ -130,6 +130,11 @@ class BiodataKaryawan extends Model
     }
 
     //new
+    public function emp_posisi()
+    {
+        return $this->belongsTo(\App\Models\EmpPosisi::class, 'id_posisi', 'id');
+    }
+
     public function emp_departemen()
     {
         return $this->belongsTo(\App\Models\EmpDepartemen::class, 'id_departemen', 'id');

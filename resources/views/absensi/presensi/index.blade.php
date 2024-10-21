@@ -104,20 +104,22 @@
                                             <div><b>Nama :</b> {{ $biodata_karyawan->nama }}</div>
                                             <div>
                                                 <b>Departemen :</b>
-                                                @if ($biodata_karyawan->satuan_kerja == 0 || $biodata_karyawan->id_posisi == 0 || $biodata_karyawan->id_jabatan == 0)
+                                                {{-- @if ($biodata_karyawan->satuan_kerja == 0 || $biodata_karyawan->id_posisi == 0 || $biodata_karyawan->id_jabatan == 0)
                                                 -
                                                 @else
                                                 {{ $biodata_karyawan->departemen->nama_departemen >= 1 ? $biodata_karyawan->departemen->nama_unit : $biodata_karyawan->departemen->nama_departemen }}
-                                                @endif
+                                                @endif --}}
+                                                {{ $biodata_karyawan->emp_departemen->nama_departemen }}
                                             </div>
                                             {{-- <div><b>Departemen :</b> {{ $biodata_karyawan->departemen->nama_departemen >= 1 ? $biodata_karyawan->departemen->nama_unit : $biodata_karyawan->departemen->nama_departemen }}</div> --}}
                                             <div>
                                                 <b>Posisi :</b> 
-                                                @if ($biodata_karyawan->satuan_kerja == 0 || $biodata_karyawan->id_posisi == 0 || $biodata_karyawan->id_jabatan == 0)
+                                                {{-- @if ($biodata_karyawan->satuan_kerja == 0 || $biodata_karyawan->id_posisi == 0 || $biodata_karyawan->id_jabatan == 0)
                                                 -
                                                 @else
                                                 {{ $biodata_karyawan->posisi->nama_posisi }}
-                                                @endif
+                                                @endif --}}
+                                                {{ $biodata_karyawan->emp_posisi->nama_posisi }}
                                             </div>
                                             {{-- <div><b>Posisi :</b> {{ $biodata_karyawan->posisi->nama_posisi }}</div> --}}
                                             {{-- {{ $biodata_karyawan->nik.' - '.$biodata_karyawan->nama }} --}}

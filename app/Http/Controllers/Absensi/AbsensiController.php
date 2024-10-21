@@ -37,474 +37,197 @@ class AbsensiController extends Controller
     }
     public function index(Request $request)
     {
-        // if ($request->ajax()) {
-        //     $data = BiodataKaryawan::where(function($query) {
-        //                                 return $query->where('nik','!=','1000001')
-        //                                             ->where('nik','!=','1000002')
-        //                                             ->where('nik','!=','1000003');
-        //                             })
-        //                             // ->where('pin',1298)
-        //                             ->where('status_karyawan','!=','R')
-        //                             // ->paginate(20);
-        //                             ->get();
-        //     return DataTables::of($data)
-        //                     ->addIndexColumn()
-        //                     ->addColumn('departemen', function($row){
-        //                         $cek_satuan_kerja = \App\Models\IticDepartemen::where('id_departemen',$row->satuan_kerja)->first();
-        //                         if (empty($cek_satuan_kerja)) {
-        //                             $satuan_kerja = '-';
-        //                         }else{
-        //                             if ($cek_satuan_kerja->nama_departemen >= 1) {
-        //                                 $satuan_kerja = $cek_satuan_kerja->nama_unit;
-        //                             }else{
-        //                                 $satuan_kerja = $cek_satuan_kerja->nama_departemen;
-        //                             }
-        //                         }
+        // if (auth()->user()->nik == 0000000) {
+        //     $data['biodata_karyawans'] = $this->biodata_karyawan->with('departemen','posisi')
+        //                                                 // ->select([
+        //                                                 //     'id','nik','nama','alamat','id_posisi','id_jabatan',
+        //                                                 //     'pin'
+        //                                                 // ])
+        //                                                 ->where(function($query) {
+        //                                                     return $query->where('nik','!=','1000001')
+        //                                                                 ->where('nik','!=','1000002')
+        //                                                                 ->where('nik','!=','1000003');
+        //                                                 })
+        //                                                 // ->where('pin',1298)
+        //                                                 ->orderBy('satuan_kerja','asc')
+        //                                                 ->where('status_karyawan','!=','R')
+        //                                                 // ->take(20)
+        //                                                 ->paginate(20);
+        //                                                 // ->get();
+        //     // // dd($data);
+        //     $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
+        //     // $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
+        //     // $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
+        //     // for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
+        //     //     $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
+        //     //     $total_absen_masuk = $this->fin_pro->where('scan_date','LIKE','%'.$i.'%')
+        //     //                                         ->whereTime('scan_date','<=','11:59')
+        //     //                                         ->orderBy('scan_date','desc')
+        //     //                                         ->take(1)
+        //     //                                         ->count();
+        //     //     // dd($total_absen_masuk);
+        //     //     $data['hasil'][] = $total_absen_masuk;
+        //     // }
 
-        //                         return $satuan_kerja;
-        //                     })
-        //                     ->addColumn('posisi', function($row){
-        //                         $cek_posisi = EmpJabatan::where('id_jabatan',$row->id_posisi)->first();
-        //                         if (empty($cek_posisi)) {
-        //                             $posisi = '-';
-        //                         }else{
-        //                             $posisi = $cek_posisi->nama_jabatan;
-        //                         }
-        //                         return $posisi;
-        //                     })
-        //                     ->addColumn('jam_masuk', function($row){
-        //                         $date_live = Carbon::now()->format('Y-m-d');
-        //                         $mesin_finger = FinPro::where('scan_date','LIKE','%'.$date_live.'%')
-        //                                             ->where('pin',$row->pin)
-        //                                             ->where('inoutmode',1)
-        //                                             ->first();
-        //                         if (empty($mesin_finger)) {
-        //                             $inoutmode = 1;
-        //                             $presensi_info = PresensiInfo::where('scan_date','LIKE','%'.$date_live.'%')
-        //                                                         ->where('pin',$row->pin)
-        //                                                         ->where('inoutmode',$inoutmode)
-        //                                                         ->first();
-        //                             if (empty($presensi_info)) {
-        //                                 $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$date_live.'`,`'.$row->pin.'`,`'.$inoutmode.'`)"><i class="bx bxs-plus-circle bx-sm bx-tada text-success"></i></a>';
-        //                             }else{
-        //                                 if ($presensi_info->status == 4) {
-        //                                     $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$date_live.'`,`'.$row->pin.'`,`'.$inoutmode.'`)" style="color: red">Sakit</a>';
-        //                                 }elseif($presensi_info->status == 7){
-        //                                     // $jam_masuk = 'Absen';
-        //                                     $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$date_live.'`,`'.$row->pin.'`,`'.$inoutmode.'`)" style="color: purple">Absen</a>';
-        //                                 }elseif($presensi_info->status == 13){
-        //                                     $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$date_live.'`,`'.$row->pin.'`,`'.$inoutmode.'`)" style="color: orange">Cuti</a>';
-        //                                     // $jam_masuk = 'Cuti';
-        //                                 }
-        //                                 else{
-        //                                     $jam_masuk = '<a type="button" onclick="detail_edit_non_absensi_jam_masuk(`'.$presensi_info->att_rec.'`)">'.$presensi_info->scan_date.'</a>';
-        //                                 }
-        //                             }
-        //                         }else{
-        //                             $inoutmode = 1;
-        //                             $absen_masuk = PresensiInfo::with('presensi_status')
-        //                                                         ->where('scan_date','LIKE','%'.$date_live.'%')
-        //                                                         ->where('pin',$row->pin)
-        //                                                         ->where('inoutmode',$inoutmode)
-        //                                                         // ->orderBy('scan_date','asc')
-        //                                                         ->first();
-        //                                                         // dd($absen_masuk);
-        //                             if (empty($absen_masuk)) {
-        //                                 $date_jam_masuk = Carbon::create($mesin_finger->scan_date)->format('H:i');
-        //                                 $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`'.$mesin_finger->scan_date.'`,`'.$mesin_finger->pin.'`,`'.$mesin_finger->inoutmode.'`)" style="color: blue">'.$date_jam_masuk.'</a>';
-        //                             }else{
-        //                                 $date_jam_masuk = Carbon::create($mesin_finger->scan_date)->format('H:i');
-        //                                 $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`'.$mesin_finger->scan_date.'`,`'.$mesin_finger->pin.'`,`'.$mesin_finger->inoutmode.'`)" style="color: blue">'.$date_jam_masuk.' ('.$absen_masuk->presensi_status->status_info.')</a>';
-        //                             }
-        //                         }
-        //                         return $jam_masuk;
-        //                     })
-        //                     ->addColumn('jam_pulang', function($row){
-        //                         $date_live = Carbon::now()->format('Y-m-d');
-        //                         $mesin_finger = FinPro::where('scan_date','LIKE','%'.$date_live.'%')
-        //                                             ->where('pin',$row->pin)
-        //                                             ->where('inoutmode',2)
-        //                                             ->first();
-        //                         if (empty($mesin_finger)) {
-        //                             $inoutmode = 2;
-        //                             $presensi_info = PresensiInfo::where('scan_date','LIKE','%'.$date_live.'%')
-        //                                                         ->where('pin',$row->pin)
-        //                                                         ->where('inoutmode',$inoutmode)
-        //                                                         // ->orderBy('scan_date','asc')
-        //                                                         ->first();
-        //                             if (empty($presensi_info)) {
-        //                                 $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`'.$date_live.'`,`'.$row->pin.'`,`'.$inoutmode.'`)"><i class="bx bxs-plus-circle bx-sm bx-tada text-success"></i></a>';
-        //                             }else{
-        //                                 if ($presensi_info->status == 4) {
-        //                                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`'.$date_live.'`,`'.$row->pin.'`,`'.$inoutmode.'`)" style="color: red">Sakit</a>';
-        //                                 }elseif($presensi_info->status == 7){
-        //                                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`'.$date_live.'`,`'.$row->pin.'`,`'.$inoutmode.'`)" style="color: purple">Absen</a>';
-        //                                     // $jam_keluar = 'Absen';
-        //                                 }elseif($presensi_info->status == 13){
-        //                                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`'.$date_live.'`,`'.$row->pin.'`,`'.$inoutmode.'`)" style="color: orange">Cuti</a>';
-        //                                     // $jam_keluar = 'Cuti';
-        //                                 }
-        //                                 else{
-        //                                     // $jam_masuk = $presensi_info->scan_date;
-        //                                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`'.$date_live.'`,`'.$row->pin.'`,`'.$inoutmode.'`)">'.$presensi_info->scan_date.'</a>';
-        //                                 }
-        //                             }
-        //                         }else{
-        //                             $inoutmode = 2;
-        //                             $absen_keluar = PresensiInfo::with('presensi_status')
-        //                                                         ->where('scan_date','LIKE','%'.$date_live.'%')
-        //                                                         ->where('pin',$row->pin)
-        //                                                         ->where('inoutmode',$inoutmode)
-        //                                                         // ->orderBy('scan_date','asc')
-        //                                                         ->first();
-        //                             if (empty($absen_keluar)) {
-        //                                 $date_jam_keluar = Carbon::create($mesin_finger->scan_date)->format('H:i');
-        //                                 $jam_keluar = '<a type="button" onclick="detail_absensi_jam_keluar(`'.$mesin_finger->scan_date.'`,`'.$mesin_finger->pin.'`,`'.$mesin_finger->inoutmode.'`)" style="color: blue">'.$date_jam_keluar.'</a>';
-        //                             }else{
-        //                                 $date_jam_keluar = Carbon::create($mesin_finger->scan_date)->format('H:i');
-        //                                 $jam_keluar = '<a type="button" onclick="detail_absensi_jam_keluar(`'.$mesin_finger->scan_date.'`,`'.$mesin_finger->pin.'`,`'.$mesin_finger->inoutmode.'`)" style="color: red">'.$date_jam_keluar.' ('.$absen_keluar->presensi_status->status_info.')</a>';
-        //                             }
-        //                         }
-        //                         return $jam_keluar;
-        //                     })
-        //                     ->addColumn('total_jam', function($row){
-        //                         $date_live = '2023-12-20';
-        //                         $mesin_finger_jam_masuk = FinPro::where('scan_date','LIKE','%'.$date_live.'%')
-        //                                                 ->where('pin',$row->pin)
-        //                                                 ->where('inoutmode',1)
-        //                                                 ->first();
-        //                         if (empty($mesin_finger_jam_masuk)) {
-        //                             $jam_masuk = 0;
-        //                         }else{
-        //                             $jam_masuk = Carbon::create($mesin_finger_jam_masuk->scan_date)->format('H:i');
-        //                         }
+        //     $data['fin_pro'] = $this->fin_pro;
+        //     $data['presensi_info'] = $this->presensi_info;
+        //     return view('absensi.home.index',$data);
+        // }else{
+        //     $akses_departemen = $this->departemen_user->whereIn('departemen_id',[3,4])->where('nik',auth()->user()->nik)->first();
+        //     // dd($akses_departemen);
+        //     if (empty($akses_departemen)) {
+        //         return redirect()->back()->with('error','Maaf Anda Tidak Bisa Akses Halaman Absensi');
+        //     }else{
+        //         if ($akses_departemen->nik == auth()->user()->nik) {
+        //             $data['biodata_karyawans'] = $this->biodata_karyawan->where(function($query) {
+        //                                                             return $query->where('nik','!=','1000001')
+        //                                                                         ->where('nik','!=','1000002')
+        //                                                                         ->where('nik','!=','1000003');
+        //                                                         })
+        //                                                         // ->where('pin',1298)
+        //                                                         ->where('status_karyawan','!=','R')
+        //                                                         ->paginate(20);
+        //             $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
+        //             // $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
+        //             // $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
+        //             // for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
+        //             //     $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
+        //             //     $total_absen_masuk = $this->fin_pro->where('scan_date','LIKE','%'.$i.'%')
+        //             //                                         ->whereTime('scan_date','<=','11:59')
+        //             //                                         ->orderBy('scan_date','desc')
+        //             //                                         ->take(1)
+        //             //                                         ->count();
+        //             //     // dd($total_absen_masuk);
+        //             //     $data['hasil'][] = $total_absen_masuk;
+        //             // }
+        //             $data['fin_pro'] = $this->fin_pro;
+        //             $data['presensi_info'] = $this->presensi_info;
+        //             return view('absensi.home.index',$data);
 
-        //                         $mesin_finger_jam_keluar = FinPro::where('scan_date','LIKE','%'.$date_live.'%')
-        //                                                 ->where('pin',$row->pin)
-        //                                                 ->where('inoutmode',2)
-        //                                                 ->first();
-        //                         if (empty($mesin_finger_jam_keluar)) {
-        //                             $jam_keluar = 0;
-        //                         }else{
-        //                             $jam_keluar = Carbon::create($mesin_finger_jam_keluar->scan_date)->format('H:i');
-        //                         }
-
-        //                         $awal = strtotime($jam_masuk);
-        //                         $akhir = strtotime($jam_keluar);
-        //                         $diff  = $akhir - $awal;
-
-        //                         $jam   = floor($diff / (60 * 60));
-        //                         $menit = $diff - ( $jam * (60 * 60) );
-        //                         $detik = $diff % 60;
-
-        //                         $selisih_jam = ($jam).':'.floor($menit/60);
-
-        //                         if ($awal == 0  && $akhir == 0) {
-        //                             $total_jam = '-';
-        //                         }elseif($awal > 0 && $akhir == 0){
-        //                             $total_jam = '-';
-        //                         }else{
-        //                             $total_jam = $selisih_jam;
-        //                         }
-
-        //                         return $total_jam;
-        //                         // return $jam_keluar-$jam_masuk;
-        //                     })
-        //                     // ->addColumn('action', function($row){
-        //                     //     $date_live = '2023-12-20';
-                                
-        //                     //     $btn = '<div class="btn-group">';
-        //                     //     $btn.= '<button type="button" class="btn btn-success" onclick="detail(`'.$row->scan_date.'`,`'.$row->pin.'`)"><i class="bx bxs-bullseye bx-tada"></i></button>';
-        //                     //     $btn.= '<button type="button" class="btn btn-primary"><i class="bx bxs-file bx-tada"></i></button>';
-        //                     //     $btn.= '</div>';
-        //                     //     return $btn;
-        //                     // })
-        //                     ->rawColumns(['jam_masuk','jam_pulang'])
-        //                     ->make(true)
-        //                     ->skipPaging()
-        //                     ->toJson();
+        //             // if ($request->ajax()) {
+        //             //     $data = $this->biodata_karyawan->with('departemen','posisi')
+        //             //                                             ->where(function($query) {
+        //             //                                                 return $query->where('nik','!=','1000001')
+        //             //                                                             ->where('nik','!=','1000002')
+        //             //                                                             ->where('nik','!=','1000003');
+        //             //                                             })
+        //             //                                             ->orderBy('satuan_kerja','asc')
+        //             //                                             ->where('status_karyawan','!=','R')
+        //             //                                             ->paginate(20);
+        //             //     foreach ($data as $key => $biodata_karyawan) {
+        //             //         $date_live = Carbon::now()->format('Y-m-d');
+        //             //         $mesin_jam_masuk = $this->fin_pro->where('scan_date', 'LIKE', '%'.$date_live.'%')
+        //             //                                         ->whereTime('scan_date','<=','11:59:59')
+        //             //                                         ->where('pin', $biodata_karyawan->pin)
+        //             //                                         ->orderBy('scan_date','asc')
+        //             //                                         ->first();
+        //             //         if (empty($mesin_jam_masuk)) {
+        //             //             $presensi_info_masuk = $this->presensi_info->where('scan_date', 'LIKE', '%' . $date_live . '%')
+        //             //                                                         ->where('pin', $biodata_karyawan->pin)
+        //             //                                                         ->whereTime('scan_date','<=','11:59:59')
+        //             //                                                         ->first();
+        //             //             if (empty($presensi_info_masuk)) {
+        //             //                 $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)"><i class="bx bxs-plus-circle bx-sm bx-tada text-success"></i></a>';
+        //             //             }else{
+        //             //                 if ($presensi_info_masuk->status == 4) {
+        //             //                     $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: red">Sakit</a>';
+        //             //                 } elseif ($presensi_info_masuk->status == 7) {
+        //             //                     $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: purple">Absen</a>';
+        //             //                 } elseif ($presensi_info_masuk->status == 13) {
+        //             //                     $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: orange">Cuti</a>';
+        //             //                 } else {
+        //             //                     $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$presensi_info_masuk->att_rec.'`)">'.$presensi_info_masuk->scan_date.'</a>';
+        //             //                 }
+        //             //             }
+        //             //         }else{
+        //             //             $absensi_masuk = $this->presensi_info->with('presensi_status')
+        //             //                                                 ->where('scan_date', 'LIKE', '%' . $date_live . '%')
+        //             //                                                 ->where('pin', $biodata_karyawan->pin)
+        //             //                                                 ->whereTime('scan_date','<=','11:59:59')
+        //             //                                                 ->first();
+        //             //             if (empty($absen_masuk)) {
+        //             //                 $date_jam_masuk = Carbon::create($mesin_jam_masuk->scan_date)->format('H:i');
+        //             //                 $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`' . $mesin_jam_masuk->scan_date . '`,`' . $mesin_jam_masuk->pin . '`,`' . $mesin_jam_masuk->inoutmode . '`)" style="color: blue">' . $date_jam_masuk . '</a>';
+        //             //             } else {
+        //             //                 $date_jam_masuk = Carbon::create($mesin_jam_masuk->scan_date)->format('H:i');
+        //             //                 $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`' . $mesin_jam_masuk->scan_date . '`,`' . $mesin_jam_masuk->pin . '`,`' . $mesin_jam_masuk->inoutmode . '`)" style="color: blue">' . $date_jam_masuk . ' (' . $absen_masuk->presensi_status->status_info . ')</a>';
+        //             //             }
+        //             //         }
+        
+        //             //         $mesin_jam_pulang = $this->fin_pro->where('scan_date', 'LIKE', '%'.$date_live.'%')
+        //             //                                         ->whereTime('scan_date','>=','12:00:00')
+        //             //                                         ->where('pin', $biodata_karyawan->pin)
+        //             //                                         ->orderBy('scan_date','desc')
+        //             //                                         ->first();
+        //             //         if (empty($mesin_jam_pulang)) {
+        //             //             $presensi_info_2 = $this->fin_pro->where('scan_date', 'LIKE', '%' . $date_live . '%')
+        //             //                                             ->where('pin', $biodata_karyawan->pin)
+        //             //                                             ->whereTime('scan_date','>=','12:00:00')
+        //             //                                             ->orderBy('scan_date','desc')
+        //             //                                             ->first();
+        //             //             if (empty($presensi_info_2)) {
+        //             //                 $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)"><i class="bx bxs-plus-circle bx-sm bx-tada text-success"></i></a>';
+        //             //             } else {
+        //             //                 if ($presensi_info_2->status == 4) {
+        //             //                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: red">Sakit</a>';
+        //             //                 } elseif ($presensi_info_2->status == 7) {
+        //             //                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: purple">Absen</a>';
+        //             //                 } elseif ($presensi_info_2->status == 13) {
+        //             //                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: orange">Cuti</a>';
+        //             //                 } else {
+        //             //                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`'.$date_live.'`,`'.$biodata_karyawan->pin.'`,`'. 0 .'`)">'.$presensi_info_2->scan_date.'</a>';
+        //             //                 }
+        //             //             }
+        //             //         }else{
+        //             //             $absen_keluar = $this->presensi_info->with('presensi_status')
+        //             //                                                 ->where('scan_date', 'LIKE', '%' . $date_live . '%')
+        //             //                                                 ->where('pin', $biodata_karyawan->pin)
+        //             //                                                 ->whereTime('scan_date','>=','12:00:00')
+        //             //                                                 ->orderBy('scan_date','desc')
+        //             //                                                 ->first();
+        //             //             if (empty($absen_keluar)) {
+        //             //                 $date_jam_keluar = Carbon::create($mesin_jam_pulang->scan_date)->format('H:i');
+        //             //                 $jam_keluar = '<a type="button" onclick="detail_absensi_jam_keluar(`' . $mesin_jam_pulang->scan_date . '`,`' . $mesin_jam_pulang->pin . '`,`' . $mesin_jam_pulang->inoutmode . '`)" style="color: blue">' . $date_jam_keluar . '</a>';
+        //             //             } else {
+        //             //                 $date_jam_keluar = Carbon::create($mesin_jam_pulang->scan_date)->format('H:i');
+        //             //                 $jam_keluar = '<a type="button" onclick="detail_absensi_jam_keluar(`' . $mesin_jam_pulang->scan_date . '`,`' . $mesin_jam_pulang->pin . '`,`' . $mesin_jam_pulang->inoutmode . '`)" style="color: red">' . $date_jam_keluar . ' (' . $absen_keluar->presensi_status->status_info . ')</a>';
+        //             //             }
+        //             //         }
+        
+        //             //         $data_karyawan[] = [
+        //             //             'id' => $biodata_karyawan->id,
+        //             //             'nik' => $biodata_karyawan->nik,
+        //             //             'nama' => $biodata_karyawan->nama,
+        //             //             'departemen' => $biodata_karyawan->departemen->nama_departemen >= 1 ? $biodata_karyawan->departemen->nama_unit : $biodata_karyawan->departemen->nama_departemen,
+        //             //             'posisi' => $biodata_karyawan->posisi->nama_posisi,
+        //             //             'jam_masuk' => $jam_masuk,
+        //             //             'jam_pulang' => $jam_keluar,
+        //             //         ];
+        //             //     }
+        //             //     return $data_karyawan;
+        //             // }
+        //             // $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
+        //             // return view('absensi.home.index',$data);
+        //         }else{
+        //             return redirect()->back()->with('error','Maaf Anda Tidak Bisa Akses Halaman Absensi');
+        //         }
+        //     }
         // }
+
         if (auth()->user()->nik == 0000000) {
-            // if ($request->ajax()) {
-            //     $data = $this->biodata_karyawan->with('departemen','posisi')
-            //                                             ->where(function($query) {
-            //                                                 return $query->where('nik','!=','1000001')
-            //                                                             ->where('nik','!=','1000002')
-            //                                                             ->where('nik','!=','1000003');
-            //                                             })
-            //                                             ->orderBy('satuan_kerja','asc')
-            //                                             ->where('status_karyawan','!=','R')
-            //                                             ->paginate(20);
-            //     foreach ($data as $key => $biodata_karyawan) {
-            //         $date_live = Carbon::now()->format('Y-m-d');
-            //         $mesin_jam_masuk = $this->fin_pro->where('scan_date', 'LIKE', '%'.$date_live.'%')
-            //                                         ->whereTime('scan_date','<=','11:59:59')
-            //                                         ->where('pin', $biodata_karyawan->pin)
-            //                                         ->orderBy('scan_date','asc')
-            //                                         ->first();
-            //         if (empty($mesin_jam_masuk)) {
-            //             $presensi_info_masuk = $this->presensi_info->where('scan_date', 'LIKE', '%' . $date_live . '%')
-            //                                                         ->where('pin', $biodata_karyawan->pin)
-            //                                                         ->whereTime('scan_date','<=','11:59:59')
-            //                                                         ->first();
-            //             if (empty($presensi_info_masuk)) {
-            //                 $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)"><i class="bx bxs-plus-circle bx-sm bx-tada text-success"></i></a>';
-            //             }else{
-            //                 if ($presensi_info_masuk->status == 4) {
-            //                     $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: red">Sakit</a>';
-            //                 } elseif ($presensi_info_masuk->status == 7) {
-            //                     $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: purple">Absen</a>';
-            //                 } elseif ($presensi_info_masuk->status == 13) {
-            //                     $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: orange">Cuti</a>';
-            //                 } else {
-            //                     $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$presensi_info_masuk->att_rec.'`)">'.$presensi_info_masuk->scan_date.'</a>';
-            //                 }
-            //             }
-            //         }else{
-            //             $absensi_masuk = $this->presensi_info->with('presensi_status')
-            //                                                 ->where('scan_date', 'LIKE', '%' . $date_live . '%')
-            //                                                 ->where('pin', $biodata_karyawan->pin)
-            //                                                 ->whereTime('scan_date','<=','11:59:59')
-            //                                                 ->first();
-            //             if (empty($absen_masuk)) {
-            //                 $date_jam_masuk = Carbon::create($mesin_jam_masuk->scan_date)->format('H:i');
-            //                 $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`' . $mesin_jam_masuk->scan_date . '`,`' . $mesin_jam_masuk->pin . '`,`' . $mesin_jam_masuk->inoutmode . '`)" style="color: blue">' . $date_jam_masuk . '</a>';
-            //             } else {
-            //                 $date_jam_masuk = Carbon::create($mesin_jam_masuk->scan_date)->format('H:i');
-            //                 $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`' . $mesin_jam_masuk->scan_date . '`,`' . $mesin_jam_masuk->pin . '`,`' . $mesin_jam_masuk->inoutmode . '`)" style="color: blue">' . $date_jam_masuk . ' (' . $absen_masuk->presensi_status->status_info . ')</a>';
-            //             }
-            //         }
-
-            //         $mesin_jam_pulang = $this->fin_pro->where('scan_date', 'LIKE', '%'.$date_live.'%')
-            //                                         ->whereTime('scan_date','>=','12:00:00')
-            //                                         ->where('pin', $biodata_karyawan->pin)
-            //                                         ->orderBy('scan_date','desc')
-            //                                         ->first();
-            //         if (empty($mesin_jam_pulang)) {
-            //             $presensi_info_2 = $this->fin_pro->where('scan_date', 'LIKE', '%' . $date_live . '%')
-            //                                             ->where('pin', $biodata_karyawan->pin)
-            //                                             ->whereTime('scan_date','>=','12:00:00')
-            //                                             ->orderBy('scan_date','desc')
-            //                                             ->first();
-            //             if (empty($presensi_info_2)) {
-            //                 $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)"><i class="bx bxs-plus-circle bx-sm bx-tada text-success"></i></a>';
-            //             } else {
-            //                 if ($presensi_info_2->status == 4) {
-            //                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: red">Sakit</a>';
-            //                 } elseif ($presensi_info_2->status == 7) {
-            //                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: purple">Absen</a>';
-            //                 } elseif ($presensi_info_2->status == 13) {
-            //                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: orange">Cuti</a>';
-            //                 } else {
-            //                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`'.$date_live.'`,`'.$biodata_karyawan->pin.'`,`'. 0 .'`)">'.$presensi_info_2->scan_date.'</a>';
-            //                 }
-            //             }
-            //         }else{
-            //             $absen_keluar = $this->presensi_info->with('presensi_status')
-            //                                                 ->where('scan_date', 'LIKE', '%' . $date_live . '%')
-            //                                                 ->where('pin', $biodata_karyawan->pin)
-            //                                                 ->whereTime('scan_date','>=','12:00:00')
-            //                                                 ->orderBy('scan_date','desc')
-            //                                                 ->first();
-            //             if (empty($absen_keluar)) {
-            //                 $date_jam_keluar = Carbon::create($mesin_jam_pulang->scan_date)->format('H:i');
-            //                 $jam_keluar = '<a type="button" onclick="detail_absensi_jam_keluar(`' . $mesin_jam_pulang->scan_date . '`,`' . $mesin_jam_pulang->pin . '`,`' . $mesin_jam_pulang->inoutmode . '`)" style="color: blue">' . $date_jam_keluar . '</a>';
-            //             } else {
-            //                 $date_jam_keluar = Carbon::create($mesin_jam_pulang->scan_date)->format('H:i');
-            //                 $jam_keluar = '<a type="button" onclick="detail_absensi_jam_keluar(`' . $mesin_jam_pulang->scan_date . '`,`' . $mesin_jam_pulang->pin . '`,`' . $mesin_jam_pulang->inoutmode . '`)" style="color: red">' . $date_jam_keluar . ' (' . $absen_keluar->presensi_status->status_info . ')</a>';
-            //             }
-            //         }
-
-            //         $data_karyawan['data'][] = [
-            //             'id' => $biodata_karyawan->id,
-            //             'nik' => $biodata_karyawan->nik,
-            //             'nama' => $biodata_karyawan->nama,
-            //             'departemen' => $biodata_karyawan->departemen->nama_departemen >= 1 ? $biodata_karyawan->departemen->nama_unit : $biodata_karyawan->departemen->nama_departemen,
-            //             'posisi' => $biodata_karyawan->posisi->nama_posisi,
-            //             'jam_masuk' => $jam_masuk,
-            //             'jam_pulang' => $jam_keluar,
-            //         ];
-            //     }
-            //     // $data_karyawan['pagination'] = json_decode($data->toJson());
-            //     return $data_karyawan;
-            // }
-            // $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
-            // return view('absensi.home.index',$data);
-
-            $data['biodata_karyawans'] = $this->biodata_karyawan->with('departemen','posisi')
-                                                        // ->select([
-                                                        //     'id','nik','nama','alamat','id_posisi','id_jabatan',
-                                                        //     'pin'
-                                                        // ])
-                                                        ->where(function($query) {
-                                                            return $query->where('nik','!=','1000001')
-                                                                        ->where('nik','!=','1000002')
-                                                                        ->where('nik','!=','1000003');
-                                                        })
-                                                        // ->where('pin',1298)
-                                                        ->orderBy('satuan_kerja','asc')
-                                                        ->where('status_karyawan','!=','R')
-                                                        // ->take(20)
-                                                        ->paginate(20);
-                                                        // ->get();
-            // // dd($data);
-            $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
-            // $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
-            // $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
-            // for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
-            //     $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
-            //     $total_absen_masuk = $this->fin_pro->where('scan_date','LIKE','%'.$i.'%')
-            //                                         ->whereTime('scan_date','<=','11:59')
-            //                                         ->orderBy('scan_date','desc')
-            //                                         ->take(1)
-            //                                         ->count();
-            //     // dd($total_absen_masuk);
-            //     $data['hasil'][] = $total_absen_masuk;
-            // }
-
-            $data['fin_pro'] = $this->fin_pro;
-            $data['presensi_info'] = $this->presensi_info;
-            return view('absensi.home.index',$data);
-        }else{
-            $akses_departemen = $this->departemen_user->whereIn('departemen_id',[3,4])->where('nik',auth()->user()->nik)->first();
-            // dd($akses_departemen);
-            if (empty($akses_departemen)) {
-                return redirect()->back()->with('error','Maaf Anda Tidak Bisa Akses Halaman Absensi');
-            }else{
-                if ($akses_departemen->nik == auth()->user()->nik) {
-                    $data['biodata_karyawans'] = $this->biodata_karyawan->where(function($query) {
+            $data['biodata_karyawans'] = $this->biodata_karyawan->where(function($query) {
                                                                     return $query->where('nik','!=','1000001')
                                                                                 ->where('nik','!=','1000002')
                                                                                 ->where('nik','!=','1000003');
                                                                 })
-                                                                // ->where('pin',1298)
+                                                                ->orderBy('id_departemen','asc')
                                                                 ->where('status_karyawan','!=','R')
                                                                 ->paginate(20);
-                    $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
-                    // $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
-                    // $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
-                    // for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
-                    //     $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
-                    //     $total_absen_masuk = $this->fin_pro->where('scan_date','LIKE','%'.$i.'%')
-                    //                                         ->whereTime('scan_date','<=','11:59')
-                    //                                         ->orderBy('scan_date','desc')
-                    //                                         ->take(1)
-                    //                                         ->count();
-                    //     // dd($total_absen_masuk);
-                    //     $data['hasil'][] = $total_absen_masuk;
-                    // }
-                    $data['fin_pro'] = $this->fin_pro;
-                    $data['presensi_info'] = $this->presensi_info;
-                    return view('absensi.home.index',$data);
-
-                    // if ($request->ajax()) {
-                    //     $data = $this->biodata_karyawan->with('departemen','posisi')
-                    //                                             ->where(function($query) {
-                    //                                                 return $query->where('nik','!=','1000001')
-                    //                                                             ->where('nik','!=','1000002')
-                    //                                                             ->where('nik','!=','1000003');
-                    //                                             })
-                    //                                             ->orderBy('satuan_kerja','asc')
-                    //                                             ->where('status_karyawan','!=','R')
-                    //                                             ->paginate(20);
-                    //     foreach ($data as $key => $biodata_karyawan) {
-                    //         $date_live = Carbon::now()->format('Y-m-d');
-                    //         $mesin_jam_masuk = $this->fin_pro->where('scan_date', 'LIKE', '%'.$date_live.'%')
-                    //                                         ->whereTime('scan_date','<=','11:59:59')
-                    //                                         ->where('pin', $biodata_karyawan->pin)
-                    //                                         ->orderBy('scan_date','asc')
-                    //                                         ->first();
-                    //         if (empty($mesin_jam_masuk)) {
-                    //             $presensi_info_masuk = $this->presensi_info->where('scan_date', 'LIKE', '%' . $date_live . '%')
-                    //                                                         ->where('pin', $biodata_karyawan->pin)
-                    //                                                         ->whereTime('scan_date','<=','11:59:59')
-                    //                                                         ->first();
-                    //             if (empty($presensi_info_masuk)) {
-                    //                 $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)"><i class="bx bxs-plus-circle bx-sm bx-tada text-success"></i></a>';
-                    //             }else{
-                    //                 if ($presensi_info_masuk->status == 4) {
-                    //                     $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: red">Sakit</a>';
-                    //                 } elseif ($presensi_info_masuk->status == 7) {
-                    //                     $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: purple">Absen</a>';
-                    //                 } elseif ($presensi_info_masuk->status == 13) {
-                    //                     $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: orange">Cuti</a>';
-                    //                 } else {
-                    //                     $jam_masuk = '<a type="button" onclick="detail_non_absen_jam_masuk(`'.$presensi_info_masuk->att_rec.'`)">'.$presensi_info_masuk->scan_date.'</a>';
-                    //                 }
-                    //             }
-                    //         }else{
-                    //             $absensi_masuk = $this->presensi_info->with('presensi_status')
-                    //                                                 ->where('scan_date', 'LIKE', '%' . $date_live . '%')
-                    //                                                 ->where('pin', $biodata_karyawan->pin)
-                    //                                                 ->whereTime('scan_date','<=','11:59:59')
-                    //                                                 ->first();
-                    //             if (empty($absen_masuk)) {
-                    //                 $date_jam_masuk = Carbon::create($mesin_jam_masuk->scan_date)->format('H:i');
-                    //                 $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`' . $mesin_jam_masuk->scan_date . '`,`' . $mesin_jam_masuk->pin . '`,`' . $mesin_jam_masuk->inoutmode . '`)" style="color: blue">' . $date_jam_masuk . '</a>';
-                    //             } else {
-                    //                 $date_jam_masuk = Carbon::create($mesin_jam_masuk->scan_date)->format('H:i');
-                    //                 $jam_masuk = '<a type="button" onclick="detail_absensi_jam_masuk(`' . $mesin_jam_masuk->scan_date . '`,`' . $mesin_jam_masuk->pin . '`,`' . $mesin_jam_masuk->inoutmode . '`)" style="color: blue">' . $date_jam_masuk . ' (' . $absen_masuk->presensi_status->status_info . ')</a>';
-                    //             }
-                    //         }
-        
-                    //         $mesin_jam_pulang = $this->fin_pro->where('scan_date', 'LIKE', '%'.$date_live.'%')
-                    //                                         ->whereTime('scan_date','>=','12:00:00')
-                    //                                         ->where('pin', $biodata_karyawan->pin)
-                    //                                         ->orderBy('scan_date','desc')
-                    //                                         ->first();
-                    //         if (empty($mesin_jam_pulang)) {
-                    //             $presensi_info_2 = $this->fin_pro->where('scan_date', 'LIKE', '%' . $date_live . '%')
-                    //                                             ->where('pin', $biodata_karyawan->pin)
-                    //                                             ->whereTime('scan_date','>=','12:00:00')
-                    //                                             ->orderBy('scan_date','desc')
-                    //                                             ->first();
-                    //             if (empty($presensi_info_2)) {
-                    //                 $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)"><i class="bx bxs-plus-circle bx-sm bx-tada text-success"></i></a>';
-                    //             } else {
-                    //                 if ($presensi_info_2->status == 4) {
-                    //                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: red">Sakit</a>';
-                    //                 } elseif ($presensi_info_2->status == 7) {
-                    //                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: purple">Absen</a>';
-                    //                 } elseif ($presensi_info_2->status == 13) {
-                    //                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`' . $date_live . '`,`' . $biodata_karyawan->pin . '`,`' . 0 . '`)" style="color: orange">Cuti</a>';
-                    //                 } else {
-                    //                     $jam_keluar = '<a type="button" onclick="detail_non_absen_jam_keluar(`'.$date_live.'`,`'.$biodata_karyawan->pin.'`,`'. 0 .'`)">'.$presensi_info_2->scan_date.'</a>';
-                    //                 }
-                    //             }
-                    //         }else{
-                    //             $absen_keluar = $this->presensi_info->with('presensi_status')
-                    //                                                 ->where('scan_date', 'LIKE', '%' . $date_live . '%')
-                    //                                                 ->where('pin', $biodata_karyawan->pin)
-                    //                                                 ->whereTime('scan_date','>=','12:00:00')
-                    //                                                 ->orderBy('scan_date','desc')
-                    //                                                 ->first();
-                    //             if (empty($absen_keluar)) {
-                    //                 $date_jam_keluar = Carbon::create($mesin_jam_pulang->scan_date)->format('H:i');
-                    //                 $jam_keluar = '<a type="button" onclick="detail_absensi_jam_keluar(`' . $mesin_jam_pulang->scan_date . '`,`' . $mesin_jam_pulang->pin . '`,`' . $mesin_jam_pulang->inoutmode . '`)" style="color: blue">' . $date_jam_keluar . '</a>';
-                    //             } else {
-                    //                 $date_jam_keluar = Carbon::create($mesin_jam_pulang->scan_date)->format('H:i');
-                    //                 $jam_keluar = '<a type="button" onclick="detail_absensi_jam_keluar(`' . $mesin_jam_pulang->scan_date . '`,`' . $mesin_jam_pulang->pin . '`,`' . $mesin_jam_pulang->inoutmode . '`)" style="color: red">' . $date_jam_keluar . ' (' . $absen_keluar->presensi_status->status_info . ')</a>';
-                    //             }
-                    //         }
-        
-                    //         $data_karyawan[] = [
-                    //             'id' => $biodata_karyawan->id,
-                    //             'nik' => $biodata_karyawan->nik,
-                    //             'nama' => $biodata_karyawan->nama,
-                    //             'departemen' => $biodata_karyawan->departemen->nama_departemen >= 1 ? $biodata_karyawan->departemen->nama_unit : $biodata_karyawan->departemen->nama_departemen,
-                    //             'posisi' => $biodata_karyawan->posisi->nama_posisi,
-                    //             'jam_masuk' => $jam_masuk,
-                    //             'jam_pulang' => $jam_keluar,
-                    //         ];
-                    //     }
-                    //     return $data_karyawan;
-                    // }
-                    // $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
-                    // return view('absensi.home.index',$data);
-                }else{
-                    return redirect()->back()->with('error','Maaf Anda Tidak Bisa Akses Halaman Absensi');
-                }
-            }
+            // dd($data);
+            $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
+            $data['fin_pro'] = $this->fin_pro;
+            $data['presensi_info'] = $this->presensi_info;
+            return view('absensi.home.index',$data);
         }
     }
 
