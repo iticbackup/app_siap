@@ -1262,6 +1262,8 @@ class HRGAController extends Controller
                 $fileName = $request->edit_nik.'_'.Str::slug($request->edit_nama_karyawan).'.'.$file->getClientOriginalExtension();
                 $file->move(public_path('berkas/HRGA/data_karyawan'), $fileName);
                 $input['foto_karyawan'] = $fileName;
+            }else{
+                $input['foto_karyawan'] = null;
             }
 
             $biodata_karyawan->update($input);
