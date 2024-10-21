@@ -1810,7 +1810,7 @@ class HRGAController extends Controller
     public function cetak_data_karyawan($nik)
     {
         $data['data_karyawan'] = $this->hrga_biodata_karyawan->where('nik',$nik)->first();
-
+        // dd($data);
         if (empty($data['data_karyawan']->biodata_karyawan->tanggal_masuk)) {
             $data['masa_kerja'] = '-';
             // $data['tanggal_masuk'] = '-';

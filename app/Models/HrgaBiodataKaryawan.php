@@ -10,7 +10,8 @@ class HrgaBiodataKaryawan extends Model
 {
     use HasFactory, SoftDeletes;
     public $table = 'hrga_biodata_karyawan';
-    protected $dates = ['deleted_at'];
+    // protected $dates = ['deleted_at'];
+    
     public $incrementing = false;
 
     public $fillable = [

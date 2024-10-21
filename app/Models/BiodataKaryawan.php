@@ -4,18 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+// use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BiodataKaryawan extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory;
     protected $connection= 'emp';
     protected $primaryKey = 'nik';
     public $table = 'biodata_karyawan';
     // public $timestamps = false;
     public $incrementing = false;
     // public $table = 'biodata_karyawan';
-    protected $dates = ['deleted_at'];
+    // protected $dates = ['deleted_at'];
     public $fillable = [
         // 'nik',
         // 'nama',
