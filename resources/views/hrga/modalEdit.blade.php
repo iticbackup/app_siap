@@ -104,6 +104,12 @@
                                     <input type="text" name="edit_no_rekening_bws" class="form-control" placeholder="No. Rekening BWS" id="edit_no_rekening_bws">
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <label for="">No. Rekening BCA</label>
+                                    <input type="text" name="edit_no_rekening_bca" class="form-control" placeholder="No. Rekening BCA" id="edit_no_rekening_bca">
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
