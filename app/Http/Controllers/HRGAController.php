@@ -1262,8 +1262,6 @@ class HRGAController extends Controller
                 $fileName = $request->edit_nik.'_'.Str::slug($request->edit_nama_karyawan).'.'.$file->getClientOriginalExtension();
                 $file->move(public_path('berkas/HRGA/data_karyawan'), $fileName);
                 $input['foto_karyawan'] = $fileName;
-            }else{
-                $input['foto_karyawan'] = null;
             }
 
             $biodata_karyawan->update($input);
@@ -1283,7 +1281,7 @@ class HRGAController extends Controller
                 'pendidikan' => $request->edit_pendidikan,
                 'kunci_loker' => $request->edit_kunci_loker,
                 'sim_kendaraan' => $request->edit_sim_kendaraan,
-                'foto_karyawan' => $input['foto_karyawan'],
+                'foto_karyawan' => $biodata_karyawan->foto_karyawan,
                 'status_karyawan'=> $request->edit_status_karyawan == 'T' ? 'R' : 'A'
             ]);
 
