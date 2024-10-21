@@ -10,14 +10,14 @@ class EmpPosisi extends Model
 {
     use HasFactory;
     protected $connection= 'emp';
-    public $table = 'emp_posisi';
+    public $table = 'posisi';
     public $timestamps = false;
     // public $table = 'biodata_karyawan';
     // protected $dates = ['deleted_at'];
     public $fillable = [
-        'id_posisi',
-        'id_level',
-        'nama_jabatan',
+        'id',
+        'id_jabatan',
+        'nama_posisi',
     ];
 
     // public function itic_departemen()

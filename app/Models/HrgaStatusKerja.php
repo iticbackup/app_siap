@@ -20,4 +20,9 @@ class HrgaStatusKerja extends Model
         'ke',
         'tgl_mulai'
     ];
+
+    public function hrga_biodata_karyawan()
+    {
+        return $this->belongsTo(\App\Models\HrgaBiodataKaryawan::class, 'hrga_biodata_karyawan_id','id');
+    }
 }

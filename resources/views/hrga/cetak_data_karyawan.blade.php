@@ -125,7 +125,7 @@
     <tr>
         <td style="width: 35%">Tanggal Masuk</td>
         <td style="width: 5%; text-align: center">:</td>
-        <td>{{ \Carbon\Carbon::create($data_karyawan->log_posisi->tanggal)->isoFormat('DD MMMM YYYY') }}</td>
+        <td>{{ \Carbon\Carbon::create($data_karyawan->biodata_karyawan->tanggal_masuk)->isoFormat('DD MMMM YYYY') }}</td>
     </tr>
     <tr>
         <td style="width: 35%">Masa Kerja</td>

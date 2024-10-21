@@ -47,8 +47,8 @@
                             <button class="btn" style="background-color: #1AACAC; color: white" onclick="downloadDataKaryawan()"><i class="fas fa-download"></i> Download Rekap Excel</button>
                             <button class="btn" style="background-color: #F31559; color: white" onclick="buatDataResign()"><i class="fas fa-plus"></i> Buat
                                 Data Resign</button>
-                            <button class="btn btn-primary" onclick="buatDataKaryawan()"><i class="fas fa-plus"></i> Buat
-                                Data Karyawan</button>
+                            {{-- <button class="btn btn-primary" onclick="buatDataKaryawan()"><i class="fas fa-plus"></i> Buat
+                                Data Karyawan</button> --}}
                             <button class="btn btn-purple" onclick="reload()"><i class="fas fa-undo"></i></button>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                                 <th class="text-center" style="width: 10%">Departemen</th>
                                 <th class="text-center" style="width: 10%">No. Telpon</th>
                                 <th class="text-center" style="width: 10%">Status Kerja</th>
-                                <th class="text-center" style="width: 10%">Status Karyawan | Tanggal Resign</th>
+                                <th class="text-center" style="width: 10%">Status Karyawan</th>
                                 <th class="text-center" style="width: 20%">Action</th>
                                 {{-- <th class="text-center">Nama Karyawan</th>
                                 <th class="text-center" style="width: 10%">No. Telpon</th>
@@ -128,20 +128,20 @@
                     name: 'nik'
                 },
                 {
-                    data: 'nama_karyawan',
-                    name: 'nama_karyawan'
+                    data: 'nama',
+                    name: 'nama'
                 },
                 {
-                    data: 'departemen',
-                    name: 'departemen'
+                    data: 'id_departemen',
+                    name: 'id_departemen'
                 },
                 {
-                    data: 'no_telepon',
-                    name: 'no_telepon'
+                    data: 'no_telp',
+                    name: 'no_telp'
                 },
                 {
-                    data: 'status_kerja',
-                    name: 'status_kerja'
+                    data: 'status_karyawan',
+                    name: 'status_karyawan'
                 },
                 {
                     data: 'status_karyawan_resign',
@@ -156,10 +156,10 @@
             ],
             columnDefs: [
                 // { className: 'text-right', targets: [7, 10, 11, 14, 16] },
-                {
-                    className: 'text-center',
-                    targets: [0,1,3,4,5,6,7]
-                },
+                // {
+                //     className: 'text-center',
+                //     targets: [0,1,3,4,5,6,7]
+                // },
             ],
         });
 
@@ -340,7 +340,7 @@
 
                         // $('#mb_alamat').val(result.alamat);
                         // $('#mb_status_klg').val(result.status_klg);
-                        var date_tanggal_masuk = new Date(result.log_posisi.tanggal);
+                        var date_tanggal_masuk = new Date(result.tanggal_masuk);
                         var resign_table = '';
                             resign_table += '<table class="table">';
                             resign_table +=     '<tbody>';
@@ -412,15 +412,16 @@
                     document.getElementById('detail_tempat_tanggal_lahir').innerHTML = result.data.tempat_tanggal_lahir;
                     document.getElementById('detail_jenis_kelamin').innerHTML = result.data.jenis_kelamin;
                     document.getElementById('detail_alamat').innerHTML = result.data.alamat;
-                    document.getElementById('detail_email').innerHTML = result.data.email;
+                    document.getElementById('detail_email').innerHTML = !result.data.email ? '<span class="text-danger">Belum Lengkap</span>' : result.data.email;
                     document.getElementById('detail_status_keluarga').innerHTML = result.data.status_keluarga;
-                    document.getElementById('detail_golongan_darah').innerHTML = result.data.golongan_darah;
-                    document.getElementById('detail_pendidikan').innerHTML = result.data.pendidikan;
-                    document.getElementById('detail_no_npwp').innerHTML = result.data.no_npwp;
-                    document.getElementById('detail_no_bpjs_ketenagakerjaan').innerHTML = result.data.no_bpjs_ketenagakerjaan;
-                    document.getElementById('detail_no_bpjs_kesehatan').innerHTML = result.data.no_bpjs_kesehatan;
-                    document.getElementById('detail_no_rekening_mandiri').innerHTML = result.data.no_rekening_mandiri;
-                    document.getElementById('detail_no_rekening_bws').innerHTML = result.data.no_rekening_bws;
+                    document.getElementById('detail_golongan_darah').innerHTML = !result.data.golongan_darah ? '<span class="text-danger">Belum Lengkap</span>' : result.data.golongan_darah;
+                    document.getElementById('detail_pendidikan').innerHTML = !result.data.pendidikan ? '<span class="text-danger">Belum Lengkap</span>' : result.data.pendidikan;
+                    document.getElementById('detail_no_npwp').innerHTML = result.data.no_npwp == 0 ? '-' : result.data.no_npwp;
+                    document.getElementById('detail_no_bpjs_ketenagakerjaan').innerHTML = !result.data.no_bpjs_ketenagakerjaan ? '<span class="text-danger">Belum Lengkap</span>' : result.data.no_bpjs_ketenagakerjaan;
+                    document.getElementById('detail_no_bpjs_kesehatan').innerHTML = !result.data.no_bpjs_kesehatan ? '<span class="text-danger">Belum Lengkap</span>' : result.data.no_bpjs_kesehatan;
+                    document.getElementById('detail_no_rekening_mandiri').innerHTML = result.data.no_rekening_mandiri == 0 ? '-' : result.data.no_rekening_mandiri == '-' ? '<span class="text-danger">Belum Lengkap</span>' : result.data.no_rekening_mandiri;
+                    document.getElementById('detail_no_rekening_bws').innerHTML = result.data.no_rekening_bws == 0 ? '-' : result.data.no_rekening_bws == '-' ? '<span class="text-danger">Belum Lengkap</span>' : result.data.no_rekening_bws;
+                    document.getElementById('detail_no_rekening_bca').innerHTML = result.data.no_rekening_bca == 0 ? '-' : result.data.no_rekening_bca == '-' ? '<span class="text-danger">Belum Lengkap</span>' : result.data.no_rekening_bca;
                     document.getElementById('detail_foto_karyawan').innerHTML = '<img src='+result.data.foto_karyawan+' width="350" style="width: 350px; height: 550px; object-fit: cover;">';
                     
                     document.getElementById('detail_departemen_dept').innerHTML = result.data.departemen_dept;
@@ -503,6 +504,26 @@
                                                                         '<button type="button" class="btn btn-md" style="background-color: #363062; color: white" onclick="buat_riwayat_training(`'+result.data.nik+'`)"><i class="mdi mdi-plus"></i> Buat Riwayat Training</button>';
                     
                     $('.modalDetailDataKaryawan').modal('show');
+                },
+                error: function(request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            });
+        }
+
+        function download_data_karyawan(nik) {
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('hrga/biodata_karyawan/') }}"+'/'+nik+'/cetak',
+                contentType: "application/json;  charset=utf-8",
+                cache: false,
+                beforeSend: function() {
+                },
+                success: (result) => {
+                    window.location.href="{{ url('hrga/biodata_karyawan/') }}"+'/'+nik+'/cetak';
                 },
                 error: function(request, status, error) {
                     iziToast.error({

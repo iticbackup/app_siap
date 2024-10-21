@@ -83,7 +83,7 @@
                                     <select name="posisi" class="form-control" id="">
                                         <option value="">-- Pilih Posisi --</option>
                                         @foreach ($posisis as $posisi)
-                                            <option value="{{ $posisi->id_posisi }}">{{ $posisi->nama_posisi }}</option>
+                                            <option value="{{ $posisi->id }}">{{ $posisi->nama_posisi }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -94,7 +94,7 @@
                                     <select name="jabatan" class="form-control" id="">
                                         <option value="">-- Pilih Jabatan --</option>
                                         @foreach ($jabatans as $jabatan)
-                                            <option value="{{ $jabatan->id_jabatan }}">{{ $jabatan->nama_jabatan }}</option>
+                                            <option value="{{ $jabatan->id }}">{{ $jabatan->nama_jabatan }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -102,13 +102,22 @@
                             <div class="col-md-2">
                                 <div class="mb-3">
                                     <label for="">Departemen</label>
-                                    <select name="departemen" class="form-control" id="">
+                                    <select name="departemen" class="form-control" id="departemen">
                                         <option value="">-- Pilih Departemen --</option>
                                         @foreach ($departemens as $departemen)
-                                            <option value="{{ $departemen->id_departemen }}">
+                                            {{-- <option value="{{ $departemen->id_departemen }}">
                                                 {{ $departemen->nama_departemen >= 2 ? $departemen->nama_unit : $departemen->nama_departemen }}
-                                            </option>
+                                            </option> --}}
+                                            <option value="{{ $departemen->id }}">{{ $departemen->nama_departemen }}</option>
                                         @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2" id="view_departemen_bagian">
+                                <div class="mb-3">
+                                    <label for="">Departemen Bagian</label>
+                                    <select name="departemen_bagian" class="form-control" id="departemen_bagian">
+                                        
                                     </select>
                                 </div>
                             </div>
@@ -130,12 +139,19 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="mb-3">
+                                    <label for="">No. Rekening BCA</label>
+                                    <input type="text" name="no_rekening_bca" class="form-control"
+                                        placeholder="No. Rekening BCA" id="">
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="mb-3">
                                     <label for="">Status Keluarga</label>
                                     <input type="text" name="status_klg" class="form-control"
                                         placeholder="Status Keluarga" id="">
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-1">
                                 <div class="mb-3">
                                     <label for="">PIN</label>
                                     <input type="text" name="pin" class="form-control" placeholder="PIN"
@@ -185,11 +201,30 @@
     <script src="{{ URL::asset('public/assets/plugins/sweet-alert2/sweetalert2.min.js') }}"></script>
     <script src="{{ URL::asset('public/assets/js/pages/jquery.sweet-alert.init.js') }}"></script>
     <script src="{{ URL::asset('public/assets/js/iziToast.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
+        integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+
+        $('#departemen').on('click', function() {
+            axios.post('{{ route("hrga.biodata_karyawan.get_departemen_bagian") }}', {
+                    id: $(this).val()
+                })
+                .then(function(response) {
+                    $('#departemen_bagian').empty();
+                    if (!response.data) {
+                        $('#departemen_bagian').append(new Option(null,null));
+                    }else{
+                        $.each(response.data, function(id, value) {
+                            $('#departemen_bagian').append(new Option(value.nama_bagian, value.id));
+                        })
+                    }
+                });
         });
 
         $('#form-simpan').submit(function(e) {

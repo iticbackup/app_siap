@@ -24,6 +24,7 @@ class HrgaBiodataKaryawan extends Model
         'no_bpjs_kesehatan',
         'no_rekening_mandiri',
         'no_rekening_bws',
+        'no_rekening_bca',
         'departemen_dept',
         'departemen_bagian',
         // 'departemen_jml',
@@ -37,8 +38,8 @@ class HrgaBiodataKaryawan extends Model
         'pendidikan',
         'email',
         'kunci_loker',
-        'status_karyawan',
         'foto_karyawan',
+        'status_karyawan',
         'tanggal_resign',
     ];
 
