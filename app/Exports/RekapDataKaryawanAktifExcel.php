@@ -15,6 +15,7 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
 use App\Models\HrgaBiodataKaryawan;
+use App\Models\BiodataKaryawan;
 use \Carbon\Carbon;
 
 class RekapDataKaryawanAktifExcel implements 
@@ -60,12 +61,24 @@ WithColumnFormatting
     public function view(): View
     {
         $data['tanggal'] = Carbon::create($this->tanggal)->format('d-m-Y');
-        $data['departemens'] = HrgaBiodataKaryawan::select('departemen_dept')
+        // $data['departemens'] = HrgaBiodataKaryawan::select('departemen_dept')
+        //                             // ->whereHas('log_posisi', function($query) use($tanggal) {
+        //                             //     return $query->where('log_posisi.tanggal',$tanggal);
+        //                             // })
+        //                             ->leftJoin('itic_emp.log_posisi','itic_emp.log_posisi.nik','=','hrga_biodata_karyawan.nik')
+        //                             ->where('itic_emp.log_posisi.tanggal','<=',$this->tanggal)
+        //                             ->where('hrga_biodata_karyawan.status_karyawan','Y')
+        //                             ->groupBy('hrga_biodata_karyawan.departemen_dept')
+        //                             ->orderBy('hrga_biodata_karyawan.departemen_dept','asc')
+        //                             ->get();
+        $data['departemens'] = HrgaBiodataKaryawan::select([
+                                        'hrga_biodata_karyawan.departemen_dept as departemen_dept'
+                                    ])
                                     // ->whereHas('log_posisi', function($query) use($tanggal) {
                                     //     return $query->where('log_posisi.tanggal',$tanggal);
                                     // })
-                                    ->leftJoin('itic_emp.log_posisi','itic_emp.log_posisi.nik','=','hrga_biodata_karyawan.nik')
-                                    ->where('itic_emp.log_posisi.tanggal','<=',$this->tanggal)
+                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','hrga_biodata_karyawan.nik')
+                                    ->where('itic_emp_new.biodata_karyawan.tanggal_masuk','<=',$this->tanggal)
                                     ->where('hrga_biodata_karyawan.status_karyawan','Y')
                                     ->groupBy('hrga_biodata_karyawan.departemen_dept')
                                     ->orderBy('hrga_biodata_karyawan.departemen_dept','asc')

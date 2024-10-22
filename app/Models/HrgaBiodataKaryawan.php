@@ -39,6 +39,7 @@ class HrgaBiodataKaryawan extends Model
         'pendidikan',
         'email',
         'kunci_loker',
+        'sim_kendaraan',
         'foto_karyawan',
         'status_karyawan',
         'tanggal_resign',

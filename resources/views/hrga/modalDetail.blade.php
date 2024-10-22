@@ -65,6 +65,11 @@
                                 <td id="detail_no_npwp"></td>
                             </tr>
                             <tr>
+                                <th style="width: 25%">SIM Kendaraan</th>
+                                <th style="width: 5%" class="text-center">:</th>
+                                <td id="detail_sim_kendaraan"></td>
+                            </tr>
+                            <tr>
                                 <th style="width: 25%">BPJS Ketenagakerjaan</th>
                                 <th style="width: 5%" class="text-center">:</th>
                                 <td id="detail_no_bpjs_ketenagakerjaan"></td>

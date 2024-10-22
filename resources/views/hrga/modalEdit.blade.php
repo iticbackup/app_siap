@@ -115,6 +115,12 @@
                             <div class="col-md-12">
                                 <hr>
                                 <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="mb-3">
+                                            <label for="">SIM Kendaraan</label>
+                                            <input type="text" name="edit_sim_kendaraan" class="form-control" id="edit_sim_kendaraan">
+                                        </div>
+                                    </div>
                                     <div class="col-md-4">
                                         <div class="mb-2">
                                             <label for="">Departemen</label>

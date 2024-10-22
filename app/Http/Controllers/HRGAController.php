@@ -1111,17 +1111,17 @@ class HRGAController extends Controller
         }
 
         // if (empty($biodata_karyawan->log_posisi)) {
-        if (empty($biodata_karyawan->tanggal_masuk)) {
+        if (empty($biodata_karyawan->biodata_karyawan->tanggal_masuk)) {
             $masa_kerja = '-';
             $tanggal_masuk = '-';
         }else{
             // Masa Kerja
             // $awal = new DateTime($biodata_karyawan->log_posisi->tanggal);
-            $awal = new DateTime($biodata_karyawan->tanggal_masuk);
+            $awal = new DateTime($biodata_karyawan->biodata_karyawan->tanggal_masuk);
             $akhir = new DateTime();
             $diff = $awal->diff($akhir);
             $masa_kerja = $diff->y.' Tahun '.$diff->m.' Bulan '.$diff->d.' Hari';
-            $tanggal_masuk = Carbon::create($biodata_karyawan->tanggal_masuk)->format('d-m-Y');
+            $tanggal_masuk = Carbon::create($biodata_karyawan->biodata_karyawan->tanggal_masuk)->format('d-m-Y');
             // $tanggal_masuk = Carbon::create($biodata_karyawan->log_posisi->tanggal)->format('d-m-Y');
         }
 
@@ -1163,6 +1163,7 @@ class HRGAController extends Controller
                 'departemen_bagian' => $biodata_karyawan->departemen_bagian,
                 'departemen_level' => $biodata_karyawan->departemen_level,
                 'kunci_loker' => $biodata_karyawan->kunci_loker,
+                'sim_kendaraan' => $biodata_karyawan->sim_kendaraan,
                 'status_karyawan' => $biodata_karyawan->status_karyawan,
                 'foto_karyawan' => $foto_karyawan,
                 'tanggal_masuk' => $tanggal_masuk,
@@ -1197,6 +1198,7 @@ class HRGAController extends Controller
             'edit_golongan_darah' => 'required',
             'edit_pendidikan' => 'required',
             'edit_kunci_loker' => 'required',
+            'edit_sim_kendaraan' => 'required',
             'edit_status_karyawan' => 'required',
             // 'foto_karyawan' => 'required',
         ];
@@ -1221,6 +1223,7 @@ class HRGAController extends Controller
             'edit_golongan_darah.required'  => 'Status Keluarga wajib diisi.',
             'edit_pendidikan.required'  => 'Pendidikan wajib diisi.',
             'edit_kunci_loker.required'  => 'Kunci Loker wajib diisi.',
+            'edit_sim_kendaraan.required'  => 'SIM Kendaraan wajib diisi.',
             'edit_status_karyawan.required'  => 'Status Karyawan wajib diisi.',
             // 'foto_karyawan.required'  => 'Upload Foto wajib diisi.',
             // 'foto_karyawan.size'  => 'File Upload Foto maksimal 2 MB.',
@@ -1251,6 +1254,7 @@ class HRGAController extends Controller
             $input['golongan_darah'] = $request->edit_golongan_darah;
             $input['pendidikan'] = $request->edit_pendidikan;
             $input['kunci_loker'] = $request->edit_kunci_loker;
+            $input['sim_kendaraan'] = $request->edit_sim_kendaraan;
             $input['status_karyawan'] = $request->edit_status_karyawan;
 
             if ($request->file('edit_foto_karyawan')) {

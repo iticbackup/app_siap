@@ -424,6 +424,7 @@
                     document.getElementById('detail_no_rekening_bca').innerHTML = result.data.no_rekening_bca == 0 ? '-' : result.data.no_rekening_bca == '-' ? '<span class="text-danger">Belum Lengkap</span>' : result.data.no_rekening_bca;
                     document.getElementById('detail_foto_karyawan').innerHTML = '<img src='+result.data.foto_karyawan+' width="350" style="width: 350px; height: 550px; object-fit: cover;">';
                     
+                    document.getElementById('detail_sim_kendaraan').innerHTML = result.data.sim_kendaraan == null ? '<span class="text-danger">Belum Lengkap</span>' : result.data.sim_kendaraan;
                     document.getElementById('detail_departemen_dept').innerHTML = result.data.departemen_dept;
                     document.getElementById('detail_departemen_bagian').innerHTML = result.data.departemen_bagian;
                     document.getElementById('detail_departemen_level').innerHTML = result.data.departemen_level;
@@ -558,6 +559,8 @@
                     $('#edit_no_bpjs_kesehatan').val(result.data.no_bpjs_kesehatan);
                     $('#edit_no_rekening_mandiri').val(result.data.no_rekening_mandiri);
                     $('#edit_no_rekening_bws').val(result.data.no_rekening_bws);
+                    $('#edit_no_rekening_bca').val(result.data.no_rekening_bca);
+                    $('#edit_sim_kendaraan').val(result.data.sim_kendaraan);
                     $('#edit_departemen_dept').val(result.data.departemen_dept);
                     $('#edit_departemen_bagian').val(result.data.departemen_bagian);
                     $('#edit_departemen_level').val(result.data.departemen_level);

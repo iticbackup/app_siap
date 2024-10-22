@@ -138,8 +138,9 @@
                                                                             'hrga_biodata_karyawan.email as email',
                                                                             'hrga_biodata_karyawan.alamat as alamat',
                                                                             'hrga_biodata_karyawan.kunci_loker as kunci_loker',
+                                                                            'biodata_karyawan.tanggal_masuk as tanggal_masuk',
                                                                         ])
-                                                                        ->join('itic_emp.log_posisi','itic_emp.log_posisi.nik','hrga_biodata_karyawan.nik')
+                                                                        ->join('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','hrga_biodata_karyawan.nik')
                                                                         // ->rightjoin('hrga_karyawan_resign','hrga_karyawan_resign.hrga_biodata_karyawan_id','!=','hrga_biodata_karyawan.id')
                                                                         // ->where('hrga_karyawan_resign.hrga_biodata_karyawan_id','!=','hrga_biodata_karyawan.id')
                                                                         // ->where(function($query) use($tanggal){
@@ -148,7 +149,7 @@
                                                                         //         ;
                                                                         // })
 
-                                                                        ->where('itic_emp.log_posisi.tanggal','<=',\Carbon\Carbon::create($tanggal)->format('Y-m-d'))
+                                                                        ->where('itic_emp_new.biodata_karyawan.tanggal_masuk','<=',\Carbon\Carbon::create($tanggal)->format('Y-m-d'))
 
                                                                         // ->where(function($query) use ($tanggal){
                                                                         //     $query->whereDate('hrga_biodata_karyawan.tanggal_resign','>=',\Carbon\Carbon::create($tanggal)->format('d'))
@@ -172,8 +173,8 @@
                                                                         // ->where('hrga_karyawan_resign.tanggal_resign','>=',\Carbon\Carbon::create($tanggal)->format('Y-m-d'))
                                                                         // ->where('hrga_karyawan_resign.tanggal_resign','>=',\Carbon\Carbon::create($tanggal)->format('Y-m-d'))
                                                                         ->where('hrga_biodata_karyawan.status_karyawan','Y')
-                                                                        ->where('departemen_dept',$departemen->departemen_dept)
-                                                                        ->where('departemen_level',$gj->departemen_level)
+                                                                        ->where('hrga_biodata_karyawan.departemen_dept',$departemen->departemen_dept)
+                                                                        ->where('hrga_biodata_karyawan.departemen_level',$gj->departemen_level)
                                                                         ->orderBy('id','asc')
                                                                         ->get();
                 @endphp
@@ -247,12 +248,12 @@
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $data_status_kerja_pk }}</td>
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $data_status_kerja_ke }}</td>
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $data_status_kerja_tgl_mulai }}</td>
-                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($hrga_biodata_karyawan->log_posisi->tanggal)->format('d') }}</td>
-                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($hrga_biodata_karyawan->log_posisi->tanggal)->format('m') }}</td>
-                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($hrga_biodata_karyawan->log_posisi->tanggal)->format('Y') }}</td>
-                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($hrga_biodata_karyawan->log_posisi->tanggal)->format('d/m/Y') }}</td>
+                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($hrga_biodata_karyawan->tanggal_masuk)->format('d') }}</td>
+                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($hrga_biodata_karyawan->tanggal_masuk)->format('m') }}</td>
+                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($hrga_biodata_karyawan->tanggal_masuk)->format('Y') }}</td>
+                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($hrga_biodata_karyawan->tanggal_masuk)->format('d/m/Y') }}</td>
                     @php
-                        $awal = new DateTime($hrga_biodata_karyawan->log_posisi->tanggal);
+                        $awal = new DateTime($hrga_biodata_karyawan->tanggal_masuk);
                         $akhir = new DateTime();
                         $diff = $awal->diff($akhir);
                         $masa_kerja_tahun = $diff->y;

@@ -184,12 +184,12 @@
                     <td style="text-align: center; border: 1px solid black; vertical-align: top; {{ $data_status_kerja_pk == 'Kontrak' ? 'color:red; font-weight: bold;' : null }}">{{ $data_status_kerja_pk }}</td>
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $data_status_kerja_ke }}</td>
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $data_status_kerja_tgl_mulai }}</td>
-                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($kr->hrga_biodata_karyawan->log_posisi->tanggal)->format('d') }}</td>
-                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($kr->hrga_biodata_karyawan->log_posisi->tanggal)->format('m') }}</td>
-                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($kr->hrga_biodata_karyawan->log_posisi->tanggal)->format('Y') }}</td>
-                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($kr->hrga_biodata_karyawan->log_posisi->tanggal)->format('d/m/Y') }}</td>
+                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($kr->hrga_biodata_karyawan->biodata_karyawan->tanggal_masuk)->format('d') }}</td>
+                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($kr->hrga_biodata_karyawan->biodata_karyawan->tanggal_masuk)->format('m') }}</td>
+                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($kr->hrga_biodata_karyawan->biodata_karyawan->tanggal_masuk)->format('Y') }}</td>
+                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ \Carbon\Carbon::create($kr->hrga_biodata_karyawan->biodata_karyawan->tanggal_masuk)->format('d/m/Y') }}</td>
                     @php
-                        $awal = new DateTime($kr->hrga_biodata_karyawan->log_posisi->tanggal);
+                        $awal = new DateTime($kr->hrga_biodata_karyawan->biodata_karyawan->tanggal_masuk);
                         $akhir = new DateTime();
                         $diff = $awal->diff($akhir);
                         $masa_kerja_tahun = $diff->y;
