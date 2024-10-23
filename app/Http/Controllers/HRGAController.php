@@ -1270,6 +1270,7 @@ class HRGAController extends Controller
 
             $biodata_karyawan->update($input);
             $this->biodata_karyawan->where('nik',$request->edit_nik)->update([
+                'tgl_lahir' => $request->edit_tanggal_lahir,
                 'email' => $request->edit_email,
                 'departemen_dept' => $request->edit_departemen_dept,
                 'departemen_bagian' => $request->edit_departemen_bagian,
