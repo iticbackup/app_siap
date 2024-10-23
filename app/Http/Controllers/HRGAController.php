@@ -243,10 +243,10 @@ class HRGAController extends Controller
                                 return strtoupper($row->departemen_dept.' - '.$row->departemen_bagian);
                             })
                             ->addColumn('no_telp', function($row){
-                                if ($row->no_telp == 0) {
+                                if ($row->no_telepon == 0) {
                                     return '-';
                                 }else{
-                                    return $row->no_telp;
+                                    return $row->no_telepon;
                                 }
                             })
                             ->addColumn('status_karyawan', function($row){

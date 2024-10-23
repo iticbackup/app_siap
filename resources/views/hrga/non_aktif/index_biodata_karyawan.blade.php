@@ -157,6 +157,7 @@
                     document.getElementById('detail_jenis_kelamin').innerHTML = result.data.jenis_kelamin;
                     document.getElementById('detail_alamat').innerHTML = result.data.alamat;
                     document.getElementById('detail_email').innerHTML = result.data.email;
+                    document.getElementById('detail_no_telepon').innerHTML = result.data.no_telepon;
                     document.getElementById('detail_status_keluarga').innerHTML = result.data.status_keluarga;
                     document.getElementById('detail_golongan_darah').innerHTML = result.data.golongan_darah;
                     document.getElementById('detail_pendidikan').innerHTML = result.data.pendidikan;
@@ -165,6 +166,7 @@
                     document.getElementById('detail_no_bpjs_kesehatan').innerHTML = result.data.no_bpjs_kesehatan;
                     document.getElementById('detail_no_rekening_mandiri').innerHTML = result.data.no_rekening_mandiri;
                     document.getElementById('detail_no_rekening_bws').innerHTML = result.data.no_rekening_bws;
+                    document.getElementById('detail_no_rekening_bca').innerHTML = result.data.no_rekening_bca;
                     document.getElementById('detail_foto_karyawan').innerHTML = '<img src='+result.data.foto_karyawan+' width="350" style="width: 350px; height: 550px; object-fit: cover;">';
                     
                     document.getElementById('detail_departemen_dept').innerHTML = result.data.departemen_dept;

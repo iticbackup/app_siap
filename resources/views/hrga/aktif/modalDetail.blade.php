@@ -84,6 +84,11 @@
                                 <th style="width: 5%" class="text-center">:</th>
                                 <td id="detail_no_rekening_bws"></td>
                             </tr>
+                            <tr>
+                                <th style="width: 25%">Rekening BCA</th>
+                                <th style="width: 5%" class="text-center">:</th>
+                                <td id="detail_no_rekening_bca"></td>
+                            </tr>
                         </table>
                         <span style="font-size: 12pt" class="card-title">Departemen</span>
                         <hr>

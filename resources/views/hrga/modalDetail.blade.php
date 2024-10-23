@@ -45,6 +45,11 @@
                                 <td id="detail_email"></td>
                             </tr>
                             <tr>
+                                <th style="width: 25%">No. Telepon</th>
+                                <th style="width: 5%" class="text-center">:</th>
+                                <td id="detail_no_telepon"></td>
+                            </tr>
+                            <tr>
                                 <th style="width: 25%">Status Keluarga</th>
                                 <th style="width: 5%" class="text-center">:</th>
                                 <td id="detail_status_keluarga"></td>
