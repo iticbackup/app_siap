@@ -18,6 +18,7 @@
         height: 35px;
     }
 </style>
+<title>Data Karyawan PT Indonesian Tobacco Tbk. - {{ $data_karyawan->nik.' '.$data_karyawan->biodata_karyawan->nama }}</title>
 <div style="text-align: center; font-weight: bold; font-size: 14pt">
     <div>DATA KARYAWAN</div>
     <div style="text-decoration: underline">PT Indonesian Tobacco Tbk.</div>

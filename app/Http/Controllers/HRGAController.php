@@ -1829,6 +1829,6 @@ class HRGAController extends Controller
 
         $pdf = PDF::loadView('hrga.cetak_data_karyawan', $data);
         
-        return $pdf->stream();
+        return $pdf->stream('Data Karyawan PT Indonesian Tobacco Tbk - '.$data['data_karyawan']['nik'].' '.$data['data_karyawan']['biodata_karyawan']['nama'].'.pdf');
     }
 }

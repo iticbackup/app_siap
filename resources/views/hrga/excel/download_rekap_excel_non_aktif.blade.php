@@ -54,7 +54,7 @@
                 <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">NAMA</th>
                 <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">NOMOR TELEPON</th>
                 <th colspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">NKK. BPJS</th>
-                <th colspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">PAYROLL</th>
+                <th colspan="3" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">PAYROLL</th>
                 <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">NPWP</th>
                 <th colspan="3" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">DEPARTEMEN</th>
                 <th colspan="3" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">STATUS KERJA</th>
@@ -66,6 +66,7 @@
                 <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">STATUS KLG</th>
                 <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">GOL. DARAH</th>
                 <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">PEND.</th>
+                <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">SIM KNDR</th>
                 <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">E-MAIL</th>
                 <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">ALAMAT</th>
                 <th rowspan="2" style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">RIWAYAT TRAINING</th>
@@ -77,6 +78,7 @@
                 <th style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; word-wrap: break-word; width: 120px; font-weight: bold; background-color: #e6b8b7">KESEHATAN</th>
                 <th style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; word-wrap: break-word; width: 120px; font-weight: bold; background-color: #e6b8b7">NO. REKENING BANK MANDIRI</th>
                 <th style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; word-wrap: break-word; width: 120px; font-weight: bold; background-color: #e6b8b7">NO. REKENING BANK WOORI</th>
+                <th style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; word-wrap: break-word; width: 120px; font-weight: bold; background-color: #e6b8b7">NO. REKENING BANK BCA</th>
                 <th style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">DEPT.</th>
                 <th style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">BAGIAN</th>
                 <th style="text-transform: uppercase; text-align: center; border: 1px solid black; vertical-align: middle; height: 50px; text-transform: uppercase; font-weight: bold; background-color: #e6b8b7">LEVEL</th>
@@ -165,6 +167,13 @@
                         // $bws = sprintf("%'.09d\n", $hrga_biodata_karyawan->no_rekening_bws);
                         $bws = $kr->hrga_biodata_karyawan->no_rekening_bws;
                     }
+
+                    if (empty($kr->hrga_biodata_karyawan->no_rekening_bca)) {
+                        $bca = "-";
+                    }else{
+                        // $bws = sprintf("%'.09d\n", $hrga_biodata_karyawan->no_rekening_bws);
+                        $bws = $kr->hrga_biodata_karyawan->no_rekening_bca;
+                    }
                 @endphp
                 <tr>
                     <td style="text-align: center; font-weight: bold; border: 1px solid black; vertical-align: top;">{{ $no }}</td>
@@ -177,6 +186,7 @@
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $bpjs_kesehatan }}</td>
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $mandiri }}</td>
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $bws }}</td>
+                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $bca }}</td>
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $kr->hrga_biodata_karyawan->no_npwp }}</td>
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $kr->hrga_biodata_karyawan->departemen_dept }}</td>
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $kr->hrga_biodata_karyawan->departemen_bagian }}</td>
@@ -212,6 +222,7 @@
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $kr->hrga_biodata_karyawan->status_keluarga }}</td>
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $kr->hrga_biodata_karyawan->golongan_darah }}</td>
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $kr->hrga_biodata_karyawan->pendidikan }}</td>
+                    <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $kr->hrga_biodata_karyawan->sim_kendaraan }}</td>
                     <td style="text-align: center; border: 1px solid black; vertical-align: top">{{ $kr->hrga_biodata_karyawan->email }}</td>
                     <td style="text-align: left; border: 1px solid black; vertical-align: top">{{ $kr->hrga_biodata_karyawan->alamat }}</td>
                     <td style="text-align: left; border: 1px solid black; vertical-align: top">

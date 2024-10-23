@@ -421,7 +421,7 @@
                     document.getElementById('detail_no_bpjs_kesehatan').innerHTML = !result.data.no_bpjs_kesehatan ? '<span class="text-danger">Belum Lengkap</span>' : result.data.no_bpjs_kesehatan;
                     document.getElementById('detail_no_rekening_mandiri').innerHTML = result.data.no_rekening_mandiri == 0 ? '-' : result.data.no_rekening_mandiri == '-' ? '<span class="text-danger">Belum Lengkap</span>' : result.data.no_rekening_mandiri;
                     document.getElementById('detail_no_rekening_bws').innerHTML = result.data.no_rekening_bws == 0 ? '-' : result.data.no_rekening_bws == '-' ? '<span class="text-danger">Belum Lengkap</span>' : result.data.no_rekening_bws;
-                    document.getElementById('detail_no_rekening_bca').innerHTML = result.data.no_rekening_bca == 0 ? '-' : result.data.no_rekening_bca == '-' ? '<span class="text-danger">Belum Lengkap</span>' : result.data.no_rekening_bca;
+                    document.getElementById('detail_no_rekening_bca').innerHTML = result.data.no_rekening_bca == 0 ? '-' : result.data.no_rekening_bca == null ? '<span class="text-danger">Belum Lengkap</span>' : result.data.no_rekening_bca;
                     document.getElementById('detail_foto_karyawan').innerHTML = '<img src='+result.data.foto_karyawan+' width="350" style="width: 350px; height: 550px; object-fit: cover;">';
                     
                     document.getElementById('detail_sim_kendaraan').innerHTML = result.data.sim_kendaraan == null ? '<span class="text-danger">Belum Lengkap</span>' : result.data.sim_kendaraan;
