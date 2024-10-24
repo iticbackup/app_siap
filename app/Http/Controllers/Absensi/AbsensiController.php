@@ -38,7 +38,7 @@ class AbsensiController extends Controller
     public function index(Request $request)
     {
         if (auth()->user()->nik == 0000000) {
-            $data['biodata_karyawans'] = $this->biodata_karyawan->with('departemen','posisi')
+            $data['biodata_karyawans'] = $this->biodata_karyawan->with('departemen')
                                                         // ->select([
                                                         //     'id','nik','nama','alamat','id_posisi','id_jabatan',
                                                         //     'pin'
@@ -49,7 +49,7 @@ class AbsensiController extends Controller
                                                                         ->where('nik','!=','1000003');
                                                         })
                                                         // ->where('pin',1298)
-                                                        ->orderBy('satuan_kerja','asc')
+                                                        ->orderBy('id_departemen','asc')
                                                         ->where('status_karyawan','!=','R')
                                                         // ->take(20)
                                                         ->paginate(20);
@@ -71,6 +71,7 @@ class AbsensiController extends Controller
 
             $data['fin_pro'] = $this->fin_pro;
             $data['presensi_info'] = $this->presensi_info;
+            // dd($data);
             return view('absensi.home.index',$data);
         }else{
             $akses_departemen = $this->departemen_user->whereIn('departemen_id',[3,4])->where('nik',auth()->user()->nik)->first();
