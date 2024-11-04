@@ -101,18 +101,30 @@
                             <tbody>
                                 @foreach ($biodata_karyawans as $key => $biodata_karyawan)
                                 @php
-                                    $cek_status_kerja = \App\Models\IticDepartemen::where('id_departemen', $biodata_karyawan->satuan_kerja)->first();
+                                    // $cek_status_kerja = \App\Models\IticDepartemen::where('id_departemen', $biodata_karyawan->satuan_kerja)->first();
+                                    // if (empty($cek_status_kerja)) {
+                                    //     $satuan_kerja = '-';
+                                    // } else {
+                                    //     if ($cek_status_kerja->nama_departemen >= 1) {
+                                    //         $satuan_kerja = $cek_status_kerja->nama_unit;
+                                    //     } else {
+                                    //         $satuan_kerja = $cek_status_kerja->nama_departemen;
+                                    //     }
+                                    // }
+
+                                    $cek_status_kerja = \App\Models\EmpDepartemen::where('id',$biodata_karyawan->id_departemen)->first();
                                     if (empty($cek_status_kerja)) {
                                         $satuan_kerja = '-';
                                     } else {
-                                        if ($cek_status_kerja->nama_departemen >= 1) {
-                                            $satuan_kerja = $cek_status_kerja->nama_unit;
-                                        } else {
-                                            $satuan_kerja = $cek_status_kerja->nama_departemen;
-                                        }
+                                        // if ($cek_status_kerja->nama_departemen >= 1) {
+                                        //     $satuan_kerja = $cek_status_kerja->nama_unit;
+                                        // } else {
+                                        //     $satuan_kerja = $cek_status_kerja->nama_departemen;
+                                        // }
+                                        $satuan_kerja = $cek_status_kerja->nama_departemen;
                                     }
 
-                                    $cek_posisi = \App\Models\EmpPosisi::where('id_posisi', $biodata_karyawan->id_posisi)->first();
+                                    $cek_posisi = \App\Models\EmpPosisi::where('id', $biodata_karyawan->id_posisi)->first();
                                     if (empty($cek_posisi)) {
                                         $posisi = '-';
                                     } else {
