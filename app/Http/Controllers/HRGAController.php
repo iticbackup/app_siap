@@ -1853,7 +1853,7 @@ class HRGAController extends Controller
         return $pdf->stream('Data Karyawan PT Indonesian Tobacco Tbk - '.$data['data_karyawan']['nik'].' '.$data['data_karyawan']['biodata_karyawan']['nama'].'.pdf');
     }
 
-    public function demonstrasi()
+    public function demografi()
     {
         $data['berdasarkan_tingkatan'] = DB::select(DB::raw(
                                             'select COUNT(id_jabatan) as total_berdasarkan_tingkat from itic_emp_new.biodata_karyawan
@@ -1990,9 +1990,7 @@ class HRGAController extends Controller
                                     ) a on t.ageband = a.ageband
                                     '
                                 ));
-        // $data['berdasarkan_usia'] = $this->biodata_karyawan->whereIn('status_karyawan',['A','K'])->get();
-        // foreach()
-        // dd($data);
-        return view('hrga.demonstrasi',$data);
+        $data['periode'] = Carbon::now()->isoFormat('dddd, DD MMMM YYYY');
+        return view('hrga.demografi',$data);
     }
 }

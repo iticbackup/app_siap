@@ -1,6 +1,6 @@
 @extends('layouts.apps.master')
 @section('title')
-    Demonstrasi Karyawan
+    Demografi Karyawan
 @endsection
 @section('content')
     @component('components.breadcrumb')
@@ -16,7 +16,9 @@
         <div class="col-md-12 col-xl-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title text-center mt-3 mb-3">Periode Berjalan</h4>
+                    <h4 class="card-title text-center mt-3 mb-3">
+                        Periode Berjalan {{ $periode }}
+                    </h4>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="card">
