@@ -24,11 +24,43 @@
             @yield('title')
         @endslot
     @endcomponent
-    
+
     @include('hrga.modalDetail')
 
     <div class="row">
         <div class="col-md-12 col-xl-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4 text-center">
+                                <img src="{{ asset('public/berkas/HRGA/data_karyawan/office-worker.png') }}" class="img-fluid rounded-start" width="120">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h4 class="card-title">Total Karyawan Laki - Laki</h4>
+                                    <div style="font-size:14pt; font-weight: bold">{{ $total_karyawan_laki_laki . ' Karyawan' }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4 text-center">
+                                <img src="{{ asset('public/berkas/HRGA/data_karyawan/social.png') }}" class="img-fluid rounded-start" width="120">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h4 class="card-title">Total Karyawan Perempuan</h4>
+                                    <div style="font-size:14pt; font-weight: bold">{{ $total_karyawan_perempuan . ' Karyawan' }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card">
                 <div class="card-header bg-dark">
                     <div class="row align-items-center">
@@ -42,8 +74,10 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <a href="{{ route('hrga.biodata_karyawan.aktif') }}" class="btn btn-primary"><i class="mdi mdi-file-table-outline"></i> Database Aktif</a>
-                        <a href="{{ route('hrga.biodata_karyawan.non_aktif') }}" class="btn btn-primary"><i class="mdi mdi-file-table-outline"></i> Database Non Aktif</a>
+                        <a href="{{ route('hrga.biodata_karyawan.aktif') }}" class="btn btn-primary"><i
+                                class="mdi mdi-file-table-outline"></i> Database Aktif</a>
+                        <a href="{{ route('hrga.biodata_karyawan.non_aktif') }}" class="btn btn-primary"><i
+                                class="mdi mdi-file-table-outline"></i> Database Non Aktif</a>
                     </div>
                     <table id="datatables" class="table table-bordered dt-responsive nowrap"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
@@ -94,8 +128,7 @@
             processing: true,
             serverSide: true,
             ajax: "{{ route('hrga.biodata_karyawan.aktif') }}",
-            columns: [
-                {
+            columns: [{
                     data: 'id',
                     name: 'id'
                 },
@@ -134,29 +167,29 @@
                 // { className: 'text-right', targets: [7, 10, 11, 14, 16] },
                 {
                     className: 'text-center',
-                    targets: [0,1,2,4,5,6,7]
+                    targets: [0, 1, 2, 4, 5, 6, 7]
                 },
             ],
         });
 
-        function reload(){
+        function reload() {
             table.ajax.reload();
         }
 
         function detail(nik) {
             $.ajax({
                 type: 'GET',
-                url: "{{ url('hrga/biodata_karyawan/') }}"+'/'+nik+'/detail',
+                url: "{{ url('hrga/biodata_karyawan/') }}" + '/' + nik + '/detail',
                 contentType: "application/json;  charset=utf-8",
                 cache: false,
-                beforeSend: function() {
-                },
+                beforeSend: function() {},
                 success: (result) => {
                     // console.table(result.data);
                     $('.detail_nik').val(result.data.nik);
                     document.getElementById('detail_nik').innerHTML = result.data.nik;
                     document.getElementById('detail_nama_karyawan').innerHTML = result.data.nama_karyawan;
-                    document.getElementById('detail_tempat_tanggal_lahir').innerHTML = result.data.tempat_tanggal_lahir;
+                    document.getElementById('detail_tempat_tanggal_lahir').innerHTML = result.data
+                        .tempat_tanggal_lahir;
                     document.getElementById('detail_jenis_kelamin').innerHTML = result.data.jenis_kelamin;
                     document.getElementById('detail_alamat').innerHTML = result.data.alamat;
                     document.getElementById('detail_email').innerHTML = result.data.email;
@@ -165,37 +198,44 @@
                     document.getElementById('detail_golongan_darah').innerHTML = result.data.golongan_darah;
                     document.getElementById('detail_pendidikan').innerHTML = result.data.pendidikan;
                     document.getElementById('detail_no_npwp').innerHTML = result.data.no_npwp;
-                    document.getElementById('detail_no_bpjs_ketenagakerjaan').innerHTML = result.data.no_bpjs_ketenagakerjaan;
-                    document.getElementById('detail_no_bpjs_kesehatan').innerHTML = result.data.no_bpjs_kesehatan;
-                    document.getElementById('detail_no_rekening_mandiri').innerHTML = result.data.no_rekening_mandiri;
+                    document.getElementById('detail_no_bpjs_ketenagakerjaan').innerHTML = result.data
+                        .no_bpjs_ketenagakerjaan;
+                    document.getElementById('detail_no_bpjs_kesehatan').innerHTML = result.data
+                        .no_bpjs_kesehatan;
+                    document.getElementById('detail_no_rekening_mandiri').innerHTML = result.data
+                        .no_rekening_mandiri;
                     document.getElementById('detail_no_rekening_bws').innerHTML = result.data.no_rekening_bws;
                     document.getElementById('detail_no_rekening_bca').innerHTML = result.data.no_rekening_bca;
-                    document.getElementById('detail_foto_karyawan').innerHTML = '<img src='+result.data.foto_karyawan+' width="350" style="width: 350px; height: 550px; object-fit: cover;">';
-                    
+                    document.getElementById('detail_foto_karyawan').innerHTML = '<img src=' + result.data
+                        .foto_karyawan +
+                        ' width="350" style="width: 350px; height: 550px; object-fit: cover;">';
+
                     document.getElementById('detail_departemen_dept').innerHTML = result.data.departemen_dept;
-                    document.getElementById('detail_departemen_bagian').innerHTML = result.data.departemen_bagian;
+                    document.getElementById('detail_departemen_bagian').innerHTML = result.data
+                        .departemen_bagian;
                     document.getElementById('detail_departemen_level').innerHTML = result.data.departemen_level;
-                    
-                    document.getElementById('detail_masuk_kerja_tgl_masuk').innerHTML = result.data.tanggal_masuk;
+
+                    document.getElementById('detail_masuk_kerja_tgl_masuk').innerHTML = result.data
+                        .tanggal_masuk;
                     document.getElementById('detail_masuk_kerja_masa_kerja').innerHTML = result.data.masa_kerja;
 
                     if (result.data.status_kerja == null) {
-                        document.getElementById('detail_status_kerja').innerHTML = '<tr><td colspan="3" class="text-center">Data Belum Tersedia</td></tr>'
-                    }else{
+                        document.getElementById('detail_status_kerja').innerHTML =
+                            '<tr><td colspan="3" class="text-center">Data Belum Tersedia</td></tr>'
+                    } else {
                         var detail_status_kerja = result.data.status_kerja;
                         var txt_status_kerja = "";
                         detail_status_kerja.forEach(dt_status_kerja);
 
-                        function dt_status_kerja(value, index)
-                        {
+                        function dt_status_kerja(value, index) {
                             txt_status_kerja += '<tr>';
-                                if (value.pk == 'Kontrak') {
-                                    txt_status_kerja += '<td class="text-center text-danger">'+value.pk+'</td>';
-                                } else {
-                                    txt_status_kerja += '<td class="text-center">'+value.pk+'</td>';
-                                }
-                            txt_status_kerja += '<td class="text-center">'+value.ke+'</td>';
-                            txt_status_kerja += '<td class="text-center">'+value.tgl_mulai+'</td>';
+                            if (value.pk == 'Kontrak') {
+                                txt_status_kerja += '<td class="text-center text-danger">' + value.pk + '</td>';
+                            } else {
+                                txt_status_kerja += '<td class="text-center">' + value.pk + '</td>';
+                            }
+                            txt_status_kerja += '<td class="text-center">' + value.ke + '</td>';
+                            txt_status_kerja += '<td class="text-center">' + value.tgl_mulai + '</td>';
                             txt_status_kerja += '</tr>';
                         }
 
@@ -203,43 +243,45 @@
                     }
 
                     if (result.data.riwayat_konseling == null) {
-                        document.getElementById('detail_riwayat_konseling').innerHTML = '<tr><td colspan="2" class="text-center">Data Belum Tersedia</td></tr>'
-                    }else{
+                        document.getElementById('detail_riwayat_konseling').innerHTML =
+                            '<tr><td colspan="2" class="text-center">Data Belum Tersedia</td></tr>'
+                    } else {
                         var detail_riwayat_konseling = result.data.riwayat_konseling;
                         var txt_riwayat_konseling = "";
                         detail_riwayat_konseling.forEach(dt_riwayat_konseling);
 
                         function dt_riwayat_konseling(value, index) {
                             txt_riwayat_konseling += '<tr>';
-                            txt_riwayat_konseling += '<td class="text-center">'+value.no+'</td>';
-                            txt_riwayat_konseling += '<td class="text-center">'+value.data+'</td>';
+                            txt_riwayat_konseling += '<td class="text-center">' + value.no + '</td>';
+                            txt_riwayat_konseling += '<td class="text-center">' + value.data + '</td>';
                             txt_riwayat_konseling += '</tr>';
                         }
-                        
+
                         document.getElementById('detail_riwayat_konseling').innerHTML = txt_riwayat_konseling;
                     }
-                    
+
                     if (result.data.riwayat_training == null) {
-                        document.getElementById('detail_riwayat_training').innerHTML = '<tr><td colspan="2" class="text-center">Data Belum Tersedia</td></tr>'
-                    }else{
+                        document.getElementById('detail_riwayat_training').innerHTML =
+                            '<tr><td colspan="2" class="text-center">Data Belum Tersedia</td></tr>'
+                    } else {
                         var detail_riwayat_training = result.data.riwayat_training;
                         var txt_riwayat_training = "";
                         detail_riwayat_training.forEach(dt_riwayat_training);
 
                         function dt_riwayat_training(value, index) {
                             txt_riwayat_training += '<tr>';
-                            txt_riwayat_training += '<td class="text-center">'+value.no+'</td>';
-                            txt_riwayat_training += '<td class="text-center">'+value.data+'</td>';
+                            txt_riwayat_training += '<td class="text-center">' + value.no + '</td>';
+                            txt_riwayat_training += '<td class="text-center">' + value.data + '</td>';
                             txt_riwayat_training += '</tr>';
                         }
-                        
+
                         document.getElementById('detail_riwayat_training').innerHTML = txt_riwayat_konseling;
                     }
 
                     // document.getElementById('button_action').innerHTML = '<button type="button" class="btn btn-md" style="background-color: #005B41; color: white" onclick="buat_kontrak(`'+result.data.nik+'`)"><i class="mdi mdi-plus"></i> Buat Kontrak</button>'+
                     //                                                     '<button type="button" class="btn btn-md" style="background-color: #508D69; color: white" onclick="buat_riwayat_konseling(`'+result.data.nik+'`)"><i class="mdi mdi-plus"></i> Buat Riwayat Konseling</button>'+
                     //                                                     '<button type="button" class="btn btn-md" style="background-color: #363062; color: white" onclick="buat_riwayat_training(`'+result.data.nik+'`)"><i class="mdi mdi-plus"></i> Buat Riwayat Training</button>';
-                    
+
                     $('.modalDetailDataKaryawan').modal('show');
                 },
                 error: function(request, status, error) {
@@ -250,6 +292,5 @@
                 }
             });
         }
-
     </script>
 @endsection

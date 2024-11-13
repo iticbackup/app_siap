@@ -355,7 +355,14 @@ class HRGAController extends Controller
             //                 ->rawColumns(['action','foto_karyawan','status_karyawan_resign'])
             //                 ->make(true);
         }
-        return view('hrga.index_biodata_karyawan');
+
+        $data['total_karyawan_laki_laki'] = $this->hrga_biodata_karyawan->where('jenis_kelamin','Laki - Laki')
+                                                                        ->where('status_karyawan','!=','T')
+                                                                        ->count();
+        $data['total_karyawan_perempuan'] = $this->hrga_biodata_karyawan->where('jenis_kelamin','Perempuan')
+                                                                        ->where('status_karyawan','!=','T')
+                                                                        ->count();
+        return view('hrga.index_biodata_karyawan',$data);
     }
 
     public function index_biodata_karyawan_aktif(Request $request)
@@ -488,7 +495,14 @@ class HRGAController extends Controller
                             ->make(true);
         }
 
-        return view('hrga.aktif.index_biodata_karyawan');
+        $data['total_karyawan_laki_laki'] = $this->hrga_biodata_karyawan->where('jenis_kelamin','Laki - Laki')
+                                                                        ->where('status_karyawan','!=','T')
+                                                                        ->count();
+        $data['total_karyawan_perempuan'] = $this->hrga_biodata_karyawan->where('jenis_kelamin','Perempuan')
+                                                                        ->where('status_karyawan','!=','T')
+                                                                        ->count();
+
+        return view('hrga.aktif.index_biodata_karyawan',$data);
     }
 
     public function index_biodata_karyawan_non_aktif(Request $request)
@@ -645,7 +659,13 @@ class HRGAController extends Controller
             //                 ->make(true);
         }
 
-        return view('hrga.non_aktif.index_biodata_karyawan');
+        $data['total_karyawan_laki_laki'] = $this->hrga_biodata_karyawan->where('jenis_kelamin','Laki - Laki')
+                                                                        ->where('status_karyawan','T')
+                                                                        ->count();
+        $data['total_karyawan_perempuan'] = $this->hrga_biodata_karyawan->where('jenis_kelamin','Perempuan')
+                                                                        ->where('status_karyawan','T')
+                                                                        ->count();
+        return view('hrga.non_aktif.index_biodata_karyawan',$data);
     }
 
     public function edit_biodata_karyawan_non_aktif($nik)

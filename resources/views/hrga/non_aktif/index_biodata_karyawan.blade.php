@@ -30,6 +30,38 @@
 
     <div class="row">
         <div class="col-md-12 col-xl-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4 text-center">
+                                <img src="{{ asset('public/berkas/HRGA/data_karyawan/office-worker.png') }}" class="img-fluid rounded-start" width="120">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h4 class="card-title">Total Karyawan Laki - Laki Resign</h4>
+                                    <div style="font-size:14pt; font-weight: bold">{{ $total_karyawan_laki_laki . ' Karyawan' }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4 text-center">
+                                <img src="{{ asset('public/berkas/HRGA/data_karyawan/social.png') }}" class="img-fluid rounded-start" width="120">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h4 class="card-title">Total Karyawan Perempuan Resign</h4>
+                                    <div style="font-size:14pt; font-weight: bold">{{ $total_karyawan_perempuan . ' Karyawan' }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card">
                 <div class="card-header bg-dark">
                     <div class="row align-items-center">
