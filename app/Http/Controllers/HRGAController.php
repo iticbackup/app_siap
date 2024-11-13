@@ -1852,4 +1852,147 @@ class HRGAController extends Controller
         
         return $pdf->stream('Data Karyawan PT Indonesian Tobacco Tbk - '.$data['data_karyawan']['nik'].' '.$data['data_karyawan']['biodata_karyawan']['nama'].'.pdf');
     }
+
+    public function demonstrasi()
+    {
+        $data['berdasarkan_tingkatan'] = DB::select(DB::raw(
+                                            'select COUNT(id_jabatan) as total_berdasarkan_tingkat from itic_emp_new.biodata_karyawan
+                                            where id_jabatan <= 11 AND status_karyawan IN ("A","K")
+                                            UNION ALL
+                                            select COUNT(id_jabatan) as total_berdasarkan_tingkat from itic_emp_new.biodata_karyawan
+                                            where id_jabatan >= 12 AND status_karyawan IN ("A","K")
+                                            '
+                                        ));
+
+        $data['berdasarkan_gender'] = DB::select(DB::raw(
+                                        'select COUNT(jenis_kelamin) as jenis_kelamin from itic_emp_new.biodata_karyawan
+                                        where jenis_kelamin = "L" AND status_karyawan IN ("A","K")
+                                        UNION ALL
+                                        select COUNT(jenis_kelamin) as jenis_kelamin from itic_emp_new.biodata_karyawan
+                                        where jenis_kelamin = "P" AND status_karyawan IN ("A","K")
+                                        '
+                                    ));
+
+        $data['berdasarkan_status_karyawan'] = DB::select(DB::raw(
+                                                'select COUNT(status_karyawan) as status_karyawan from itic_emp_new.biodata_karyawan
+                                                where status_karyawan = "A"
+                                                UNION ALL
+                                                select COUNT(status_karyawan) as status_karyawan from itic_emp_new.biodata_karyawan
+                                                where status_karyawan = "K"
+                                                '
+                                            ));
+
+        $data['berdasarkan_departemen'] = DB::select(DB::raw(
+                                                'select COUNT(id_departemen) as id_departemen from itic_emp_new.biodata_karyawan
+                                                where id_departemen = 1
+                                                AND
+                                                status_karyawan IN ("A","K")
+                                                UNION ALL
+                                                select COUNT(id_departemen) as id_departemen from itic_emp_new.biodata_karyawan
+                                                where id_departemen = 2
+                                                AND
+                                                status_karyawan IN ("A","K")
+                                                UNION ALL
+                                                select COUNT(id_departemen) as id_departemen from itic_emp_new.biodata_karyawan
+                                                where id_departemen = 3
+                                                AND
+                                                status_karyawan IN ("A","K")
+                                                UNION ALL
+                                                select COUNT(id_departemen) as id_departemen from itic_emp_new.biodata_karyawan
+                                                where id_departemen = 4
+                                                AND
+                                                status_karyawan IN ("A","K")
+                                                UNION ALL
+                                                select COUNT(id_departemen) as id_departemen from itic_emp_new.biodata_karyawan
+                                                where id_departemen IN (5,6)
+                                                AND
+                                                status_karyawan IN ("A","K")
+                                                UNION ALL
+                                                select COUNT(id_departemen) as id_departemen from itic_emp_new.biodata_karyawan
+                                                where id_departemen = 7
+                                                AND
+                                                status_karyawan IN ("A","K")
+                                                UNION ALL
+                                                select COUNT(id_departemen) as id_departemen from itic_emp_new.biodata_karyawan
+                                                where id_departemen = 8
+                                                AND
+                                                status_karyawan IN ("A","K")
+                                                UNION ALL
+                                                select COUNT(id_departemen) as id_departemen from itic_emp_new.biodata_karyawan
+                                                where id_departemen = 9
+                                                AND
+                                                status_karyawan IN ("A","K")
+                                                '
+                                            ));
+
+        $data['berdasarkan_pendidikan'] = DB::select(DB::raw(
+                                            'select COUNT(pendidikan) as pendidikan from itic_emp_new.biodata_karyawan
+                                            where pendidikan = "SD"
+                                            AND
+                                            status_karyawan IN ("A","K")
+                                            UNION ALL
+                                            select COUNT(pendidikan) as pendidikan from itic_emp_new.biodata_karyawan
+                                            where pendidikan IN ("SMP","MTS")
+                                            AND
+                                            status_karyawan IN ("A","K")
+                                            UNION ALL
+                                            select COUNT(pendidikan) as pendidikan from itic_emp_new.biodata_karyawan
+                                            where pendidikan IN ("SMA","SMK","SLTA","MA")
+                                            AND
+                                            status_karyawan IN ("A","K")
+                                            UNION ALL
+                                            select COUNT(pendidikan) as pendidikan from itic_emp_new.biodata_karyawan
+                                            where pendidikan IN ("D1","D2","D3")
+                                            AND
+                                            status_karyawan IN ("A","K")
+                                            UNION ALL
+                                            select COUNT(pendidikan) as pendidikan from itic_emp_new.biodata_karyawan
+                                            where pendidikan IN ("D4","S1")
+                                            AND
+                                            status_karyawan IN ("A","K")
+                                            UNION ALL
+                                            select COUNT(pendidikan) as pendidikan from itic_emp_new.biodata_karyawan
+                                            where pendidikan IN ("S2","S3")
+                                            AND
+                                            status_karyawan IN ("A","K")
+                                            '
+                                        ));
+        
+        $data['berdasarkan_usia'] = DB::select(DB::raw(
+                                    '
+                                    SELECT a.ageband, IFNULL(t.agecount, 0) as "total_age"
+                                    FROM (
+                                    SELECT
+                                        CASE
+                                        WHEN age IS NULL THEN "Unspecified"
+                                        WHEN age < 19 THEN "<19"
+                                        WHEN age >= 19 AND age <= 30 THEN "19-30"
+                                        WHEN age >= 31 AND age <= 45 THEN "31-45"
+                                        WHEN age > 45 THEN ">45"
+                                        END AS ageband,
+                                        COUNT(*) as agecount
+                                    FROM (
+                                        select 
+                                        TIMESTAMPDIFF(YEAR,tgl_lahir,CURDATE()) as "age"
+                                        FROM itic_emp_new.biodata_karyawan 
+                                        where status_karyawan IN ("A","K")
+                                        ORDER BY age
+                                        ASC
+                                        ) t
+                                    GROUP BY ageband
+                                    ) t
+                                    right join (
+                                    SELECT "Unspecified" as ageband union
+                                    SELECT "<19" union
+                                    SELECT "19-30" union
+                                    SELECT "31-45" union
+                                    SELECT ">45"
+                                    ) a on t.ageband = a.ageband
+                                    '
+                                ));
+        // $data['berdasarkan_usia'] = $this->biodata_karyawan->whereIn('status_karyawan',['A','K'])->get();
+        // foreach()
+        // dd($data);
+        return view('hrga.demonstrasi',$data);
+    }
 }

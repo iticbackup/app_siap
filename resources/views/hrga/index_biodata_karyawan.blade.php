@@ -75,6 +75,7 @@
                             <h4 class="card-title text-white">@yield('title')</h4>
                         </div>
                         <div class="col-auto">
+                            <a href="{{ route('hrga.biodata_karyawan.demonstrasi') }}" class="btn" style="background-color: #FFEAC5; color: black" target="_blank"><i class="fas fa-file"></i> Demonstrasi</a>
                             <a href="{{ route('hrga.rekap_pelatihan') }}" class="btn" style="background-color: #EEF296; color: black"><i class="fas fa-file"></i> Rekap Pelatihan</a>
                             <button class="btn" style="background-color: #1AACAC; color: white" onclick="downloadDataKaryawan()"><i class="fas fa-download"></i> Download Rekap Excel</button>
                             <button class="btn" style="background-color: #F31559; color: white" onclick="buatDataResign()"><i class="fas fa-plus"></i> Buat

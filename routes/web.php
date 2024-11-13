@@ -239,6 +239,8 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('{nik}/edit', [App\Http\Controllers\HRGAController::class, 'edit_biodata_karyawan_non_aktif'])->name('hrga.biodata_karyawan.non_aktif.edit');
             });
 
+            Route::get('demonstrasi', [App\Http\Controllers\HRGAController::class, 'demonstrasi'])->name('hrga.biodata_karyawan.demonstrasi');
+
             Route::get('buat_karyawan_baru', [App\Http\Controllers\HRGAController::class, 'buat_karyawan_baru'])->name('hrga.biodata_karyawan.buat_karyawan_baru');
             Route::post('buat_karyawan_baru/simpan', [App\Http\Controllers\HRGAController::class, 'buat_karyawan_baru_simpan'])->name('hrga.biodata_karyawan.buat_karyawan_baru.simpan');
             Route::post('get_departemen_bagian', [App\Http\Controllers\HRGAController::class, 'get_departemen_bagian'])->name('hrga.biodata_karyawan.get_departemen_bagian');
