@@ -188,7 +188,25 @@
                             <div class="col-md-2">
                                 <div class="mb-2">
                                     <label for="">Pendidikan</label>
-                                    <input type="text" name="edit_pendidikan" class="form-control" placeholder="Pendidikan" id="edit_pendidikan">
+                                    {{-- <input type="text" name="edit_pendidikan" class="form-control" placeholder="Pendidikan" id="edit_pendidikan"> --}}
+                                    <select name="edit_pendidikan" class="form-control" id="edit_pendidikan">
+                                        <option value="">-- Pilih Pendidikan --</option>
+                                        <option value="SD">SD</option>
+                                        <option value="SMP">SMP</option>
+                                        <option value="SLTP">SLTP</option>
+                                        <option value="MTS">MTS</option>
+                                        <option value="SMA">SMA</option>
+                                        <option value="SLTA">SLTA</option>
+                                        <option value="SMK">SMK</option>
+                                        <option value="MA">MA</option>
+                                        <option value="D1">D1</option>
+                                        <option value="D2">D2</option>
+                                        <option value="D3">D3</option>
+                                        <option value="D4">D4</option>
+                                        <option value="S1">S1</option>
+                                        <option value="S2">S2</option>
+                                        <option value="S3">S3</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-2">

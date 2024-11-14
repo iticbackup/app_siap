@@ -1932,7 +1932,7 @@ class HRGAController extends Controller
                                             status_karyawan IN ("A","K")
                                             UNION ALL
                                             select COUNT(pendidikan) as pendidikan from itic_emp_new.biodata_karyawan
-                                            where pendidikan IN ("SMP","MTS")
+                                            where pendidikan IN ("SMP","SLTP","MTS")
                                             AND
                                             status_karyawan IN ("A","K")
                                             UNION ALL
