@@ -1857,10 +1857,10 @@ class HRGAController extends Controller
     {
         $data['berdasarkan_tingkatan'] = DB::select(DB::raw(
                                             'select COUNT(id_jabatan) as total_berdasarkan_tingkat from itic_emp_new.biodata_karyawan
-                                            where id_jabatan <= 11 AND status_karyawan IN ("A","K")
+                                            where id_jabatan <= 11 AND status_karyawan != "R"
                                             UNION ALL
                                             select COUNT(id_jabatan) as total_berdasarkan_tingkat from itic_emp_new.biodata_karyawan
-                                            where id_jabatan >= 12 AND status_karyawan IN ("A","K")
+                                            where id_jabatan >= 12 AND status_karyawan != "R"
                                             '
                                         ));
 

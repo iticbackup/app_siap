@@ -47,6 +47,7 @@
                         <div class="col-md-4">
                             <div class="card">
                                 <div class="card-body">
+                                    <h4 class="card-title text-center">Berdasarkan Departemen</h4>
                                     <div id="berdasarkan-departemen"></div>
                                 </div>
                             </div>
@@ -216,72 +217,52 @@
         chart.render();
 
         var options = {
-            series: [{
-                data: [
-                    {{ 
-                        $berdasarkan_departemen[0]->id_departemen.','.
-                        $berdasarkan_departemen[1]->id_departemen.','.
-                        $berdasarkan_departemen[2]->id_departemen.','.
-                        $berdasarkan_departemen[3]->id_departemen.','.
-                        $berdasarkan_departemen[4]->id_departemen.','.
-                        $berdasarkan_departemen[5]->id_departemen.','.
-                        $berdasarkan_departemen[6]->id_departemen.','.
-                        $berdasarkan_departemen[7]->id_departemen
-                    }}
-                ]
-            }],
-            labels: ["Finance & Accounting", "HRGA", "Marketing", "Purchasing", "PPIC", "Production", "QC", "IT"],
             chart: {
-                type: 'bar',
-                height: 350,
-                stacked: true,
+                height: 320,
+                type: 'pie',
             },
-            plotOptions: {
-                bar: {
-                    borderRadius: 4,
-                    borderRadiusApplication: 'end',
-                    horizontal: true,
-                    dataLabels: {
-                        position: 'top',
-                        colors: ['#F96E2A']
-                    }
-                }
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
             },
-            title: {
-                text: 'Berdasarkan Departemen'
-            },
-            tooltip: {
-                y: {
-                    formatter: function (val) {
-                    return val
-                    }
-                }
-            },
-            fill: {
-                opacity: 1
+            series: [{{ 
+                $berdasarkan_departemen[0]->id_departemen.','.
+                $berdasarkan_departemen[1]->id_departemen.','.
+                $berdasarkan_departemen[2]->id_departemen.','.
+                $berdasarkan_departemen[3]->id_departemen.','.
+                $berdasarkan_departemen[4]->id_departemen.','.
+                $berdasarkan_departemen[5]->id_departemen.','.
+                $berdasarkan_departemen[6]->id_departemen.','.
+                $berdasarkan_departemen[7]->id_departemen
+            }}],
+            labels: ["Finance & Accounting", "HRGA", "Marketing", "Purchasing", "PPIC", "Production", "QC", "IT"],
+            colors: ["#E85C0D", "#C7253E", "#E2C044", "#FCA17D", "#0B3948", "#3E8914", "#DFB2F4", "#EC0868"],
+            dataLabels: {
+                formatter: (val, { seriesIndex, w }) => w.config.series[seriesIndex] // <--- HERE
             },
             legend: {
-                position: 'top',
-                horizontalAlign: 'left',
-                offsetX: 40
+                show: true,
+                position: 'bottom',
+                horizontalAlign: 'center',
+                verticalAlign: 'middle',
+                floating: false,
+                fontSize: '14px',
+                offsetX: 0,
+                offsetY: 6
             },
-            dataLabels: {
-                enabled: true,
-                style: {
-                    colors: ['#F96E2A']
-                },
-                offsetX: 30
-            },
-            xaxis: {
-                categories: ["Finance & Accounting", "HRGA", "Marketing", "Purchasing", "PPIC", "Production", "QC", "IT"],
-                labels: {
-                    formatter: function (val) {
-                    return val
-                    }
+            responsive: [{
+                breakpoint: 600,
+                options: {
+                    chart: {
+                        height: 240
+                    },
+                    legend: {
+                        show: false
+                    },
                 }
-            },
-            colors: ["#FF8000"]
-        };
+            }]
+        }
 
         var chart = new ApexCharts(
             document.querySelector("#berdasarkan-departemen"),
@@ -290,19 +271,67 @@
 
         chart.render();
 
-        // ----------------------------------------------------
+        // var options = {
+        //     chart: {
+        //         height: 320,
+        //         type: 'pie',
+        //     },
+        //     stroke: {
+        //         show: true,
+        //         width: 2,
+        //         colors: ['transparent']
+        //     },
+        //     series: [{{ 
+        //         $berdasarkan_pendidikan[5]->pendidikan.','.
+        //         $berdasarkan_pendidikan[4]->pendidikan.','.
+        //         $berdasarkan_pendidikan[3]->pendidikan.','.
+        //         $berdasarkan_pendidikan[2]->pendidikan.','.
+        //         $berdasarkan_pendidikan[1]->pendidikan.','.
+        //         $berdasarkan_pendidikan[0]->pendidikan
+        //     }}],
+        //     labels: ["Pascasarjana","D4/S1","D1 s.d D3","SMA","SMP","SD"],
+        //     colors: ["#102C57", "#1679AB", "#059212", "#FFC700", "#95D2B3", "#FD9B63"],
+        //     dataLabels: {
+        //         formatter: (val, { seriesIndex, w }) => w.config.series[seriesIndex] // <--- HERE
+        //     },
+        //     legend: {
+        //         show: true,
+        //         position: 'bottom',
+        //         horizontalAlign: 'center',
+        //         verticalAlign: 'middle',
+        //         floating: false,
+        //         fontSize: '14px',
+        //         offsetX: 0,
+        //         offsetY: 6
+        //     },
+        //     responsive: [{
+        //         breakpoint: 600,
+        //         options: {
+        //             chart: {
+        //                 height: 240
+        //             },
+        //             legend: {
+        //                 show: false
+        //             },
+        //         }
+        //     }]
+        // }
 
+        // var chart = new ApexCharts(
+        //     document.querySelector("#berdasarkan-pendidikan"),
+        //     options
+        // );
+
+        // chart.render();
         var options = {
             series: [{
                 data: [
-                    {{ 
-                        $berdasarkan_pendidikan[5]->pendidikan.','.
-                        $berdasarkan_pendidikan[4]->pendidikan.','.
-                        $berdasarkan_pendidikan[3]->pendidikan.','.
-                        $berdasarkan_pendidikan[2]->pendidikan.','.
-                        $berdasarkan_pendidikan[1]->pendidikan.','.
-                        $berdasarkan_pendidikan[0]->pendidikan
-                    }}
+                    $berdasarkan_pendidikan[5]->pendidikan.','.
+                    $berdasarkan_pendidikan[4]->pendidikan.','.
+                    $berdasarkan_pendidikan[3]->pendidikan.','.
+                    $berdasarkan_pendidikan[2]->pendidikan.','.
+                    $berdasarkan_pendidikan[1]->pendidikan.','.
+                    $berdasarkan_pendidikan[0]->pendidikan
                 ]
             }],
             labels: ["Pascasarjana","D4/S1","D1 s.d D3","SMA","SMP","SD"],
@@ -355,11 +384,66 @@
                     }
                 }
             },
-            colors: ["#1679AB"]
+            colors: ["#102C57", "#1679AB", "#059212", "#FFC700", "#95D2B3", "#FD9B63"]
         };
 
-        var chart = new ApexCharts(document.querySelector("#berdasarkan-pendidikan"), options);
+        var chart = new ApexCharts(
+            document.querySelector("#berdasarkan-pendidikan"),
+            options
+        );
+
         chart.render();
+        // ----------------------------------------------------
+        // var options = {
+        //     chart: {
+        //         height: 320,
+        //         type: 'pie',
+        //     },
+        //     stroke: {
+        //         show: true,
+        //         width: 2,
+        //         colors: ['transparent']
+        //     },
+        //     series: [{{ 
+        //         $berdasarkan_usia[1]->total_age.','.
+        //         $berdasarkan_usia[2]->total_age.','.
+        //         $berdasarkan_usia[3]->total_age.','.
+        //         $berdasarkan_usia[4]->total_age
+        //     }}],
+        //     labels: ["<19 Tahun","19 Tahun - 30 Tahun","31 Tahun - 45 Tahun",">46 Tahun"],
+        //     colors: ["#3ABEF9", "#059212", "#FF7F3E", "#C80036"],
+        //     dataLabels: {
+        //         formatter: (val, { seriesIndex, w }) => w.config.series[seriesIndex] // <--- HERE
+        //     },
+        //     legend: {
+        //         show: true,
+        //         position: 'bottom',
+        //         horizontalAlign: 'center',
+        //         verticalAlign: 'middle',
+        //         floating: false,
+        //         fontSize: '14px',
+        //         offsetX: 0,
+        //         offsetY: 6
+        //     },
+        //     responsive: [{
+        //         breakpoint: 600,
+        //         options: {
+        //             chart: {
+        //                 height: 240
+        //             },
+        //             legend: {
+        //                 show: false
+        //             },
+        //         }
+        //     }]
+        // }
+
+        // var chart = new ApexCharts(
+        //     document.querySelector("#berdasarkan-usia"),
+        //     options
+        // );
+
+        // chart.render();
 
         // ----------------------------------------------------
         var options = {

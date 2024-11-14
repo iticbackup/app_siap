@@ -128,9 +128,12 @@
             processing: true,
             serverSide: true,
             ajax: "{{ route('hrga.biodata_karyawan.aktif') }}",
-            columns: [{
-                    data: 'id',
-                    name: 'id'
+            columns: [
+                {
+                    data: 'DT_RowIndex', 
+                    name: 'DT_RowIndex', 
+                    orderable: false, 
+                    searchable: false
                 },
                 {
                     data: 'foto_karyawan',
