@@ -84,6 +84,7 @@ class IjinKeluarMasukController extends Controller
                                             ->whereYear('tanggal_ijin',$date_live)
                                             ->orderBy('tanggal_ijin','desc')
                                             ->paginate(20);
+        
         return view('absensi.ijin_keluar_masuk.index',$data);
         // return view('absensi.ijin_keluar_masuk.index');
     }

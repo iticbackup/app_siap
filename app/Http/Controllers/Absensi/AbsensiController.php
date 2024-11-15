@@ -71,6 +71,7 @@ class AbsensiController extends Controller
 
             $data['fin_pro'] = $this->fin_pro;
             $data['presensi_info'] = $this->presensi_info;
+            $data['departemens'] = $this->itic_departemen->all();
             // dd($data);
             return view('absensi.home.index',$data);
         }else{
@@ -1078,18 +1079,37 @@ class AbsensiController extends Controller
 
     public function search_name(Request $request)
     {
-        $data['biodata_karyawans'] = $this->biodata_karyawan->where(function($query) {
-                                                        return $query->where('nik','!=','1000001')
-                                                                    ->where('nik','!=','1000002')
-                                                                    ->where('nik','!=','1000003');
-                                                    })
-                                                    ->where('nik','LIKE','%'.$request->cari.'%')
-                                                    ->orWhere('nama','LIKE','%'.$request->cari.'%')
-                                                    ->where('status_karyawan','!=','R')
-                                                    ->orderBy('id_departemen','asc')
-                                                    // ->where('status_karyawan','!=','R')
-                                                    // ->orderBy('satuan_kerja','asc')
-                                                    ->paginate(20)->withQueryString();
+        // dd($request->all());
+        // $data['biodata_karyawans'] = $this->biodata_karyawan->where(function($query) {
+        //                                                 return $query->where('nik','!=','1000001')
+        //                                                             ->where('nik','!=','1000002')
+        //                                                             ->where('nik','!=','1000003');
+        //                                             })
+        //                                             ->where('nik','LIKE','%'.$request->cari.'%')
+        //                                             // ->whereIn('status_karyawan',['A','K'])
+        //                                             ->where('id_departemen',$request->departemen)
+        //                                             ->where('nama','LIKE','%'.$request->cari.'%')
+        //                                             ->orderBy('id_departemen','asc')
+        //                                             ->where('status_karyawan','!=','R')
+        //                                             // ->orderBy('satuan_kerja','asc')
+        //                                             ->paginate(20)->withQueryString();
+        $data['biodata_karyawans'] = $this->biodata_karyawan->whereNotIn('nik',array('1000001','1000002','1000003'))
+                                                            ->where(function($query) use($request){
+                                                                if ($request->cari) {
+                                                                    $query->where('nik','LIKE','%'.$request->cari.'%')
+                                                                        ->orwhere('nama','LIKE','%'.$request->cari.'%')
+                                                                        ->where('id_departemen',$request->departemen)
+                                                                        ->where('status_karyawan','!=','R')
+                                                                        ;
+                                                                }else{
+                                                                    $query->where('id_departemen',$request->departemen)
+                                                                        ->where('status_karyawan','!=','R')
+                                                                        ;
+                                                                }
+                                                            })
+                                                            ->orderBy('nama','asc')
+                                                            ->paginate(20)->withQueryString();
+        // dd($data);
         $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
         // $data['total_absen_kemarin'] = FinPro::where('scan_date','LIKE','%'.Carbon::yesterday()->format('Y-m-d').'%')->where('inoutmode',1)->count();
         // $data['total_absen_hari_ini'] = FinPro::where('scan_date','LIKE','%'.Carbon::today()->format('Y-m-d').'%')->where('inoutmode',1)->count();
@@ -1111,6 +1131,7 @@ class AbsensiController extends Controller
             // dd($total_absen_masuk);
             $data['hasil'][] = $total_absen_masuk;
         }
+        $data['departemens'] = $this->itic_departemen->all();
         // dd($data);
         return view('absensi.home.search',$data);
     }

@@ -65,6 +65,15 @@
                             <form action="{{ route('absensi.search_name') }}" method="get">
                                 <div class="input-group">
                                     <div class="mb-3">
+                                        <label for="">Departemen</label>
+                                        <select name="departemen" class="form-control" id="">
+                                            <option value="">-- Pilih Departemen --</option>
+                                            @foreach ($departemens as $departemen)
+                                                <option value="{{ $departemen->id }}" {{ $departemen->id == $_GET['departemen'] ? 'selected' : null }}>{{ $departemen->nama_departemen }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="">Cari NIK / Karyawan</label>
                                         <input type="search" name="cari" class="form-control" value="{{ $_GET['cari'] }}"
                                             placeholder="Search..." id="">

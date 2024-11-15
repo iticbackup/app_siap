@@ -52,6 +52,7 @@ class PresensiController extends Controller
                                                             ->paginate(10);
         // dd($data);
         $data['fin_pro'] = $this->fin_pro;
+        $data['departemens'] = $this->itic_departemen->all();
         return view('absensi.presensi.index',$data);
     }
 
@@ -198,18 +199,38 @@ class PresensiController extends Controller
         for ($i=$start_month_now; $i <= $end_month_now; $i++) { 
             $data['weeks'][] = $i;
         }
+        // $data['biodata_karyawans'] = $this->biodata_karyawan->whereNotIn('nik',array('1000001','1000002','1000003'))
+        //                                                     // ->where(function($query) use($request){
+        //                                                     //     $query->where('nama','LIKE','%'.$request->cari.'%')
+        //                                                     //         ->orWhere('nik','LIKE','%'.$request->cari.'%');
+        //                                                     // })
+        //                                                     // ->search()
+        //                                                     ->where('nik','LIKE','%'.$request->cari.'%')
+        //                                                     ->where('id_departemen',$request->departemen)
+        //                                                     ->orwhere('nama','LIKE','%'.$request->cari.'%')
+        //                                                     ->where('status_karyawan','!=','R')
+        //                                                     // ->orwhere('status_karyawan','!=','R')
+        //                                                     ->orderBy('nama','asc')
+        //                                                     ->paginate(20)->withQueryString();
         $data['biodata_karyawans'] = $this->biodata_karyawan->whereNotIn('nik',array('1000001','1000002','1000003'))
-                                                            // ->where(function($query) use($request){
-                                                            //     $query->where('nama','LIKE','%'.$request->cari.'%')
-                                                            //         ->orWhere('nik','LIKE','%'.$request->cari.'%');
-                                                            // })
-                                                            // ->search()
-                                                            ->where('nik','LIKE','%'.$request->cari.'%')
-                                                            ->orwhere('nama','LIKE','%'.$request->cari.'%')
-                                                            // ->orwhere('status_karyawan','!=','R')
+                                                            ->where(function($query) use($request){
+                                                                if ($request->cari) {
+                                                                    $query->where('nik','LIKE','%'.$request->cari.'%')
+                                                                        ->orwhere('nama','LIKE','%'.$request->cari.'%')
+                                                                        ->where('id_departemen',$request->departemen)
+                                                                        ->where('status_karyawan','!=','R')
+                                                                        ;
+                                                                }else{
+                                                                    $query->where('id_departemen',$request->departemen)
+                                                                        ->where('status_karyawan','!=','R')
+                                                                        ;
+                                                                }
+                                                            })
                                                             ->orderBy('nama','asc')
                                                             ->paginate(20)->withQueryString();
+        // dd($data);
         $data['fin_pro'] = $this->fin_pro;
+        $data['departemens'] = $this->itic_departemen->all();
         // dd($data);
         return view('absensi.presensi.index',$data);
     }

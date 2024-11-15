@@ -19,6 +19,24 @@
                         <form action="{{ route('presensi.search') }}" method="get">
                             <div class="input-group">
                                 <div class="mb-3">
+                                    <label for="">Departemen</label>
+                                    @if (!empty($_GET['departemen']))
+                                    <select name="departemen" class="form-control" id="">
+                                        <option value="">-- Pilih Departemen --</option>
+                                        @foreach ($departemens as $departemen)
+                                            <option value="{{ $departemen->id }}" {{ $departemen->id == $_GET['departemen'] ? 'selected' : null }}>{{ $departemen->nama_departemen }}</option>
+                                        @endforeach
+                                    </select>
+                                    @else
+                                    <select name="departemen" class="form-control" id="">
+                                        <option value="">-- Pilih Departemen --</option>
+                                        @foreach ($departemens as $departemen)
+                                            <option value="{{ $departemen->id }}">{{ $departemen->nama_departemen }}</option>
+                                        @endforeach
+                                    </select>
+                                    @endif
+                                </div>
+                                <div class="mb-3">
                                     <label for="">Cari NIK / Karyawan</label>
                                     @if (!empty($_GET['cari']))
                                     <input type="search" name="cari" class="form-control"
