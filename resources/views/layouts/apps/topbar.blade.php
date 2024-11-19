@@ -28,6 +28,11 @@
                     <i data-feather="menu" class="align-self-center topbar-icon"></i>
                 </button>
             </li>
+            <li class="creat-btn">
+                <div class="nav-link">
+                    <a class=" btn btn-sm btn-soft-primary" href="#" role="button"><i class="fas fa-address-book"></i> HRIS</a>
+                </div>                                
+            </li>
         </ul>
     </nav>
 </div>

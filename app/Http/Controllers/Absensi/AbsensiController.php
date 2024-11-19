@@ -104,6 +104,7 @@ class AbsensiController extends Controller
                     // }
                     $data['fin_pro'] = $this->fin_pro;
                     $data['presensi_info'] = $this->presensi_info;
+                    $data['departemens'] = $this->itic_departemen->all();
                     return view('absensi.home.index',$data);
 
                     // if ($request->ajax()) {
