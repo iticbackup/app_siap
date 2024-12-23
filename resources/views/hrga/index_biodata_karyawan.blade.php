@@ -450,6 +450,7 @@
                     document.getElementById('detail_status_keluarga').innerHTML = result.data.status_keluarga;
                     document.getElementById('detail_golongan_darah').innerHTML = !result.data.golongan_darah ? '<span class="text-danger">Belum Lengkap</span>' : result.data.golongan_darah;
                     document.getElementById('detail_pendidikan').innerHTML = !result.data.pendidikan ? '<span class="text-danger">Belum Lengkap</span>' : result.data.pendidikan;
+                    document.getElementById('detail_pin').innerHTML = result.data.pin;
                     document.getElementById('detail_no_npwp').innerHTML = result.data.no_npwp == 0 ? '-' : result.data.no_npwp;
                     document.getElementById('detail_no_bpjs_ketenagakerjaan').innerHTML = !result.data.no_bpjs_ketenagakerjaan ? '<span class="text-danger">Belum Lengkap</span>' : result.data.no_bpjs_ketenagakerjaan;
                     document.getElementById('detail_no_bpjs_kesehatan').innerHTML = !result.data.no_bpjs_kesehatan ? '<span class="text-danger">Belum Lengkap</span>' : result.data.no_bpjs_kesehatan;

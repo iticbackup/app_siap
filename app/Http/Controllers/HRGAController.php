@@ -1362,6 +1362,7 @@ class HRGAController extends Controller
                 'status_kerja' => $data_status_kerja,
                 'riwayat_konseling' => $data_riwayat_konseling,
                 'riwayat_training' => $data_riwayat_training,
+                'pin' => $biodata_karyawan->biodata_karyawan->pin,
                 // 'status_kerja' => $biodata_karyawan->status_kerja
             ]
         ]);

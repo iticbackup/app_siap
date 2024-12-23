@@ -70,6 +70,11 @@
                                 <td id="detail_no_npwp"></td>
                             </tr>
                             <tr>
+                                <th style="width: 25%">PIN</th>
+                                <th style="width: 5%" class="text-center">:</th>
+                                <td id="detail_pin"></td>
+                            </tr>
+                            <tr>
                                 <th style="width: 25%">SIM Kendaraan</th>
                                 <th style="width: 5%" class="text-center">:</th>
                                 <td id="detail_sim_kendaraan"></td>
