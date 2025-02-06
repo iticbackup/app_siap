@@ -1461,6 +1461,31 @@ class HRGAController extends Controller
             }
 
             $biodata_karyawan->update($input);
+
+            // switch ($request->edit_status_karyawan) {
+            //     case 'T':
+            //         $status_karyawan = 'R';
+            //         break;
+            //     case 'K':
+            //         $status_karyawan = 'K';
+            //         break;
+            //     case 'A':
+            //         $status_karyawan = 'K';
+            //         break;
+                
+            //     default:
+            //         # code...
+            //         break;
+            // }
+
+            if ($request->edit_status_karyawan == 'T') {
+                $status_karyawan = 'R';
+            }elseif($request->edit_status_karyawan == 'K') {
+                $status_karyawan = 'K';
+            }else{
+                $status_karyawan = 'A';
+            }
+
             $this->biodata_karyawan->where('nik',$request->edit_nik)->update([
                 'tgl_lahir' => $request->edit_tanggal_lahir,
                 'email' => $request->edit_email,
@@ -1479,7 +1504,8 @@ class HRGAController extends Controller
                 'kunci_loker' => $request->edit_kunci_loker,
                 'sim_kendaraan' => $request->edit_sim_kendaraan,
                 'foto_karyawan' => $biodata_karyawan->foto_karyawan,
-                'status_karyawan'=> $request->edit_status_karyawan == 'T' ? 'R' : 'A'
+                'status_karyawan'=> $status_karyawan
+                // 'status_karyawan'=> $request->edit_status_karyawan == 'T' ? 'R' : 'A'
             ]);
 
             if($biodata_karyawan){
@@ -1551,6 +1577,10 @@ class HRGAController extends Controller
             $input['tgl_mulai'] = $request->kontrak_kerja_tanggal_mulai;
 
             $kontrak_kerja = $this->hrga_status_kerja->create($input);
+            
+            $this->hrga_biodata_karyawan->find($input['hrga_biodata_karyawan_id'])->update([
+                'status_karyawan' => 'Y'
+            ]);
 
             if($kontrak_kerja){
                 $message_title="Berhasil !";

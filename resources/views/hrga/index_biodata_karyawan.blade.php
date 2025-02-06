@@ -111,6 +111,18 @@
                                 <th class="text-center" style="width: 20%">Action</th> --}}
                             </tr>
                         </thead>
+                        {{-- <tfoot>
+                            <tr>
+                                <th class="text-center" style="width: 10%">Foto</th>
+                                <th class="text-center" style="width: 10%">NIK</th>
+                                <th class="text-center">Nama Karyawan</th>
+                                <th class="text-center" style="width: 10%">Departemen</th>
+                                <th class="text-center" style="width: 10%">No. Telpon</th>
+                                <th class="text-center" style="width: 10%">Status Kerja</th>
+                                <th class="text-center" style="width: 10%">Status Karyawan</th>
+                                <th class="text-center" style="width: 20%">Action</th>
+                            </tr>
+                        </tfoot> --}}
                     </table>
                 </div>
             </div>
@@ -142,6 +154,15 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        // $('#datatables thead tr:eq(1) th').each(function (i) {
+        //     var title = $('#datatables thead th')
+        //         .eq($(this).index())
+        //         .text();
+        //     $(this).html(
+        //         '<input type="text" placeholder="' + title + '" data-index="' + i + '" class="form-control" />'
+        //     );
+        // });
 
         var table = $('#datatables').DataTable({
             processing: true,
@@ -195,6 +216,13 @@
                 },
             ],
         });
+
+        // $(table.table().container()).on('keyup', 'thead input', function () {
+        //     table
+        //         .column($(this).data('index'))
+        //         .search(this.value)
+        //         .draw();
+        // });
 
         $(document).ready(function() {
             var fileTag = document.getElementById("filetag"),
