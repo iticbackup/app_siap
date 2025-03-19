@@ -272,6 +272,22 @@ Route::group(['middleware' => ['auth']], function() {
         });
     });
 
+    Route::prefix('qhse')->group(function () {
+        Route::prefix('ibprpp')->group(function () {
+            Route::prefix('kategori')->group(function () {
+                Route::prefix('periode')->group(function () {
+                });
+            });
+            Route::get('/',[App\Http\Controllers\IBPRPPController::class,'ibprpp_periode'])->name('qhse.ibprpp.periode');
+            Route::get('{periode}',[App\Http\Controllers\IBPRPPController::class,'ibprpp_index'])->name('qhse.ibprpp.index');
+            Route::get('{periode}/{departemen_id}/preview',[App\Http\Controllers\IBPRPPController::class,'ibprpp_departemen_input_preview'])->name('qhse.ibprpp.departemen_preview');
+            Route::get('{periode}/{departemen_id}/pdf',[App\Http\Controllers\IBPRPPController::class,'ibprpp_departemen_download_pdf'])->name('qhse.ibprpp.departemen_download_pdf');
+            Route::get('{periode}/{departemen_id}/table-matriks',[App\Http\Controllers\IBPRPPController::class,'ibprpp_departemen_download_table_matriks'])->name('qhse.ibprpp.departemen_download_table_matriks');
+            Route::get('{periode}/{departemen_id}/input',[App\Http\Controllers\IBPRPPController::class,'ibprpp_departemen_input'])->name('qhse.ibprpp.departemen_input');
+            Route::post('{periode}/{departemen_id}/simpan',[App\Http\Controllers\IBPRPPController::class,'ibprpp_departemen_input_simpan'])->name('qhse.ibprpp.departemen_simpan');
+        });
+    });
+
     Route::prefix('mesin_finger')->group(function () {
         Route::prefix('device')->group(function () {
             Route::get('/',[App\Http\Controllers\FinProController::class,'device'])->name('fin_pro.device');

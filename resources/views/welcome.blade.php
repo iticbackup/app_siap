@@ -505,9 +505,8 @@
                     </div>
                     @if (request()->ip() == '::1' || 
                     // request()->ip() == '192.168.1.32' || 
-                    request()->ip() == '192.168.1.25' ||
-                    request()->ip() == '192.168.1.28' ||
-                    request()->ip() == '192.168.1.29' ||
+                    request()->ip() == '192.168.1.20' ||
+                    request()->ip() == '192.168.1.21' ||
                     request()->ip() == '192.168.1.121' || 
                     request()->ip() == '192.168.1.122' || 
                     request()->ip() == '192.168.1.123' || 
@@ -563,7 +562,7 @@
                                     d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
                             </svg>
                             <div class="ml-4 text-lg leading-7 font-semibold"><a
-                                    href="https://app.indonesiantobacco.com/"
+                                    href="https://app.indonesianshagtobacco.com/"
                                     class="underline text-gray-900 dark:text-white" style="text-decoration: none">APAR &
                                     HYDRANT</a></div>
                         </div>

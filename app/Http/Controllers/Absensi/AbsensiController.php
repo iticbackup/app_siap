@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Absensi;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use App\Models\FinPro;
 use App\Models\BiodataKaryawan;
 use App\Models\DepartemenUser;

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use App\Models\RekapPelatihanSeminar;
 use App\Models\FileManagerPerubahanData;
 use App\Models\Departemen;
@@ -40,13 +41,38 @@ class HomeController extends Controller
     public function index()
     {
         $date = Carbon::now();
-        $data['reminders'] = $this->rekap_pelatihan->with('rekap_pelatihan_seminar_peserta')
-                                                    ->whereHas('rekap_pelatihan_seminar_peserta',function($query){
-                                                        $query->where('peserta',auth()->user()->name);
-                                                    })
-                                                    ->where('periode',$date->format('Y'))
-                                                    ->where('status','Plan')
-                                                    ->get();
+        // $reminders = Cache::remember('rekap_pelatihan', 60 * 12, function () {
+        //     // return User::all();
+        //     $date = Carbon::now();
+        //     return $this->rekap_pelatihan->with('rekap_pelatihan_seminar_peserta')
+        //                                 ->whereHas('rekap_pelatihan_seminar_peserta',function($query){
+        //                                     $query->where('peserta',auth()->user()->name);
+        //                                 })
+        //                                 ->where('periode',$date->format('Y'))
+        //                                 ->where('status','Plan')
+        //                                 ->get();
+        // });
+
+        // dd($reminders);
+
+        // $data['reminders'] = $this->rekap_pelatihan->with('rekap_pelatihan_seminar_peserta')
+        //                                             ->whereHas('rekap_pelatihan_seminar_peserta',function($query){
+        //                                                 $query->where('peserta',auth()->user()->name);
+        //                                             })
+        //                                             ->where('periode',$date->format('Y'))
+        //                                             ->where('status','Plan')
+        //                                             ->get();
+
+        $data['reminders'] = Cache::remember('rekap_pelatihan', 1 * 12, function () {
+            $date = Carbon::now();
+            return $this->rekap_pelatihan->with('rekap_pelatihan_seminar_peserta')
+                                        ->whereHas('rekap_pelatihan_seminar_peserta',function($query){
+                                            $query->where('peserta',auth()->user()->name);
+                                        })
+                                        ->where('periode',$date->format('Y'))
+                                        ->where('status','Plan')
+                                        ->get();
+        });
         // dd($data['reminders']);
         $data['event_rekaps'] = $this->rekap_pelatihan->where('periode',$date->format('Y'))->get();
 
@@ -71,7 +97,7 @@ class HomeController extends Controller
         if (auth()->user()->nik == 1207514 || auth()->user()->nik == 1711952 || auth()->user()->nik == 0000000) {
             $data['start_month'] = Carbon::now()->startOfYear()->format('m');
             $data['end_month'] = Carbon::now()->endOfYear()->format('m');
-            for ($i=$data['start_month']; $i <= $data['end_month'] ; $i++) { 
+            for ($i=$data['start_month']; $i <= $data['end_month'] ; $i++) {
                 $total_hasil_rekap_done = $this->rekap_pelatihan->where('status','Done')->whereMonth('created_at',$i)->whereYear('created_at',$date)->count();
                 $data['total_hasil_rekap_done'][] = $total_hasil_rekap_done;
             }
