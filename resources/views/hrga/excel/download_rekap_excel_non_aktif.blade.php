@@ -172,7 +172,7 @@
                         $bca = "-";
                     }else{
                         // $bws = sprintf("%'.09d\n", $hrga_biodata_karyawan->no_rekening_bws);
-                        $bws = $kr->hrga_biodata_karyawan->no_rekening_bca;
+                        $bca = $kr->hrga_biodata_karyawan->no_rekening_bca;
                     }
                 @endphp
                 <tr>
