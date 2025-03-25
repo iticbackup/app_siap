@@ -108,6 +108,90 @@
                 
         @endforelse
 
+        @if (auth()->user()->hasRole('Admin') || auth()->user()->hasRole('HRGA Admin'))
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card report-card bg-primary">
+                        <div class="card-body">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col">
+                                    <p class="text-dark mb-0 fw-semibold text-white">Total Employees</p>
+                                    <h3 class="m-0 text-white">{{ $total_employees[0]->total }} Employees</h3>
+                                </div>
+                                <div class="col-auto align-self-center">
+                                    <div class="report-main-icon bg-light-alt">
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-users"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card report-card bg-warning">
+                        <div class="card-body">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col">
+                                    <p class="text-dark mb-0 fw-semibold">Male</p>
+                                    <h3 class="m-0">{{ $berdasarkan_gender[0]->jenis_kelamin }} Employees</h3>
+                                </div>
+                                <div class="col-auto align-self-center">
+                                    <div class="report-main-icon bg-light-alt">
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-gender-male"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 14m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0" /><path d="M19 5l-5.4 5.4" /><path d="M19 5h-5" /><path d="M19 5v5" /></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card report-card bg-danger">
+                        <div class="card-body">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col">
+                                    <p class="text-dark mb-0 fw-semibold text-white">Female</p>
+                                    <h3 class="m-0 text-white">{{ $berdasarkan_gender[1]->jenis_kelamin }} Employees</h3>
+                                </div>
+                                <div class="col-auto align-self-center">
+                                    <div class="report-main-icon bg-light-alt">
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-gender-female"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0" /><path d="M12 14v7" /><path d="M9 18h6" /></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card report-card bg-success">
+                        <div class="card-body">
+                            <div class="row d-flex justify-content-center">
+                                <div class="col">
+                                    <p class="text-dark mb-0 fw-semibold text-white">Average Age</p>
+                                    <h3 class="m-0 text-white">{{ round($average_age[0]->rata_rata) }} Years (0 - >45)</h3>
+                                </div>
+                                <div class="col-auto align-self-center">
+                                    <div class="report-main-icon bg-light-alt">
+                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-rating-18-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M11.5 10.5m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M11.5 13.5m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M7 15v-6" /><path d="M15.5 12h3" /><path d="M17 10.5v3" /></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+
+                        </div>
+                    </div>
+                </div>
+            </div> --}}
+        </div>
+        @endif
+
         @if (auth()->user()->nik == 1207514 || auth()->user()->nik == 1711952 || auth()->user()->nik == 0000000)
             <div class="col-lg-6">
                 <div class="card">

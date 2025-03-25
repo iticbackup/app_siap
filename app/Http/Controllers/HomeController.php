@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Models\RekapPelatihanSeminar;
 use App\Models\FileManagerPerubahanData;
+use App\Models\BiodataKaryawan;
 use App\Models\Departemen;
 use App\Models\DepartemenUser;
 use \Carbon\Carbon;
+use DB;
 
 class HomeController extends Controller
 {
@@ -20,12 +22,14 @@ class HomeController extends Controller
     protected $rekap_pelatihan;
 
     public function __construct(
+        BiodataKaryawan $biodataKaryawan,
         FileManagerPerubahanData $file_manager_perubahan_data,
         Departemen $departemen,
         DepartemenUser $departemen_user,
         RekapPelatihanSeminar $rekap_pelatihan
     )
     {
+        $this->biodata_karyawan = $biodataKaryawan;
         $this->rekap_pelatihan = $rekap_pelatihan;
         $this->file_manager_perubahan_data = $file_manager_perubahan_data;
         $this->departemen = $departemen;
@@ -130,6 +134,36 @@ class HomeController extends Controller
         
         $data['year'] = Carbon::now()->format('Y');
         $data['month'] = Carbon::now()->format('m');
+
+        // dd(auth()->user()->roles);
+        if (auth()->user()->hasRole('Admin') || auth()->user()->hasRole('HRGA Admin')) {
+            // $data['total_employees'] = $this->biodata_karyawan->whereIn('status_karyawan',['A','K'])->count();
+            $data['total_employees'] = DB::select(DB::raw(
+                                        'select count(*) as total from itic_emp_new.biodata_karyawan 
+                                        join hrga_biodata_karyawan on hrga_biodata_karyawan.nik = itic_emp_new.biodata_karyawan.nik
+                                        where itic_emp_new.biodata_karyawan.status_karyawan IN ("A","K")'
+                                    ));
+            $data['berdasarkan_gender'] = DB::select(DB::raw(
+                                            'select COUNT(biodata_karyawan.jenis_kelamin) as jenis_kelamin 
+                                            from itic_emp_new.biodata_karyawan
+                                            join hrga_biodata_karyawan on hrga_biodata_karyawan.nik = itic_emp_new.biodata_karyawan.nik
+                                            where itic_emp_new.biodata_karyawan.jenis_kelamin = "L" AND itic_emp_new.biodata_karyawan.status_karyawan IN ("A","K")
+                                            UNION ALL
+                                            select COUNT(biodata_karyawan.jenis_kelamin) as jenis_kelamin 
+                                            from itic_emp_new.biodata_karyawan
+                                            join hrga_biodata_karyawan on hrga_biodata_karyawan.nik = itic_emp_new.biodata_karyawan.nik
+                                            where itic_emp_new.biodata_karyawan.jenis_kelamin = "P" AND itic_emp_new.biodata_karyawan.status_karyawan IN ("A","K")
+                                            '
+                                        ));
+            $data['average_age'] = DB::select(DB::raw(
+                                    'select SUM((YEAR(CURDATE()) - YEAR(biodata_karyawan.tgl_lahir)))/count(*) AS rata_rata 
+                                    FROM itic_emp_new.biodata_karyawan 
+                                    WHERE status_karyawan IN("A","K")
+                                    '
+                                ));
+        }
+
+        // dd($data);
 
         return view('home',$data);
     }

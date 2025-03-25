@@ -44,6 +44,7 @@
                                 {{-- <th>#</th> --}}
                                 <th>Name</th>
                                 <th>Username</th>
+                                <th>Roles</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -161,6 +162,10 @@
                 {
                     data: 'username',
                     name: 'username'
+                },
+                {
+                    data: 'roles',
+                    name: 'roles'
                 },
                 {
                     data: 'last_seen',

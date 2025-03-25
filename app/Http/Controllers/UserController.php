@@ -26,6 +26,15 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     function __construct(
+        User $user,
+        BiodataKaryawan $biodataKaryawan
+     ){
+        $this->user = $user;
+        $this->biodataKaryawan = $biodataKaryawan;
+     }
+
     public function index(Request $request)
     {
         // $data = User::orderBy('id','DESC')->get();
@@ -33,9 +42,35 @@ class UserController extends Controller
         //     ->with('i', ($request->input('page', 1) - 1) * 5);
 
         if ($request->ajax()) {
-            $data = User::get();
+            $data = $this->user->get();
             return DataTables::of($data)
                             ->addIndexColumn()
+                            ->addColumn('roles', function($row){
+                                if (!empty($row->getRoleNames())) {
+                                    // $roles = [];
+                                    // foreach ($row->getRoleNames() as $v) {
+                                    //     if ($v == 'Admin') {
+                                    //         // $roles = '<label class="badge bg-primary">'.$v.'</label>';
+                                    //         // return $roles;
+                                    //         return '<label class="badge bg-primary">'.$v.'</label>';
+                                    //     }else{
+                                    //         // $roles = '<label class="badge bg-info">'.$v.'</label>';
+                                    //         return '<label class="badge bg-info">'.$v.'</label>';
+                                    //     }
+                                    // }
+
+                                    $roles = '';
+                                    foreach ($row->getRoleNames() as $v) {
+                                        if ($v == 'Admin') {
+                                            $roles.= '<span class="badge bg-primary">'.$v.'</span>';
+                                        }else{
+                                            $roles.= '<span class="badge bg-info">'.$v.'</span>';
+                                        }
+                                    }
+                                    // $roles.= '';
+                                    return $roles;
+                                }
+                            })
                             ->addColumn('action', function($row){
                                 // $btn = '<div class="btn-group">';
                                 // $btn.= '<button onclick="buat_team('.$row->id.')" class="btn btn-success btn-icon">
@@ -67,7 +102,7 @@ class UserController extends Controller
                                     }
                                 }
                             })
-                            ->rawColumns(['action','last_seen'])
+                            ->rawColumns(['action','roles','last_seen'])
                             ->make(true);
         }
         return view('users.index');

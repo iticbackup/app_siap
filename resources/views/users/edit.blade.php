@@ -29,7 +29,7 @@
 
 
 {!! Form::model($user, ['method' => 'PATCH','route' => ['users.update', $user->id]]) !!}
-<div class="row">
+<div class="row mt-4">
     <div class="col-xl-12 col-sm-12 col-md-12">
         <div class="card">
             <div class="card-body">
@@ -64,6 +64,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary">Back</a>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>

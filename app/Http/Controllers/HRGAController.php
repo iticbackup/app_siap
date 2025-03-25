@@ -1943,7 +1943,7 @@ class HRGAController extends Controller
                                 $btn.= '</div>';
                                 return $btn;
                             })
-                            ->rawColumns(['action','status'])
+                            ->rawColumns(['action','tema','status'])
                             ->make(true);
         }
         return view('hrga.rekap_pelatihan.index');
