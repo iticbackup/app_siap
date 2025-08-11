@@ -19,20 +19,29 @@ Route::prefix('absensi')->group(function () {
     Route::post('login', [App\Http\Controllers\AuthAbsensi\LoginController::class, 'login'])->name('absensi.login.post');
 
     Route::group(['middleware' => ['auth_absensi']], function() {
-        Route::get('home', [App\Http\Controllers\Absensi\AbsensiController::class, 'index'])->name('absensi.home');
+        Route::controller(App\Http\Controllers\Absensi\AbsensiController::class)->group(function () {
+            Route::get('home', 'index')->name('absensi.home');
+        });
+
+        // Route::get('home', [App\Http\Controllers\Absensi\AbsensiController::class, 'index'])->name('absensi.home');
         Route::get('home/search', [App\Http\Controllers\Absensi\AbsensiController::class, 'search_name'])->name('absensi.search_name');
         // Route::get('home/detail/{nik}', [App\Http\Controllers\Absensi\AbsensiController::class, 'detail'])->name('absensi.detail');
         
-        Route::get('absensi_masuk/{scan_date}/{pin}/{inoutmode}', [App\Http\Controllers\Absensi\AbsensiController::class, 'detail_jam_masuk'])->name('absensi.detail_jam_masuk');
+        // Route::get('absensi_masuk/{scan_date}/{pin}/{inoutmode}', [App\Http\Controllers\Absensi\AbsensiController::class, 'detail_jam_masuk'])->name('absensi.detail_jam_masuk');
+        Route::get('absensi_masuk/{scan_date}/{pin}', [App\Http\Controllers\Absensi\AbsensiController::class, 'detail_jam_masuk'])->name('absensi.detail_jam_masuk');
         Route::post('absensi_masuk/simpan', [App\Http\Controllers\Absensi\AbsensiController::class, 'detail_jam_masuk_simpan'])->name('absensi.detail_jam_masuk_simpan');
         
-        Route::get('absensi_keluar/{scan_date}/{pin}/{inoutmode}', [App\Http\Controllers\Absensi\AbsensiController::class, 'detail_jam_keluar'])->name('absensi.detail_jam_keluar');
+        // Route::get('absensi_keluar/{scan_date}/{pin}/{inoutmode}', [App\Http\Controllers\Absensi\AbsensiController::class, 'detail_jam_keluar'])->name('absensi.detail_jam_keluar');
+        Route::get('absensi_keluar/{scan_date}/{pin}', [App\Http\Controllers\Absensi\AbsensiController::class, 'detail_jam_keluar'])->name('absensi.detail_jam_keluar');
         Route::post('absensi_keluar/simpan', [App\Http\Controllers\Absensi\AbsensiController::class, 'detail_jam_keluar_simpan'])->name('absensi.detail_jam_keluar_simpan');
         
-        Route::get('jam_masuk/{date_live}/{pin}/{inoutmode}', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_nofinger_jam_masuk_absensi'])->name('absensi.input_modal_nofinger_jam_masuk_absensi');
+        // Route::get('jam_masuk/{date_live}/{pin}/{inoutmode}', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_nofinger_jam_masuk_absensi'])->name('absensi.input_modal_nofinger_jam_masuk_absensi');
+        Route::get('jam_masuk/{date_live}/{pin}', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_nofinger_jam_masuk_absensi'])->name('absensi.input_modal_nofinger_jam_masuk_absensi');
         Route::post('jam_masuk/no_finger/simpan', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_nofinger_jam_masuk_simpan'])->name('absensi.input_modal_nofinger_jam_masuk_simpan');
+        Route::post('jam_masuk/no_finger/update', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_nofinger_jam_masuk_update'])->name('absensi.input_modal_nofinger_jam_masuk_update');
         
-        Route::get('jam_pulang/{date_live}/{pin}/{inoutmode}', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_nofinger_jam_pulang_absensi'])->name('absensi.input_modal_nofinger_jam_pulang_absensi');
+        // Route::get('jam_pulang/{date_live}/{pin}/{inoutmode}', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_nofinger_jam_pulang_absensi'])->name('absensi.input_modal_nofinger_jam_pulang_absensi');
+        Route::get('jam_pulang/{date_live}/{pin}', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_nofinger_jam_pulang_absensi'])->name('absensi.input_modal_nofinger_jam_pulang_absensi');
         Route::post('jam_pulang/no_finger/simpan', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_nofinger_jam_pulang_simpan'])->name('absensi.input_modal_nofinger_jam_pulang_simpan');
 
         Route::prefix('ijin_keluar_masuk')->group(function () {
@@ -52,7 +61,8 @@ Route::prefix('absensi')->group(function () {
             Route::get('{att_rec}/delete', [App\Http\Controllers\Absensi\IjinTerlambatController::class, 'delete'])->name('ijin_terlambat.delete');
         });
         Route::prefix('presensi')->group(function () {
-            Route::get('/', [App\Http\Controllers\Absensi\PresensiController::class, 'index'])->name('presensi');
+            // Route::get('/', [App\Http\Controllers\Absensi\PresensiController::class, 'index'])->name('presensi');
+            Route::get('/', [App\Http\Controllers\Absensi\PresensiController::class, 'index_new'])->name('presensi.index');
             Route::get('search', [App\Http\Controllers\Absensi\PresensiController::class, 'search'])->name('presensi.search');
             Route::get('detail/{nik}', [App\Http\Controllers\Absensi\PresensiController::class, 'detail'])->name('presensi.detail');
             Route::get('detail/{nik}/search', [App\Http\Controllers\Absensi\PresensiController::class, 'search_detail'])->name('presensi.search_detail');
@@ -61,7 +71,7 @@ Route::prefix('absensi')->group(function () {
             Route::get('detail/{nik}/{tanggal}', [App\Http\Controllers\Absensi\PresensiController::class, 'detail_ijin_jam_kerja'])->name('presensi.detail_ijin_jam_kerja');
             Route::post('detail/{nik}/ijin_keluar_masuk/simpan', [App\Http\Controllers\Absensi\PresensiController::class, 'detail_ijin_jam_kerja_simpan'])->name('presensi.detail_ijin_jam_kerja_simpan');
         });
-        // Route::get('jam_masuk/edit/{att_rec}', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_edit_nofinger_jam_masuk_absensi'])->name('absensi.input_modal_edit_nofinger_jam_masuk_absensi');
+        
         // Route::post('jam_masuk/no_finger/update', [App\Http\Controllers\Absensi\AbsensiController::class, 'input_modal_edit_nofinger_jam_masuk_update'])->name('absensi.input_modal_edit_nofinger_jam_masuk_update');
         
         // Route::get('home', function(){

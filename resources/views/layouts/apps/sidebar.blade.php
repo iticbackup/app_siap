@@ -98,9 +98,9 @@
 
             @can('hrga_list')
                 <li class="menu-label mt-0">HRGA</li>
-                <li class="{{ Request::is('hrga/biodata_karyawan') ? 'active' : '' }}">
+                <li class="{{ Request::is('hrga/biodata_karyawan*') ? 'active' : '' }}">
                     <a href="{{ route('hrga.biodata_karyawan') }}"
-                        class="{{ Request::is('hrga/biodata_karyawan') ? 'active' : '' }}"><i
+                        class="{{ Request::is('hrga/biodata_karyawan*') ? 'active' : '' }}"><i
                             class="mdi mdi-account-box-multiple"></i> Data Karyawan</a>
                 </li>
                 <li class="{{ Request::is('hrga/buat_karyawan_baru') ? 'active' : '' }}">

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class HrgaBiodataKaryawan extends Model
 {
     use HasFactory, SoftDeletes;
-    public $table = 'hrga_biodata_karyawan';
+    public $table = 'hrga_biodata_karyawan_new';
     // protected $dates = ['deleted_at'];
     
     public $incrementing = false;
@@ -33,6 +33,10 @@ class HrgaBiodataKaryawan extends Model
         'tempat_lahir',
         'tanggal_lahir',
         'alamat',
+        'kecamatan',
+        'kelurahan',
+        'kab_kota',
+        'provinsi',
         'jenis_kelamin',
         'status_keluarga',
         'golongan_darah',

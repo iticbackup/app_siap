@@ -129,6 +129,15 @@ class BiodataKaryawan extends Model
                     ->first();
     }
 
+    public function fin_pro_new($date)
+    {
+        return $this->hasMany(\App\Models\FinPro::class, 'pin','pin')
+                    ->where('scan_date','LIKE','%'.$date.'%')
+                    ->orderBy('scan_date','asc')
+                    ->limit(2)
+                    ->get();
+    }
+
     //new
     public function emp_posisi()
     {

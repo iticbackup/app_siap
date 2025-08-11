@@ -121,12 +121,10 @@
                                         <td style="vertical-align: middle" class="text-center">
                                             <div class="btn-group">
                                                 <button onclick="edit(`{{ $ijin_terlambat->att_rec }}`)"
-                                                    class="btn btn-warning"
-                                                    onclick="edit(`{{ $ijin_terlambat->att_rec }}`)"><i
+                                                    class="btn btn-warning"><i
                                                         class="bx bx-edit"></i> Edit</button>
                                                 <button onclick="hapus(`{{ $ijin_terlambat->att_rec }}`)"
-                                                    class="btn btn-danger"
-                                                    onclick="hapus(`{{ $ijin_terlambat->att_rec }}`)"><i
+                                                    class="btn btn-danger"><i
                                                         class="bx bx-trash"></i> Delete</button>
                                             </div>
                                         </td>

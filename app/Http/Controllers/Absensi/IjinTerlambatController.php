@@ -34,7 +34,8 @@ class IjinTerlambatController extends Controller
                                             ->paginate(20);
                                             // dd($data);
         $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
-        return view('absensi.ijin_terlambat.index',$data);
+        // return view('absensi.ijin_terlambat.index',$data);
+        return view('absensi.ijin_terlambat.new.index',$data);
     }
 
     public function simpan(Request $request)
@@ -220,17 +221,38 @@ class IjinTerlambatController extends Controller
     public function search(Request $request)
     {
         $date_live = Carbon::now()->format('Y');
-        $biodata_karyawan = BiodataKaryawan::select('nik','pin')
-                                            ->where('nik','LIKE','%'.$request->cari.'%')
-                                            ->orWhere('nama','LIKE','%'.$request->cari.'%')
-                                            ->first();
-        $data['ijin_terlambats'] = $this->presensi_info->where('pin',$biodata_karyawan->pin)
-                                            ->orWhereBetween('scan_date',[$request->cari_tanggal_awal, $request->cari_tanggal_akhir])
-                                            ->whereYear('scan_date',$date_live)
-                                            ->orderBy('scan_date','desc')
-                                            ->paginate(20)->withQueryString();
+        if ($request->cari) {
+            $biodata_karyawan = BiodataKaryawan::select('nik','pin')
+                                                ->where('nama','LIKE','%'.$request->cari.'%')
+                                                ->orWhere('nik','LIKE','%'.$request->cari.'%')
+                                                ->first();
+            $data['ijin_terlambats'] = $this->presensi_info->where('pin',$biodata_karyawan->pin)
+                                                ->whereYear('scan_date',$date_live)
+                                                ->orderBy('scan_date','desc')
+                                                ->paginate(20)->withQueryString();
+
+        }elseif($request->cari && $request->cari_tanggal_awal && $request->cari_tanggal_akhir)
+        {
+            $biodata_karyawan = BiodataKaryawan::select('nik','pin')
+                                                ->where('nama','LIKE','%'.$request->cari.'%')
+                                                ->orWhere('nik','LIKE','%'.$request->cari.'%')
+                                                ->first();
+            $data['ijin_terlambats'] = $this->presensi_info->where('pin',$biodata_karyawan->pin)
+                                                ->orWhereBetween('scan_date',[$request->cari_tanggal_awal, $request->cari_tanggal_akhir])
+                                                ->orderBy('scan_date','desc')
+                                                ->paginate(20)->withQueryString();
+
+        }elseif ($request->cari_tanggal_awal && $request->cari_tanggal_akhir) {
+            $data['ijin_terlambats'] = $this->presensi_info->whereBetween('scan_date',[$request->cari_tanggal_awal, $request->cari_tanggal_akhir])
+                                                ->orderBy('scan_date','desc')
+                                                ->paginate(20)->withQueryString();
+        }else{
+            $data['ijin_terlambats'] = $this->presensi_info->whereYear('scan_date',$date_live)
+                                                ->orderBy('scan_date','desc')
+                                                ->paginate(20)->withQueryString();
+        }
                                             // ->get();
         $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
-        return view('absensi.ijin_terlambat.index',$data);
+        return view('absensi.ijin_terlambat.new.index',$data);
     }
 }

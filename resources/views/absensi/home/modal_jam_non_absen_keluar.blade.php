@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title m-0" id="exampleModalCenterTitle">Buat Jam Masuk</h6>
+                <h6 class="modal-title m-0" id="exampleModalCenterTitle">Buat Jam Pulang</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="form-simpan-jam-keluar-non-absen" method="post">

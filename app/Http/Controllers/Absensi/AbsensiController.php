@@ -39,36 +39,49 @@ class AbsensiController extends Controller
     public function index(Request $request)
     {
         if (auth()->user()->nik == 0000000) {
-            $data['biodata_karyawans'] = $this->biodata_karyawan->with('departemen')
-                                                        // ->select([
-                                                        //     'id','nik','nama','alamat','id_posisi','id_jabatan',
-                                                        //     'pin'
-                                                        // ])
-                                                        ->where(function($query) {
-                                                            return $query->where('nik','!=','1000001')
-                                                                        ->where('nik','!=','1000002')
-                                                                        ->where('nik','!=','1000003');
-                                                        })
-                                                        // ->where('pin',1298)
-                                                        ->orderBy('id_departemen','asc')
-                                                        ->where('status_karyawan','!=','R')
-                                                        // ->take(20)
-                                                        ->paginate(20);
-                                                        // ->get();
-            // // dd($data);
+            $data['biodata_karyawans'] = $this->biodata_karyawan
+                                                ->select(
+                                                    'biodata_karyawan.id as id',
+                                                    'biodata_karyawan.nik as nik',
+                                                    'biodata_karyawan.nama as nama',
+                                                    'biodata_karyawan.tempat_lahir as tempat_lahir',
+                                                    'biodata_karyawan.tgl_lahir as tgl_lahir',
+                                                    'biodata_karyawan.alamat as alamat',
+                                                    'biodata_karyawan.jenis_kelamin as jenis_kelamin',
+                                                    'biodata_karyawan.pin as pin',
+                                                    'departemen.nama_departemen as nama_departemen',
+                                                    'posisi.nama_posisi as nama_posisi',
+                                                )
+                                                ->leftJoin('departemen','departemen.id','=','biodata_karyawan.id_departemen')
+                                                ->leftJoin('posisi','posisi.id','=','biodata_karyawan.id_posisi')
+                                                ->where(function($query) {
+                                                    return $query->where('nik','!=','1000001')
+                                                                ->where('nik','!=','1000002')
+                                                                ->where('nik','!=','1000003');
+                                                })
+                                                ->orderBy('id_departemen','asc')
+                                                ->where('status_karyawan','!=','R')
+                                                ->paginate(20);
+            
+            // dd($data);
+            // $data['biodata_karyawans'] = $this->biodata_karyawan->with('departemen')
+            //                                             // ->select([
+            //                                             //     'id','nik','nama','alamat','id_posisi','id_jabatan',
+            //                                             //     'pin'
+            //                                             // ])
+            //                                             ->where(function($query) {
+            //                                                 return $query->where('nik','!=','1000001')
+            //                                                             ->where('nik','!=','1000002')
+            //                                                             ->where('nik','!=','1000003');
+            //                                             })
+            //                                             // ->where('pin',1298)
+            //                                             ->orderBy('id_departemen','asc')
+            //                                             ->where('status_karyawan','!=','R')
+            //                                             // ->take(20)
+            //                                             ->paginate(20);
+            //                                             // ->get();
+
             $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
-            // $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
-            // $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
-            // for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
-            //     $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
-            //     $total_absen_masuk = $this->fin_pro->where('scan_date','LIKE','%'.$i.'%')
-            //                                         ->whereTime('scan_date','<=','11:59')
-            //                                         ->orderBy('scan_date','desc')
-            //                                         ->take(1)
-            //                                         ->count();
-            //     // dd($total_absen_masuk);
-            //     $data['hasil'][] = $total_absen_masuk;
-            // }
 
             $data['fin_pro'] = $this->fin_pro;
             $data['presensi_info'] = $this->presensi_info;
@@ -82,15 +95,40 @@ class AbsensiController extends Controller
                 return redirect()->back()->with('error','Maaf Anda Tidak Bisa Akses Halaman Absensi');
             }else{
                 if ($akses_departemen->nik == auth()->user()->nik) {
-                    $data['biodata_karyawans'] = $this->biodata_karyawan->where(function($query) {
-                                                                    return $query->where('nik','!=','1000001')
-                                                                                ->where('nik','!=','1000002')
-                                                                                ->where('nik','!=','1000003');
-                                                                })
-                                                                // ->where('pin',1298)
-                                                                ->where('status_karyawan','!=','R')
-                                                                ->paginate(20);
+                    // $data['biodata_karyawans'] = $this->biodata_karyawan->where(function($query) {
+                    //                                                 return $query->where('nik','!=','1000001')
+                    //                                                             ->where('nik','!=','1000002')
+                    //                                                             ->where('nik','!=','1000003');
+                    //                                             })
+                    //                                             ->where('status_karyawan','!=','R')
+                    //                                             ->paginate(20);
+                    $data['biodata_karyawans'] = $this->biodata_karyawan
+                                                ->select(
+                                                    'biodata_karyawan.id as id',
+                                                    'biodata_karyawan.nik as nik',
+                                                    'biodata_karyawan.nama as nama',
+                                                    'biodata_karyawan.tempat_lahir as tempat_lahir',
+                                                    'biodata_karyawan.tgl_lahir as tgl_lahir',
+                                                    'biodata_karyawan.alamat as alamat',
+                                                    'biodata_karyawan.jenis_kelamin as jenis_kelamin',
+                                                    'biodata_karyawan.pin as pin',
+                                                    'departemen.nama_departemen as nama_departemen',
+                                                    'posisi.nama_posisi as nama_posisi',
+                                                )
+                                                ->leftJoin('departemen','departemen.id','=','biodata_karyawan.id_departemen')
+                                                ->leftJoin('posisi','posisi.id','=','biodata_karyawan.id_posisi')
+                                                // ->leftJoin('fin_pro.att_log','att_log.pin','=','biodata_karyawan.pin')
+                                                ->where(function($query) {
+                                                    return $query->where('nik','!=','1000001')
+                                                                ->where('nik','!=','1000002')
+                                                                ->where('nik','!=','1000003');
+                                                })
+                                                ->orderBy('id_departemen','asc')
+                                                ->where('status_karyawan','!=','R')
+                                                ->paginate(20);
+                                                // dd($data);
                     $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
+                    // dd($data);
                     // $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
                     // $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
                     // for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
@@ -239,11 +277,12 @@ class AbsensiController extends Controller
     //     return $nik;
     // }
 
-    public function input_modal_nofinger_jam_masuk_absensi($date_live,$pin,$inoutmode)
+    public function input_modal_nofinger_jam_masuk_absensi($date_live,$pin)
     {
         $presensi_info = $this->presensi_info->where('scan_date','LIKE','%'.$date_live.'%')
                                             ->where('pin',$pin)
-                                            ->where('inoutmode',$inoutmode)
+                                            ->whereTime('scan_date','<=','11:59:59')
+                                            // ->where('inoutmode',$inoutmode)
                                             ->first();
         // dd($presensi_info);
         if (empty($presensi_info)){
@@ -254,12 +293,20 @@ class AbsensiController extends Controller
                     'message_title' => 'Data Karyawan Tidak Ditemukan'
                 ]);
             }
-            $date_live = Carbon::now()->format('Y-m-d');
+
+            // dd($date_live);
+
+            // if(empty(request('tanggal'))){
+            //     $date_live = Carbon::now()->format('Y-m-d');
+            // }else{
+            //     $date_live = request('tanggal');
+            // }
+            
             return response()->json([
                 'success' => true,
                 'data' => $biodata_karyawan,
                 'tanggal' => $date_live,
-                'inoutmode' => $inoutmode
+                // 'inoutmode' => $inoutmode
             ]);
         }
 
@@ -273,7 +320,7 @@ class AbsensiController extends Controller
             'menit' => Carbon::create($presensi_info->scan_date)->format('i'),
             'detik' => Carbon::create($presensi_info->scan_date)->format('s'),
             'status' => $presensi_info->status,
-            'inoutmode' => $inoutmode,
+            // 'inoutmode' => $inoutmode,
             'penyesuaian_masuk_jam' => Carbon::create($explode_keterangan[1])->format('H'),
             'penyesuaian_masuk_menit' => Carbon::create($explode_keterangan[1])->format('i'),
             'penyesuaian_istirahat_jam' => Carbon::create($explode_keterangan[2])->format('H'),
@@ -298,14 +345,16 @@ class AbsensiController extends Controller
         if ($validator->passes()) {
             $presensi_info = $this->presensi_info->where('scan_date','LIKE','%'.$request->tanggal_non_absen_masuk.'%')
                                         ->where('pin',$request->pin_non_absen_masuk)
-                                        ->where('inoutmode',$request->inoutmode_non_absen_masuk)
+                                        ->where('inoutmode',1)
                                         ->first();
+
+                                        // dd($presensi_info);
             if (empty($presensi_info)) {
                 $norut = $this->presensi_info->max('att_rec');
                 $input['att_id'] = Carbon::now()->format('Y').$norut+1;
                 $input['scan_date'] = $request->tanggal_non_absen_masuk.' '.$request->jam_non_absen_masuk.':'.$request->menit_non_absen_masuk.':'.$request->detik_non_absen_masuk;
                 $input['pin'] = $request->pin_non_absen_masuk;
-                $input['inoutmode'] = $request->inoutmode_non_absen_masuk;
+                $input['inoutmode'] = 1;
                 $input['status'] = $request->status_non_absen_masuk;
                 if (!empty($request->penyesuaian_masuk_jam_masuk_jam_non_absen) && !empty($request->penyesuaian_masuk_jam_masuk_menit_non_absen)) {
                     $penyesuaian_jam_masuk_jam = $request->penyesuaian_masuk_jam_masuk_jam_non_absen.':'.$request->penyesuaian_masuk_jam_masuk_menit_non_absen;
@@ -327,6 +376,7 @@ class AbsensiController extends Controller
         
                 $input['keterangan'] = $request->keterangan_jam_masuk_non_absen.'@'.$penyesuaian_jam_masuk_jam.'@'.$penyesuaian_jam_istirahat_jam.'@'.$penyesuaian_jam_pulang_jam;
     
+                // dd($input);
                 $presensi_info = $this->presensi_info->create($input);
                 if ($presensi_info) {
                     $message_title="Berhasil !";
@@ -345,7 +395,7 @@ class AbsensiController extends Controller
 
             $input['scan_date'] = $request->tanggal_non_absen_masuk.' '.$request->jam_non_absen_masuk.':'.$request->menit_non_absen_masuk.':'.$request->detik_non_absen_masuk;
             $input['pin'] = $request->pin_non_absen_masuk;
-            $input['inoutmode'] = $request->inoutmode_non_absen_masuk;
+            $input['inoutmode'] = 1;
             $input['status'] = $request->status_non_absen_masuk;
             if (!empty($request->penyesuaian_masuk_jam_masuk_jam_non_absen) && !empty($request->penyesuaian_masuk_jam_masuk_menit_non_absen)) {
                 $penyesuaian_jam_masuk_jam = $request->penyesuaian_masuk_jam_masuk_jam_non_absen.':'.$request->penyesuaian_masuk_jam_masuk_menit_non_absen;
@@ -366,6 +416,8 @@ class AbsensiController extends Controller
             }
     
             $input['keterangan'] = $request->keterangan_jam_masuk_non_absen.'@'.$penyesuaian_jam_masuk_jam.'@'.$penyesuaian_jam_istirahat_jam.'@'.$penyesuaian_jam_pulang_jam;
+
+            // dd($input);
             $presensi_info->update($input);
             if ($presensi_info) {
                 $message_title="Berhasil !";
@@ -390,11 +442,110 @@ class AbsensiController extends Controller
         // dd($input);
     }
 
-    public function input_modal_nofinger_jam_pulang_absensi($date_live,$pin,$inoutmode)
+    public function input_modal_nofinger_jam_masuk_update(Request $request)
+    {
+        // dd($request->all());
+
+        $rules = [
+            'edit_waktu_non_absen_masuk' => 'required',
+            'edit_jam_masuk_status_non_absen_masuk' => 'required',
+            'edit_penyesuaian_masuk_jam_masuk_jam_non_absen' => 'required',
+            'edit_penyesuaian_masuk_jam_masuk_menit_non_absen' => 'required',
+            'edit_penyesuaian_istirahat_jam_masuk_jam_non_absen' => 'required',
+            'edit_penyesuaian_istirahat_jam_masuk_menit_non_absen' => 'required',
+            'edit_penyesuaian_pulang_jam_masuk_jam_non_absen' => 'required',
+            'edit_penyesuaian_pulang_jam_masuk_menit_non_absen' => 'required',
+        ];
+
+        $messages = [
+            'edit_waktu_non_absen_masuk.required'  => 'Waktu wajib diisi.',
+            'edit_jam_masuk_status_non_absen_masuk.required'  => 'Status wajib diisi.',
+            'edit_penyesuaian_masuk_jam_masuk_jam_non_absen.required'  => 'Penyesuaian Jam Masuk wajib diisi.',
+            'edit_penyesuaian_masuk_jam_masuk_menit_non_absen.required'  => 'Penyesuaian Jam Masuk wajib diisi.',
+            'edit_penyesuaian_istirahat_jam_masuk_jam_non_absen.required'  => 'Penyesuaian Jam Istirahat wajib diisi.',
+            'edit_penyesuaian_istirahat_jam_masuk_menit_non_absen.required'  => 'Penyesuaian Jam Istirahat wajib diisi.',
+            'edit_penyesuaian_pulang_jam_masuk_jam_non_absen.required'  => 'Penyesuaian Jam Pulang wajib diisi.',
+            'edit_penyesuaian_pulang_jam_masuk_menit_non_absen.required'  => 'Penyesuaian Jam Pulang wajib diisi.',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->passes()) {
+            $presensi_info = $this->presensi_info->with('biodata_karyawan')
+                                                ->where('scan_date','LIKE','%'.$request->edit_tanggal_non_absen_masuk.'%')
+                                                ->where('pin',$request->edit_pin_non_absen_masuk)
+                                                ->where('inoutmode',1)
+                                                ->first();
+
+            if (empty($presensi_info)) {
+                $message_title="Gagal !";
+                $message_content="Presensi Jam Masuk ".$presensi_info->biodata_karyawan->nama." Tidak Ditemukan";
+                $message_type="success";
+                $message_succes = true;
+
+                $array_message = array(
+                    'success' => $message_succes,
+                    'message_title' => $message_title,
+                    'message_content' => $message_content,
+                    'message_type' => $message_type,
+                );
+                return response()->json($array_message);
+            }
+
+            $input['scan_date'] = $request->edit_tanggal_non_absen_masuk.' '.$request->edit_waktu_non_absen_masuk;
+            $input['pin'] = $request->edit_pin_non_absen_masuk;
+            $input['inoutmode'] = 1;
+            $input['status'] = $request->edit_jam_masuk_status_non_absen_masuk;
+
+            if (!empty($request->edit_penyesuaian_masuk_jam_masuk_jam_non_absen) && !empty($request->edit_penyesuaian_masuk_jam_masuk_menit_non_absen)) {
+                $penyesuaian_jam_masuk_jam = $request->edit_penyesuaian_masuk_jam_masuk_jam_non_absen.':'.$request->edit_penyesuaian_masuk_jam_masuk_menit_non_absen;
+            }else{
+                $penyesuaian_jam_masuk_jam = null;
+            }
+            
+            if (!empty($request->edit_penyesuaian_istirahat_jam_masuk_jam_non_absen) && !empty($request->edit_penyesuaian_istirahat_jam_masuk_menit_non_absen)) {
+                $penyesuaian_jam_istirahat_jam = $request->edit_penyesuaian_istirahat_jam_masuk_jam_non_absen.':'.$request->edit_penyesuaian_istirahat_jam_masuk_menit_non_absen;
+            }else{
+                $penyesuaian_jam_istirahat_jam = null;
+            }
+    
+            if (!empty($request->edit_penyesuaian_pulang_jam_masuk_jam_non_absen) && !empty($request->edit_penyesuaian_pulang_jam_masuk_menit_non_absen)) {
+                $penyesuaian_jam_pulang_jam = $request->edit_penyesuaian_pulang_jam_masuk_jam_non_absen.':'.$request->edit_penyesuaian_pulang_jam_masuk_menit_non_absen;
+            }else{
+                $penyesuaian_jam_pulang_jam = null;
+            }
+    
+            $input['keterangan'] = $request->edit_keterangan_jam_masuk_non_absen.'@'.$penyesuaian_jam_masuk_jam.'@'.$penyesuaian_jam_istirahat_jam.'@'.$penyesuaian_jam_pulang_jam;
+
+            // dd($input);
+            $presensi_info->update($input);
+            if ($presensi_info) {
+                $message_title="Berhasil !";
+                $message_content="Presensi Masuk ".$presensi_info->biodata_karyawan->nama." Berhasil Diupdate";
+                $message_type="success";
+                $message_succes = true;
+            }
+            $array_message = array(
+                'success' => $message_succes,
+                'message_title' => $message_title,
+                'message_content' => $message_content,
+                'message_type' => $message_type,
+            );
+            return response()->json($array_message);
+        }
+        return response()->json(
+            [
+                'success' => false,
+                'error' => $validator->errors()->all()
+            ]
+        );
+    }
+
+    public function input_modal_nofinger_jam_pulang_absensi($date_live,$pin)
     {
         $presensi_info = $this->presensi_info->where('scan_date','LIKE','%'.$date_live.'%')
                                             ->where('pin',$pin)
-                                            ->where('inoutmode',$inoutmode)
+                                            // ->where('inoutmode',$inoutmode)
                                             // ->orderBy('scan_date','asc')
                                             ->first();
         // dd($presensi_info);
@@ -411,7 +562,7 @@ class AbsensiController extends Controller
                 'success' => true,
                 'data' => $biodata_karyawan,
                 'tanggal' => $date_live,
-                'inoutmode' => $inoutmode
+                // 'inoutmode' => $inoutmode
             ]);
         }
 
@@ -425,7 +576,7 @@ class AbsensiController extends Controller
             'menit' => Carbon::create($presensi_info->scan_date)->format('i'),
             'detik' => Carbon::create($presensi_info->scan_date)->format('s'),
             'status' => $presensi_info->status,
-            'inoutmode' => $inoutmode,
+            // 'inoutmode' => $inoutmode,
             'penyesuaian_masuk_jam' => Carbon::create($explode_keterangan[1])->format('H'),
             'penyesuaian_masuk_menit' => Carbon::create($explode_keterangan[1])->format('i'),
             'penyesuaian_istirahat_jam' => Carbon::create($explode_keterangan[2])->format('H'),
@@ -647,17 +798,18 @@ class AbsensiController extends Controller
     //     );
     // }
 
-    public function detail_jam_masuk($scan_date,$pin,$inoutmode){
+    public function detail_jam_masuk($scan_date,$pin){
+        // dd($scan_date,$pin);
         $presensi_info = $this->presensi_info->where('scan_date','LIKE','%'.$scan_date.'%')
                                             ->where('pin',$pin)
-                                            ->where('inoutmode',$inoutmode)
+                                            // ->where('inoutmode',$inoutmode)
                                             // ->orderBy('scan_date','asc')
                                             ->first();
         if(empty($presensi_info)){
             $fin_pro = $this->fin_pro->with('biodata_karyawan')
                             ->where('scan_date','LIKE','%'.$scan_date.'%')
                             ->where('pin',$pin)
-                            ->where('inoutmode',$inoutmode)
+                            // ->where('inoutmode',$inoutmode)
                             ->first();
             // dd($fin_pro);
             if (empty($fin_pro)) {
@@ -676,7 +828,7 @@ class AbsensiController extends Controller
                     'scan_date' => $fin_pro->scan_date,
                     'pin' => $fin_pro->pin,
                     'verifymode' => $fin_pro->verifymode,
-                    'inoutmode' => $fin_pro->inoutmode,
+                    // 'inoutmode' => $fin_pro->inoutmode,
                     'reserved' => $fin_pro->reserved,
                     'work_code' => $fin_pro->work_code,
                     'att_id' => $fin_pro->att_id,
@@ -694,7 +846,7 @@ class AbsensiController extends Controller
                 'att_id' => $presensi_info->att_id,
                 'scan_date' => $presensi_info->scan_date,
                 'pin' => $presensi_info->pin,
-                'inoutmode' => $presensi_info->inoutmode,
+                // 'inoutmode' => $presensi_info->inoutmode,
                 'status' => $presensi_info->status,
                 'penyesuaian_masuk_jam' => Carbon::create($explode_keterangan[1])->format('H'),
                 'penyesuaian_masuk_menit' => Carbon::create($explode_keterangan[1])->format('i'),
@@ -812,7 +964,7 @@ class AbsensiController extends Controller
         );
     }
 
-    public function detail_jam_keluar($scan_date,$pin,$inoutmode){
+    public function detail_jam_keluar($scan_date,$pin){
         // $presensi_info = PresensiInfo::where('scan_date','LIKE','%'.$scan_date.'%')
         //                                 ->where('pin',$pin)
         //                                 ->orderBy('scan_date','desc')
@@ -848,14 +1000,14 @@ class AbsensiController extends Controller
 
         $presensi_info = $this->presensi_info->where('scan_date','LIKE','%'.$scan_date.'%')
                                         ->where('pin',$pin)
-                                        ->where('inoutmode',$inoutmode)
+                                        // ->where('inoutmode',$inoutmode)
                                         // ->orderBy('scan_date','asc')
                                         ->first();
         if(empty($presensi_info)){
             $fin_pro = $this->fin_pro->with('biodata_karyawan')
                             ->where('scan_date','LIKE','%'.$scan_date.'%')
                             ->where('pin',$pin)
-                            ->where('inoutmode',$inoutmode)
+                            // ->where('inoutmode',$inoutmode)
                             ->first();
             // dd($fin_pro);
             if (empty($fin_pro)) {
@@ -874,7 +1026,7 @@ class AbsensiController extends Controller
                     'scan_date' => $fin_pro->scan_date,
                     'pin' => $fin_pro->pin,
                     'verifymode' => $fin_pro->verifymode,
-                    'inoutmode' => $fin_pro->inoutmode,
+                    // 'inoutmode' => $fin_pro->inoutmode,
                     'reserved' => $fin_pro->reserved,
                     'work_code' => $fin_pro->work_code,
                     'att_id' => $fin_pro->att_id,
@@ -892,7 +1044,7 @@ class AbsensiController extends Controller
                 'att_id' => $presensi_info->att_id,
                 'scan_date' => $presensi_info->scan_date,
                 'pin' => $presensi_info->pin,
-                'inoutmode' => $presensi_info->inoutmode,
+                // 'inoutmode' => $presensi_info->inoutmode,
                 'status' => $presensi_info->status,
                 'penyesuaian_masuk_jam' => Carbon::create($explode_keterangan[1])->format('H'),
                 'penyesuaian_masuk_menit' => Carbon::create($explode_keterangan[1])->format('i'),
@@ -1081,25 +1233,25 @@ class AbsensiController extends Controller
 
     public function search_name(Request $request)
     {
-        // dd($request->all());
-        // $data['biodata_karyawans'] = $this->biodata_karyawan->where(function($query) {
-        //                                                 return $query->where('nik','!=','1000001')
-        //                                                             ->where('nik','!=','1000002')
-        //                                                             ->where('nik','!=','1000003');
-        //                                             })
-        //                                             ->where('nik','LIKE','%'.$request->cari.'%')
-        //                                             // ->whereIn('status_karyawan',['A','K'])
-        //                                             ->where('id_departemen',$request->departemen)
-        //                                             ->where('nama','LIKE','%'.$request->cari.'%')
-        //                                             ->orderBy('id_departemen','asc')
-        //                                             ->where('status_karyawan','!=','R')
-        //                                             // ->orderBy('satuan_kerja','asc')
-        //                                             ->paginate(20)->withQueryString();
-        $data['biodata_karyawans'] = $this->biodata_karyawan->whereNotIn('nik',array('1000001','1000002','1000003'))
+        $data['biodata_karyawans'] = $this->biodata_karyawan->select(
+                                                                'biodata_karyawan.id as id',
+                                                                'biodata_karyawan.nik as nik',
+                                                                'biodata_karyawan.nama as nama',
+                                                                'biodata_karyawan.tempat_lahir as tempat_lahir',
+                                                                'biodata_karyawan.tgl_lahir as tgl_lahir',
+                                                                'biodata_karyawan.alamat as alamat',
+                                                                'biodata_karyawan.jenis_kelamin as jenis_kelamin',
+                                                                'biodata_karyawan.pin as pin',
+                                                                'departemen.nama_departemen as nama_departemen',
+                                                                'posisi.nama_posisi as nama_posisi',
+                                                            )
+                                                            ->leftJoin('departemen','departemen.id','=','biodata_karyawan.id_departemen')
+                                                            ->leftJoin('posisi','posisi.id','=','biodata_karyawan.id_posisi')
+                                                            ->whereNotIn('nik',array('1000001','1000002','1000003'))
                                                             ->where(function($query) use($request){
-                                                                if ($request->cari) {
-                                                                    $query->where('nik','LIKE','%'.$request->cari.'%')
-                                                                        ->orwhere('nama','LIKE','%'.$request->cari.'%')
+                                                                if ($request->nik_nama) {
+                                                                    $query->where('nik','LIKE','%'.$request->nik_nama.'%')
+                                                                        ->orWhere('nama','LIKE','%'.$request->nik_nama.'%')
                                                                         ->where('id_departemen',$request->departemen)
                                                                         ->where('status_karyawan','!=','R')
                                                                         ;
@@ -1109,33 +1261,30 @@ class AbsensiController extends Controller
                                                                         ;
                                                                 }
                                                             })
+                                                            // ->where('nama','LIKE','%'.$request->nik_nama.'%')
+                                                            // ->where('id_departemen',$request->departemen)
+                                                            // ->where('status_karyawan','!=','R')
+                                                            // ->orWhere('nik',$request->nik_nama)
                                                             ->orderBy('nama','asc')
                                                             ->paginate(20)->withQueryString();
         // dd($data);
         $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
-        // $data['total_absen_kemarin'] = FinPro::where('scan_date','LIKE','%'.Carbon::yesterday()->format('Y-m-d').'%')->where('inoutmode',1)->count();
-        // $data['total_absen_hari_ini'] = FinPro::where('scan_date','LIKE','%'.Carbon::today()->format('Y-m-d').'%')->where('inoutmode',1)->count();
-        // // dd($data);
-        // if ($data['total_absen_kemarin'] == $data['total_absen_hari_ini']) {
-        //     $data['persentase'] = '<small class="font-13">(0%)</small>';
-        // }elseif($data['total_absen_kemarin'] >= $data['total_absen_hari_ini']){
-        //     $hitung = ($data['total_absen_kemarin']/$data['total_absen_hari_ini'])*100;
-        //     $data['persentase'] = '<small class="text-success font-13">(+'.$hitung.'%)</small>';
-        // }elseif($data['total_absen_kemarin'] <= $data['total_absen_hari_ini']){
-        //     $hitung = ($data['total_absen_kemarin']/$data['total_absen_hari_ini'])*100;
-        //     $data['persentase'] = '<small class="text-danger font-13">(-'.$hitung.'%)</small>';
+        
+        // $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
+        // $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
+        // for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
+        //     $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
+        //     $total_absen_masuk = $this->fin_pro->where('scan_date','LIKE','%'.$i.'%')->where('inoutmode',1)->count();
+        //     // dd($total_absen_masuk);
+        //     $data['hasil'][] = $total_absen_masuk;
         // }
-        $start_year_now = Carbon::now()->startOfYear()->format('Y-m');
-        $end_year_now = Carbon::now()->endOfYear()->format('Y-m');
-        for ($i=$start_year_now; $i <= $end_year_now; $i++) { 
-            $data['periode'][] = Carbon::create($i)->isoFormat('MMMM YYYY');
-            $total_absen_masuk = $this->fin_pro->where('scan_date','LIKE','%'.$i.'%')->where('inoutmode',1)->count();
-            // dd($total_absen_masuk);
-            $data['hasil'][] = $total_absen_masuk;
-        }
+
+        $data['fin_pro'] = $this->fin_pro;
+        $data['presensi_info'] = $this->presensi_info;
         $data['departemens'] = $this->itic_departemen->all();
         // dd($data);
-        return view('absensi.home.search',$data);
+        // return view('absensi.home.search',$data);
+        return view('absensi.home.index',$data);
     }
 
     public function absensi()

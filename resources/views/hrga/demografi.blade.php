@@ -67,6 +67,38 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    {{-- <h4 class="card-title text-center">Berdasarkan Kecamatan</h4> --}}
+                                    <div id="berdasarkan-kecamatan"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    {{-- <h4 class="card-title text-center">Berdasarkan Kecamatan</h4> --}}
+                                    <div id="berdasarkan-kelurahan"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    {{-- <h4 class="card-title text-center">Berdasarkan Kecamatan</h4> --}}
+                                    <div id="berdasarkan-kab-kota"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    {{-- <h4 class="card-title text-center">Berdasarkan Kecamatan</h4> --}}
+                                    <div id="berdasarkan-provinsi"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -87,11 +119,16 @@
                 width: 2,
                 colors: ['transparent']
             },
-            series: [{{ $berdasarkan_tingkatan[0]->total_berdasarkan_tingkat.','.$berdasarkan_tingkatan[1]->total_berdasarkan_tingkat }}],
+            series: [
+                {{ $berdasarkan_tingkatan[0]->total_berdasarkan_tingkat . ',' . $berdasarkan_tingkatan[1]->total_berdasarkan_tingkat }}
+            ],
             labels: ["Staff", "Operator"],
             colors: ["#E85C0D", "#C7253E"],
             dataLabels: {
-                formatter: (val, { seriesIndex, w }) => w.config.series[seriesIndex] // <--- HERE
+                formatter: (val, {
+                    seriesIndex,
+                    w
+                }) => w.config.series[seriesIndex] // <--- HERE
             },
             legend: {
                 show: true,
@@ -133,11 +170,14 @@
                 width: 2,
                 colors: ['transparent']
             },
-            series: [{{ $berdasarkan_gender[0]->jenis_kelamin.','.$berdasarkan_gender[1]->jenis_kelamin }}],
+            series: [{{ $berdasarkan_gender[0]->jenis_kelamin . ',' . $berdasarkan_gender[1]->jenis_kelamin }}],
             labels: ["Laki - Laki", "Perempuan"],
             colors: ["#134B70", "#508C9B"],
             dataLabels: {
-                formatter: (val, { seriesIndex, w }) => w.config.series[seriesIndex] // <--- HERE
+                formatter: (val, {
+                    seriesIndex,
+                    w
+                }) => w.config.series[seriesIndex] // <--- HERE
             },
             legend: {
                 show: true,
@@ -179,11 +219,16 @@
                 width: 2,
                 colors: ['transparent']
             },
-            series: [{{ $berdasarkan_status_karyawan[0]->status_karyawan.','.$berdasarkan_status_karyawan[1]->status_karyawan }}],
+            series: [
+                {{ $berdasarkan_status_karyawan[0]->status_karyawan . ',' . $berdasarkan_status_karyawan[1]->status_karyawan }}
+            ],
             labels: ["Pekerja Tetap", "Pekerja Kontrak"],
             colors: ["#597445", "#F4CE14"],
             dataLabels: {
-                formatter: (val, { seriesIndex, w }) => w.config.series[seriesIndex] // <--- HERE
+                formatter: (val, {
+                    seriesIndex,
+                    w
+                }) => w.config.series[seriesIndex] // <--- HERE
             },
             legend: {
                 show: true,
@@ -218,16 +263,21 @@
         var options = {
             series: [{
                 data: [
-                    {{ 
-                        $berdasarkan_departemen[0]->id_departemen.','.
-                        $berdasarkan_departemen[1]->id_departemen.','.
-                        $berdasarkan_departemen[2]->id_departemen.','.
-                        $berdasarkan_departemen[3]->id_departemen.','.
-                        $berdasarkan_departemen[4]->id_departemen.','.
-                        $berdasarkan_departemen[5]->id_departemen.','.
-                        $berdasarkan_departemen[6]->id_departemen.','.
-                        $berdasarkan_departemen[7]->id_departemen
-                    }}
+                    {{ $berdasarkan_departemen[0]->id_departemen .
+                        ',' .
+                        $berdasarkan_departemen[1]->id_departemen .
+                        ',' .
+                        $berdasarkan_departemen[2]->id_departemen .
+                        ',' .
+                        $berdasarkan_departemen[3]->id_departemen .
+                        ',' .
+                        $berdasarkan_departemen[4]->id_departemen .
+                        ',' .
+                        $berdasarkan_departemen[5]->id_departemen .
+                        ',' .
+                        $berdasarkan_departemen[6]->id_departemen .
+                        ',' .
+                        $berdasarkan_departemen[7]->id_departemen }}
                 ]
             }],
             labels: ["Finance & Accounting", "HRGA", "Marketing", "Purchasing", "PPIC", "Production", "QC", "IT"],
@@ -252,8 +302,8 @@
             },
             tooltip: {
                 y: {
-                    formatter: function (val) {
-                    return val
+                    formatter: function(val) {
+                        return val
                     }
                 }
             },
@@ -273,10 +323,12 @@
                 offsetX: 30
             },
             xaxis: {
-                categories: ["Finance & Accounting", "HRGA", "Marketing", "Purchasing", "PPIC", "Production", "QC", "IT"],
+                categories: ["Finance & Accounting", "HRGA", "Marketing", "Purchasing", "PPIC", "Production", "QC",
+                    "IT"
+                ],
                 labels: {
-                    formatter: function (val) {
-                    return val
+                    formatter: function(val) {
+                        return val
                     }
                 }
             },
@@ -295,17 +347,20 @@
         var options = {
             series: [{
                 data: [
-                    {{ 
-                        $berdasarkan_pendidikan[5]->pendidikan.','.
-                        $berdasarkan_pendidikan[4]->pendidikan.','.
-                        $berdasarkan_pendidikan[3]->pendidikan.','.
-                        $berdasarkan_pendidikan[2]->pendidikan.','.
-                        $berdasarkan_pendidikan[1]->pendidikan.','.
-                        $berdasarkan_pendidikan[0]->pendidikan
-                    }}
+                    {{ $berdasarkan_pendidikan[5]->pendidikan .
+                        ',' .
+                        $berdasarkan_pendidikan[4]->pendidikan .
+                        ',' .
+                        $berdasarkan_pendidikan[3]->pendidikan .
+                        ',' .
+                        $berdasarkan_pendidikan[2]->pendidikan .
+                        ',' .
+                        $berdasarkan_pendidikan[1]->pendidikan .
+                        ',' .
+                        $berdasarkan_pendidikan[0]->pendidikan }}
                 ]
             }],
-            labels: ["Pascasarjana","D4/S1","D1 s.d D3","SMA","SMP","SD"],
+            labels: ["Pascasarjana", "D4/S1", "D1 s.d D3", "SMA", "SMP", "SD"],
             chart: {
                 type: 'bar',
                 height: 350,
@@ -327,8 +382,8 @@
             },
             tooltip: {
                 y: {
-                    formatter: function (val) {
-                    return val
+                    formatter: function(val) {
+                        return val
                     }
                 }
             },
@@ -348,10 +403,10 @@
                 offsetX: 30
             },
             xaxis: {
-                categories: ["Pascasarjana","D4/S1","D1 s.d D3","SMA","SMP","SD"],
+                categories: ["Pascasarjana", "D4/S1", "D1 s.d D3", "SMA", "SMP", "SD"],
                 labels: {
-                    formatter: function (val) {
-                    return val
+                    formatter: function(val) {
+                        return val
                     }
                 }
             },
@@ -365,15 +420,16 @@
         var options = {
             series: [{
                 data: [
-                    {{ 
-                        $berdasarkan_usia[1]->total_age.','.
-                        $berdasarkan_usia[2]->total_age.','.
-                        $berdasarkan_usia[3]->total_age.','.
-                        $berdasarkan_usia[4]->total_age
-                    }}
+                    {{ $berdasarkan_usia[1]->total_age .
+                        ',' .
+                        $berdasarkan_usia[2]->total_age .
+                        ',' .
+                        $berdasarkan_usia[3]->total_age .
+                        ',' .
+                        $berdasarkan_usia[4]->total_age }}
                 ]
             }],
-            labels: ["<19 Tahun","19 Tahun - 30 Tahun","31 Tahun - 45 Tahun",">46 Tahun"],
+            labels: ["<19 Tahun", "19 Tahun - 30 Tahun", "31 Tahun - 45 Tahun", ">46 Tahun"],
             chart: {
                 type: 'bar',
                 height: 350,
@@ -395,8 +451,8 @@
             },
             tooltip: {
                 y: {
-                    formatter: function (val) {
-                    return val
+                    formatter: function(val) {
+                        return val
                     }
                 }
             },
@@ -416,10 +472,10 @@
                 offsetX: 30
             },
             xaxis: {
-                categories: ["<19 Tahun","19 Tahun - 30 Tahun","31 Tahun - 45 Tahun",">46 Tahun"],
+                categories: ["<19 Tahun", "19 Tahun - 30 Tahun", "31 Tahun - 45 Tahun", ">46 Tahun"],
                 labels: {
-                    formatter: function (val) {
-                    return val
+                    formatter: function(val) {
+                        return val
                     }
                 }
             },
@@ -427,6 +483,274 @@
         };
 
         var chart = new ApexCharts(document.querySelector("#berdasarkan-usia"), options);
+        chart.render();
+
+        // ----------------------
+
+        var options = {
+            series: [
+                {
+                    data: @json($berdasarkan_kecamatan)
+                }
+            ],
+            chart: {
+                type: 'bar',
+                height: 1280,
+                stacked: true,
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    borderRadiusApplication: 'end',
+                    horizontal: true,
+                    dataLabels: {
+                        position: 'top',
+                        colors: ['#2D4F2B']
+                    }
+                }
+            },
+            title: {
+                text: 'Berdasarkan Kecamatan'
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val
+                    }
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'left',
+                offsetX: 40
+            },
+            dataLabels: {
+                enabled: true,
+                style: {
+                    colors: ['#2D4F2B']
+                },
+                offsetX: 30
+            },
+            xaxis: {
+                type: 'category',
+                labels: {
+                    formatter: function(val) {
+                        return val
+                    }
+                }
+            },
+            colors: ["#2D4F2B"]
+        };
+
+        var chart = new ApexCharts(
+            document.querySelector("#berdasarkan-kecamatan"),
+            options
+        );
+
+        chart.render();
+
+        // ----------------------
+
+        var options = {
+            series: [
+                {
+                    data: @json($berdasarkan_kelurahan)
+                }
+            ],
+            chart: {
+                type: 'bar',
+                height: 1366,
+                stacked: true,
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    borderRadiusApplication: 'end',
+                    horizontal: true,
+                    dataLabels: {
+                        position: 'top',
+                        colors: ['#2D4F2B']
+                    }
+                }
+            },
+            title: {
+                text: 'Berdasarkan Kelurahan'
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val
+                    }
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'left',
+                offsetX: 40
+            },
+            dataLabels: {
+                enabled: true,
+                style: {
+                    colors: ['#2D4F2B']
+                },
+                offsetX: 30
+            },
+            xaxis: {
+                type: 'category',
+                labels: {
+                    formatter: function(val) {
+                        return val
+                    }
+                }
+            },
+            colors: ["#D50B8B"]
+        };
+
+        var chart = new ApexCharts(
+            document.querySelector("#berdasarkan-kelurahan"),
+            options
+        );
+
+        chart.render();
+
+        // ----------------------
+
+        var options = {
+            series: [
+                {
+                    data: @json($berdasarkan_kab_kota)
+                }
+            ],
+            chart: {
+                type: 'bar',
+                height: 500,
+                stacked: true,
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    borderRadiusApplication: 'end',
+                    horizontal: true,
+                    dataLabels: {
+                        position: 'top',
+                        colors: ['#2D4F2B']
+                    }
+                }
+            },
+            title: {
+                text: 'Berdasarkan Kab/Kota'
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val
+                    }
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'left',
+                offsetX: 40
+            },
+            dataLabels: {
+                enabled: true,
+                style: {
+                    colors: ['#2D4F2B']
+                },
+                offsetX: 30
+            },
+            xaxis: {
+                type: 'category',
+                labels: {
+                    formatter: function(val) {
+                        return val
+                    }
+                }
+            },
+            colors: ["#954C2E"]
+        };
+
+        var chart = new ApexCharts(
+            document.querySelector("#berdasarkan-kab-kota"),
+            options
+        );
+
+        chart.render();
+
+        // ----------------------
+
+        var options = {
+            series: [
+                {
+                    data: @json($berdasarkan_provinsi)
+                }
+            ],
+            chart: {
+                type: 'bar',
+                height: 500,
+                stacked: true,
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    borderRadiusApplication: 'end',
+                    horizontal: true,
+                    dataLabels: {
+                        position: 'top',
+                        colors: ['#2D4F2B']
+                    }
+                }
+            },
+            title: {
+                text: 'Berdasarkan Provinsi'
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val
+                    }
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'left',
+                offsetX: 40
+            },
+            dataLabels: {
+                enabled: true,
+                style: {
+                    colors: ['#2D4F2B']
+                },
+                offsetX: 30
+            },
+            xaxis: {
+                type: 'category',
+                labels: {
+                    formatter: function(val) {
+                        return val
+                    }
+                }
+            },
+            colors: ["#52357B"]
+        };
+
+        var chart = new ApexCharts(
+            document.querySelector("#berdasarkan-provinsi"),
+            options
+        );
+
         chart.render();
     </script>
 @endsection

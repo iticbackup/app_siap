@@ -16,76 +16,25 @@ use DataTables;
 
 class IjinKeluarMasukController extends Controller
 {
-    function __construct(IjinKeluarMasuk $ijin_keluar_masuk)
+    function __construct(
+        BiodataKaryawan $biodata_karyawan,
+        IjinKeluarMasuk $ijin_keluar_masuk
+    )
     {
+        $this->biodata_karyawan = $biodata_karyawan;
         $this->ijin_keluar_masuk = $ijin_keluar_masuk;
     }
 
     public function index(){
-        // if ($request->ajax()) {
-        //     // $date_live = Carbon::now()->format('Y');
-        //     $date_live = 2023;
-        //     $data = $this->ijin_keluar_masuk->whereYear('tanggal_ijin',$date_live)
-        //                                     ->get();
-        //     return DataTables::of($data)
-        //                     ->addIndexColumn()
-        //                     ->addColumn('nama', function($row){
-        //                         $cek_status_kerja = IticDepartemen::where('id_departemen',$row->biodata_karyawan->satuan_kerja)->first();
-        //                         if (empty($cek_status_kerja)) {
-        //                             $satuan_kerja = '-';
-        //                         }else{
-        //                             if ($cek_status_kerja->nama_departemen >= 1) {
-        //                                 $satuan_kerja = $cek_status_kerja->nama_unit;
-        //                             }else{
-        //                                 $satuan_kerja = $cek_status_kerja->nama_departemen;
-        //                             }
-        //                         }
-
-        //                         $cek_posisi = EmpPosisi::where('id_posisi',$row->biodata_karyawan->id_posisi)->first();
-        //                         if (empty($cek_posisi)) {
-        //                             $posisi = '-';
-        //                         }else{
-        //                             $posisi = $cek_posisi->nama_posisi;
-        //                         }
-
-        //                         $card = "<div class='card'>";
-        //                         $card .=     "<div class='card-body'>";
-        //                         $card .=        "<h6>".$row->biodata_karyawan->nik.' - '.$row->biodata_karyawan->nama."</h6>";
-        //                         $card .=        "<hr>";
-        //                         $card .=        "<div>"."<b>Departemen : <b>".$satuan_kerja."</div>";
-        //                         $card .=        "<div>"."<b>Posisi : <b>".$posisi."</div>";
-        //                         $card .=    "</div>";
-        //                         $card .= "</div>";
-        //                         return $card;
-        //                     })
-        //                     ->addColumn('tanggal_ijin', function($row){
-        //                         return $row->tanggal_ijin;
-        //                     })
-        //                     ->addColumn('durasi', function($row){
-        //                         // return $row->tanggal_ijin;
-        //                         $awal = strtotime($row->jam_keluar);
-        //                         $akhir = strtotime($row->jam_datang);
-        //                         $total_jam = ($akhir-$awal)/60;
-        //                         return $total_jam.' Menit';
-        //                     })
-        //                     ->addColumn('action', function($row){
-        //                         $btn = "<div class='btn-group'>";
-        //                         $btn .= "<button onclick='edit(`".$row->id_ijin."`)' class='btn btn-warning'>".'<i class="bx bx-edit"></i> Edit'."</button>";
-        //                         $btn .= "<button onclick='hapus(`".$row->id_ijin."`)' class='btn btn-danger'>".'<i class="bx bx-trash"></i> Delete'."</button>";
-        //                         $btn .= "</div>";
-        //                         return $btn;
-        //                     })
-        //                     ->rawColumns(['nama','action'])
-        //                     ->make(true);
-        // }
         $date_live = Carbon::now()->format('Y');
         // $date_live = 2023;
         $data['ijin_keluar_masuks'] = $this->ijin_keluar_masuk->with('biodata_karyawan')
                                             ->whereYear('tanggal_ijin',$date_live)
                                             ->orderBy('tanggal_ijin','desc')
-                                            ->paginate(20);
-        
-        return view('absensi.ijin_keluar_masuk.index',$data);
+                                            ->paginate(10);
+        // dd($data);
+        // return view('absensi.ijin_keluar_masuk.index',$data);
+        return view('absensi.ijin_keluar_masuk.new.index',$data);
         // return view('absensi.ijin_keluar_masuk.index');
     }
 
@@ -237,17 +186,72 @@ class IjinKeluarMasukController extends Controller
         // $nama = $request->cari;
         // $posisi = $request->cari_posisi;
         // dd($request->all());
-        $biodata_karyawan = BiodataKaryawan::select('nik','pin')
-                                            ->where('nik','LIKE','%'.$request->cari.'%')
-                                            ->orWhere('nama','LIKE','%'.$request->cari.'%')
-                                            ->first();
-                                            // dd($biodata_karyawan);
-        $data['ijin_keluar_masuks'] = $this->ijin_keluar_masuk->with('biodata_karyawan')
-                                            ->where('nik',$biodata_karyawan->nik)
-                                            ->whereBetween('tanggal_ijin',[$request->cari_tanggal_awal,$request->cari_tanggal_akhir])
-                                            // ->whereRelation('biodata_karyawan','nik',$request->cari)
-                                            ->paginate(20)->withQueryString();
-                                            // dd($data['ijin_keluar_masuks']);
-        return view('absensi.ijin_keluar_masuk.index',$data);              
+        // $biodata_karyawan = $this->biodata_karyawan::select('nik','pin')
+        //                                             ->where('nik','LIKE','%'.$request->cari.'%')
+        //                                             ->orWhere('nama','LIKE','%'.$request->cari.'%')
+        //                                             ->first();
+
+        // if (empty($biodata_karyawan)) {
+        //     $data['ijin_keluar_masuks'] = $this->ijin_keluar_masuk->with('biodata_karyawan')
+        //                                                         ->whereBetween('tanggal_ijin',[$request->cari_tanggal_awal,$request->cari_tanggal_akhir])
+        //                                                         // ->whereRelation('biodata_karyawan','nik',$request->cari)
+        //                                                         ->paginate(20)
+        //                                                         ->withQueryString();
+        // }else{
+        //     $data['ijin_keluar_masuks'] = $this->ijin_keluar_masuk->with('biodata_karyawan')
+        //                                                         ->where('nik','LIKE','%'.$request->cari.'%')
+        //                                                         ->whereBetween('tanggal_ijin',[$request->cari_tanggal_awal,$request->cari_tanggal_akhir])
+        //                                                         // ->whereRelation('biodata_karyawan','nik',$request->cari)
+        //                                                         ->paginate(20)
+        //                                                         ->withQueryString();
+        // }
+
+        if ($request->cari) {
+            $biodata_karyawan = $this->biodata_karyawan::select('nik','pin')
+                                                    ->where('nama','LIKE','%'.$request->cari.'%')
+                                                    ->orWhere('nik','LIKE','%'.$request->cari.'%')
+                                                    ->first();
+                                                    
+            $data['ijin_keluar_masuks'] = $this->ijin_keluar_masuk->where('nik',$biodata_karyawan->nik)
+                                                                ->paginate(20)
+                                                                ->withQueryString();
+        }elseif ($request->cari && $request->cari_tanggal_awal && $request->cari_tanggal_akhir) {
+            $biodata_karyawan = $this->biodata_karyawan::select('nik','pin')
+                                                    ->where('nama','LIKE','%'.$request->cari.'%')
+                                                    ->orWhere('nik','LIKE','%'.$request->cari.'%')
+                                                    ->first();
+
+            $data['ijin_keluar_masuks'] = $this->ijin_keluar_masuk->whereBetween('tanggal_ijin', [$request->cari_tanggal_awal, $request->cari_tanggal_akhir])
+                                                                ->where('nik',$biodata_karyawan->nik)
+                                                                ->paginate(20)
+                                                                ->withQueryString();
+        }elseif ($request->cari_tanggal_awal && $request->cari_tanggal_akhir) {
+            $data['ijin_keluar_masuks'] = $this->ijin_keluar_masuk->with('biodata_karyawan')
+                                                                ->whereBetween('tanggal_ijin',[$request->cari_tanggal_awal,$request->cari_tanggal_akhir])
+                                                                // ->whereRelation('biodata_karyawan','nik',$request->cari)
+                                                                ->paginate(20)
+                                                                ->withQueryString();
+        }elseif($request->cari_posisi) {
+            $data['ijin_keluar_masuks'] = $this->ijin_keluar_masuk->with('biodata_karyawan')
+                                                                ->paginate(20)
+                                                                ->withQueryString();
+        }else{
+            // $biodata_karyawan = $this->biodata_karyawan::select('nik','pin')
+            //                                         ->where('nama','LIKE','%'.$request->cari.'%')
+            //                                         ->orWhere('nik','LIKE','%'.$request->cari.'%')
+            //                                         ->first();
+            // $data['ijin_keluar_masuks'] = $this->ijin_keluar_masuk->with('biodata_karyawan')
+            //                                                     ->where('nik',$biodata_karyawan->nik)
+            //                                                     ->whereBetween('tanggal_ijin',[$request->cari_tanggal_awal,$request->cari_tanggal_akhir])
+            //                                                     // ->whereRelation('biodata_karyawan','nik',$request->cari)
+            //                                                     ->paginate(20)
+            //                                                     ->withQueryString();
+            $data['ijin_keluar_masuks'] = $this->ijin_keluar_masuk->orderBy('tanggal_input','desc')
+                                                                ->paginate(20)
+                                                                ->withQueryString();
+        }
+
+                                            // dd($data);
+        return view('absensi.ijin_keluar_masuk.new.index',$data);              
     }
 }

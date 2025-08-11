@@ -7,7 +7,7 @@
             </div>
             <form id="form-simpan-jam-masuk-non-absen" method="post">
                 @csrf
-                <input type="hidden" name="inoutmode_non_absen_masuk" id="inoutmode_non_absen_masuk">
+                {{-- <input type="hidden" name="inoutmode_non_absen_masuk" id="inoutmode_non_absen_masuk"> --}}
                 <input type="hidden" name="pin_non_absen_masuk" id="pin_non_absen_masuk">
             <div class="modal-body">
                 <table class="table">

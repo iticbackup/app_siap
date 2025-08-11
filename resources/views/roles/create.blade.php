@@ -42,7 +42,6 @@
                                 <label>{{ Form::checkbox('permission[]', $value->id, false, ['class' => 'form-check-input']) }}
                                     {{ ucwords($value->name) }}</label>
                             </div>
-                                {{-- <br /> --}}
                             @endforeach
                         </div>
                     </div>

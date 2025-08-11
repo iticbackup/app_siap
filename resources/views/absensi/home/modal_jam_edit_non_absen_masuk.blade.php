@@ -7,8 +7,8 @@
             </div>
             <form id="form-edit-jam-masuk-non-absen" method="post">
                 @csrf
-                <input type="hidden" name="edit_att_rec_non_absen" id="edit_att_rec_non_absen">
-                {{-- <input type="hidden" name="edit_pin_non_absen_masuk" id="edit_pin_non_absen_masuk"> --}}
+                {{-- <input type="hidden" name="edit_att_rec_non_absen" id="edit_att_rec_non_absen"> --}}
+                <input type="hidden" name="edit_pin_non_absen_masuk" id="edit_pin_non_absen_masuk">
             <div class="modal-body">
                 <table class="table">
                     <thead>
@@ -32,7 +32,7 @@
                         <tr>
                             <td>Waktu</td>
                             <td>:</td>
-                            <td><input type="text" name="edit_waktu_non_absen_masuk" class="form-control" readonly id="edit_non_absen_masuk_jam_masuk_waktu"></td>
+                            <td><input type="time" name="edit_waktu_non_absen_masuk" class="form-control" id="edit_non_absen_masuk_jam_masuk_waktu"></td>
                         </tr>
                         <tr>
                             <td style="vertical-align: middle">Status</td>
@@ -90,8 +90,8 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-outline-primary btn-sm">Update</button>
-                <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success btn-sm">Update</button>
+                <button type="button" class="btn btn-dark btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
             </form>
         </div>

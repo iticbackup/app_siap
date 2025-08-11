@@ -217,7 +217,7 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::prefix('hrga')->group(function () {
         Route::prefix('biodata_karyawan')->group(function () {
-            Route::get('/', [App\Http\Controllers\HRGAController::class, 'index_biodata_karyawan'])->name('hrga.biodata_karyawan');
+            Route::get('/', [App\Http\Controllers\HRGAController::class, 'index_biodata_karyawan_new'])->name('hrga.biodata_karyawan');
             Route::get('data_karyawan', [App\Http\Controllers\HRGAController::class, 'data_karyawan'])->name('hrga.data_karyawan');
             Route::get('search/{nik}', [App\Http\Controllers\HRGAController::class, 'get_search_data_karyawan'])->name('hrga.get_search_data_karyawan');
             Route::post('simpan', [App\Http\Controllers\HRGAController::class, 'simpan'])->name('hrga.biodata_karyawan.simpan');
@@ -315,6 +315,59 @@ Route::group(['middleware' => ['auth']], function() {
     });
     Route::post('/send-notification',[App\Http\Controllers\UserController::class,'notification'])->name('notification');
 
+    Route::get('test', function(){
+        // $data = \DB::table('fin_pro.att_log')
+        //             ->addSelect(\DB::raw(
+        //                 "
+        //                 DATE(scan_date) AS tanggal,
+        //                 pin as pin,
+        //                 MAX(CASE WHEN DATE_FORMAT(scan_date,'%H:%i') <= '11:59:59' THEN DATE_FORMAT(scan_date,'%H:%i') ELSE NULL END) AS jam_masuk
+        //                 "
+        //             ))
+        //             ->addSelect(\DB::raw(
+        //                 "
+        //                 DATE(scan_date) AS tanggal,
+        //                 pin as pin,
+        //                 MAX(CASE WHEN DATE_FORMAT(scan_date,'%H:%i') >= '12:00:00' THEN DATE_FORMAT(scan_date,'%H:%i') ELSE NULL END) AS jam_pulang
+        //                 "
+        //             ))
+        //             ->where('scan_date','LIKE','%2025-08-01%')
+        //             ->where('pin','1298')
+        //             ->groupBy(\DB::raw('DATE(scan_date)'),'pin')
+        //             ->orderBy('scan_date', 'asc')
+        //             ->first();
+
+        $data = \DB::table('fin_pro.att_log')
+                    ->select(
+                        \DB::raw('DATE(scan_date) AS tanggal'),
+                        'pin',
+                        \DB::raw("MAX(CASE WHEN DATE_FORMAT(scan_date,'%H:%i') <= '11:59:59' THEN DATE_FORMAT(scan_date,'%H:%i') ELSE NULL END) AS jam_masuk"),
+                        \DB::raw("MAX(CASE WHEN DATE_FORMAT(scan_date,'%H:%i') >= '12:00:00' THEN DATE_FORMAT(scan_date,'%H:%i') ELSE NULL END) AS jam_pulang")
+                    )
+                    ->where('pin', 1298)
+                    // Menggunakan whereDate() adalah cara yang lebih baik dan aman daripada LIKE untuk memfilter tanggal
+                    ->whereDate('scan_date', '2025-08-01')
+                    ->groupBy(\DB::raw('DATE(scan_date)'), 'pin')
+                    ->orderBy(\DB::raw('DATE(scan_date)'))
+                    ->first();
+
+        // $data = \DB::select(\DB::raw(
+        //     '
+        //     SELECT
+        //         DATE(scan_date) AS tanggal,
+        //         pin AS pin,
+        //         MAX(CASE WHEN DATE_FORMAT(scan_date,"%H:%i") <= "11:59:59" THEN DATE_FORMAT(scan_date,"%H:%i") ELSE NULL END) AS jam_masuk,
+        //         MAX(CASE WHEN DATE_FORMAT(scan_date,"%H:%i") >= "12:00:00" THEN DATE_FORMAT(scan_date,"%H:%i") ELSE NULL END) AS jam_pulang
+        //     FROM `fin_pro`.`att_log`
+        //     WHERE `scan_date` LIKE "2025-08-01%" AND `pin` = 1298
+        //     GROUP BY pin
+        //     ORDER BY `scan_date` ASC
+        //     LIMIT 1
+        //     '
+        // ));
+
+        return $data;
+    });
     // Route::get('testing', [App\Http\Controllers\TestingController::class, 'testing2'])->name('testing_pdf');
 
 });
