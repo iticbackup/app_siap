@@ -71,6 +71,32 @@
                     </div>
                 </div>
             </div>
+            <div class="mt-4">
+                <h5 class="text-primary">Peringkat Absensi Keseluruhan Per Tahun {{ date('Y') }}</h5>
+                <div class="row gx-2">
+                    @forelse ($peringkat_absensis as $key => $peringkat_absensi)
+                        <div class="col-md-4 mt-2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="text-center text-primary" style="font-weight: bold">Peringkat {{ $key+1 }}</div>
+                                    <div class="text-center">{{ $peringkat_absensi->biodata_karyawan->nama }}</div>
+                                    <div class="text-center">Total Absen : <span class="text-primary">{{ $peringkat_absensi->total_absensi }}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        
+                    @endforelse
+                </div>
+            </div>
+            {{-- <div class="card mt-2">
+                <div class="card-body">
+                    <h5>Peringkat Absensi Per Tahun {{ date('Y') }}</h5>
+                    <table class="table table-striped">
+                        <thead></thead>
+                    </table>
+                </div>
+            </div> --}}
         </div>
         <div class="col-12 col-xl-7 mb-5">
             <div class="d-flex justify-content-between">
@@ -232,7 +258,7 @@
                                                         $mesin_absensi->jam_masuk .
                                                         '`,`' .
                                                         $mesin_absensi->pin .
-                                                        '`)" style="color: blue">' .
+                                                        '`)" class="text-success">' .
                                                         \Carbon\Carbon::create($mesin_absensi->jam_masuk)->format(
                                                             'H:i',
                                                         ) .
