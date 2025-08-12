@@ -1298,6 +1298,14 @@ class AbsensiController extends Controller
         $data['fin_pro'] = $this->fin_pro;
         $data['presensi_info'] = $this->presensi_info;
         $data['departemens'] = $this->itic_departemen->all();
+
+        $data['peringkat_absensis'] = $this->presensi_info->with('biodata_karyawan')
+                                                        ->select('pin',DB::raw('COUNT(*) as total_absensi'))
+                                                        ->whereYear('scan_date',date('Y'))
+                                                        ->groupBy('pin')
+                                                        ->orderBy('total_absensi','desc')
+                                                        ->limit(6)
+                                                        ->get();
         // dd($data);
         // return view('absensi.home.search',$data);
         return view('absensi.home.index',$data);
