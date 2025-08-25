@@ -475,7 +475,7 @@
                     document.getElementById('detail_nama_karyawan').innerHTML = result.data.nama_karyawan;
                     document.getElementById('detail_tempat_tanggal_lahir').innerHTML = result.data.tempat_tanggal_lahir;
                     document.getElementById('detail_jenis_kelamin').innerHTML = result.data.jenis_kelamin;
-                    document.getElementById('detail_alamat').innerHTML = result.data.alamat;
+                    document.getElementById('detail_alamat').innerHTML = result.data.alamat+' Kel. '+result.data.kelurahan+', Kec. '+result.data.kecamatan+', '+result.data.kab_kota+', '+result.data.provinsi;
                     document.getElementById('detail_email').innerHTML = !result.data.email ? '<span class="text-danger">Belum Lengkap</span>' : result.data.email;
                     document.getElementById('detail_no_telepon').innerHTML = !result.data.no_telepon ? '<span class="text-danger">Belum Lengkap</span>' : result.data.no_telepon;
                     document.getElementById('detail_status_keluarga').innerHTML = result.data.status_keluarga;
