@@ -148,6 +148,9 @@
     <script src="{{ URL::asset('public/assets/js/iziToast.min.js') }}"></script>
     <script src="{{ URL::asset('public/assets/plugins/repeater/jquery.repeater.min.js') }}"></script>
     <script src="{{ URL::asset('public/assets/js/pages/jquery.form-repeater.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
+        integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         $.ajaxSetup({
             headers: {
@@ -632,9 +635,37 @@
                     $('#edit_pendidikan').val(result.data.pendidikan);
                     $('#edit_kunci_loker').val(result.data.kunci_loker);
                     $('#edit_status_karyawan').val(result.data.status_karyawan);
+                    $('#edit_kelurahan').val(result.data.kelurahan);
+                    $('#edit_kecamatan').val(result.data.kecamatan);
+                    $('#edit_kab_kota').val(result.data.kab_kota);
+                    $('.edit_provinsi').val(result.data.provinsi);
                     // document.getElementById('button_action').innerHTML = '<button type="button" class="btn btn-md" style="background-color: #005B41; color: white" onclick="buat_kontrak(`'+result.data.nik+'`)"><i class="mdi mdi-plus"></i> Buat Kontrak</button>'+
                     //                                                     '<button type="button" class="btn btn-md" style="background-color: #508D69; color: white" onclick="buat_riwayat_konseling(`'+result.data.nik+'`)"><i class="mdi mdi-plus"></i> Buat Riwayat Konseling</button>'+
                     //                                                     '<button type="button" class="btn btn-md" style="background-color: #363062; color: white" onclick="buat_riwayat_training(`'+result.data.nik+'`)"><i class="mdi mdi-plus"></i> Buat Riwayat Training</button>';
+                    function getProvinsi()
+                    {
+                        axios.post('https://alamat.thecloudalert.com/api/provinsi/get/')
+                            .then(function(response) {
+                                // console.log(response.data.result)
+                                $('.provinsi').empty();
+                                if (!response.data.result) {
+                                    $('.provinsi').append(new Option(null,null));
+                                }else{
+                                    $.each(response.data.result, function(id, value) {
+                                        $('.provinsi').append(
+                                            `
+                                            <option value="${value.text}" ${value.text == result.data.provinsi ? 'selected' : ''}> 
+                                                ${value.text} 
+                                            </option>
+                                            `
+                                        );
+                                        // $('.provinsi').append(new Option(value.text, value.text));
+                                    })
+                                }
+                            });
+                    }
+
+                    getProvinsi()
                     
                     $('.modalEditDataKaryawan').modal('show');
                 },
@@ -1335,6 +1366,26 @@
             // console.log($('#search_date_download').val());
             document.getElementById('view_download').innerHTML = '<a href="{{ url("hrga/biodata_karyawan/download_rekap_excel/") }}'+'/'+$('#search_date_download').val()+'" class="btn btn-primary" target="_blank"><i class="fas fa-download"></i> Download Rekap</a>'
         })
+
+        function getProvinsi()
+        {
+            axios.post('https://alamat.thecloudalert.com/api/provinsi/get/')
+                .then(function(response) {
+                    // console.log(response.data.result)
+                    $('.provinsi').empty();
+                    if (!response.data.result) {
+                        $('.provinsi').append(new Option(null,null));
+                    }else{
+                        $.each(response.data.result, function(id, value) {
+                            $('.provinsi').append(new Option(value.text, value.text));
+                        })
+                    }
+                });
+        }
+
+        $(document).ready(function(){
+            getProvinsi()
+        });
 
         // $(document).ready(function(){
         //     alert($('.nama_karyawan').val());

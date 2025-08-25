@@ -1526,15 +1526,15 @@ class HRGAController extends Controller
             $foto_karyawan = asset('public/berkas/HRGA/data_karyawan/'.$biodata_karyawan->foto_karyawan);
         }
 
-        if (empty($biodata_karyawan->kecamatan)) {
-            $alamat = $biodata_karyawan->alamat.', Kel. '.$biodata_karyawan->kelurahan.', '.$biodata_karyawan->kab_kota;
-        }elseif(empty($biodata_karyawan->kelurahan)) {
-            $alamat = $biodata_karyawan->alamat.', '.$biodata_karyawan->kab_kota.', '.$biodata_karyawan->provinsi;
-        }elseif(empty($biodata_karyawan->kab_kota)) {
-            $alamat = $biodata_karyawan->alamat.', '.$biodata_karyawan->provinsi;
-        }else{
-            $alamat = $biodata_karyawan->alamat.', Kec. '.$biodata_karyawan->kecamatan.', Kel. '.$biodata_karyawan->kelurahan.', '.$biodata_karyawan->kab_kota.', '.$biodata_karyawan->provinsi;
-        }
+        // if (empty($biodata_karyawan->kecamatan)) {
+        //     $alamat = $biodata_karyawan->alamat.', Kel. '.$biodata_karyawan->kelurahan.', '.$biodata_karyawan->kab_kota;
+        // }elseif(empty($biodata_karyawan->kelurahan)) {
+        //     $alamat = $biodata_karyawan->alamat.', '.$biodata_karyawan->kab_kota.', '.$biodata_karyawan->provinsi;
+        // }elseif(empty($biodata_karyawan->kab_kota)) {
+        //     $alamat = $biodata_karyawan->alamat.', '.$biodata_karyawan->provinsi;
+        // }else{
+        //     $alamat = $biodata_karyawan->alamat.', Kec. '.$biodata_karyawan->kecamatan.', Kel. '.$biodata_karyawan->kelurahan.', '.$biodata_karyawan->kab_kota.', '.$biodata_karyawan->provinsi;
+        // }
         
         return response()->json([
             'success' => true,
@@ -1546,7 +1546,11 @@ class HRGAController extends Controller
                 'tanggal_lahir' => $biodata_karyawan->tanggal_lahir,
                 'tempat_tanggal_lahir' => $biodata_karyawan->tempat_lahir.', '.Carbon::create($biodata_karyawan->tanggal_lahir)->isoFormat('LL'),
                 'jenis_kelamin' => $biodata_karyawan->jenis_kelamin,
-                'alamat' => $alamat,
+                'alamat' => $biodata_karyawan->alamat,
+                'kecamatan' => $biodata_karyawan->kecamatan,
+                'kelurahan' => $biodata_karyawan->kelurahan,
+                'kab_kota' => $biodata_karyawan->kab_kota,
+                'provinsi' => $biodata_karyawan->provinsi,
                 'email' => $biodata_karyawan->email,
                 'no_urut_level' => $biodata_karyawan->no_urut_level,
                 'no_urut_departemen' => $biodata_karyawan->no_urut_departemen,
@@ -1639,6 +1643,10 @@ class HRGAController extends Controller
             $input['tanggal_lahir'] = $request->edit_tanggal_lahir;
             $input['jenis_kelamin'] = $request->edit_jenis_kelamin;
             $input['alamat'] = $request->edit_alamat;
+            $input['kecamatan'] = $request->edit_kecamatan;
+            $input['kelurahan'] = $request->edit_kelurahan;
+            $input['kab_kota'] = $request->edit_kab_kota;
+            $input['provinsi'] = $request->edit_provinsi;
             $input['no_npwp'] = $request->edit_no_npwp;
             $input['no_telepon'] = $request->edit_no_telepon;
             $input['email'] = $request->edit_email;
@@ -1698,6 +1706,8 @@ class HRGAController extends Controller
 
             $this->biodata_karyawan->where('nik',$request->edit_nik)->update([
                 'tgl_lahir' => $request->edit_tanggal_lahir,
+                'alamat' => $request->edit_alamat.' '.ucwords($request->edit_kelurahan).', '.ucwords($request->edit_kecamatan).', '.ucwords($request->edit_kab_kota).', '.ucwords($request->edit_provinsi),
+                'jenis_kelamin' => $request->edit_jenis_kelamin == 'Laki - Laki' ? 'L' : 'P',
                 'email' => $request->edit_email,
                 'departemen_dept' => $request->edit_departemen_dept,
                 'departemen_bagian' => $request->edit_departemen_bagian,
