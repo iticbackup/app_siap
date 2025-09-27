@@ -49,7 +49,8 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Name Permission</th>
+                                <th>Role Name</th>
+                                <th>Role Guard</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -58,6 +59,7 @@
                                 <tr>
                                     <td>{{ ++$i }}</td>
                                     <td>{{ $role->name }}</td>
+                                    <td>{{ $role->guard_name }}</td>
                                     <td>
                                         <div class="button-items">
                                             <a class="btn btn-outline-info" href="{{ route('roles.show', $role->id) }}"><i class="far fa-eye"></i> Detail</a>
@@ -78,6 +80,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $roles->links('vendor.pagination.template1.default') }}
                 </div>
             </div>
         </div>

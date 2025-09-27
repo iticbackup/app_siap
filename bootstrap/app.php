@@ -52,4 +52,10 @@ $app->singleton(
 |
 */
 
+// $app->configure('services');
+
+# Register the notification service providers.
+// $app->register(Illuminate\Notifications\NotificationServiceProvider::class);
+// $app->register(NotificationChannels\Telegram\TelegramServiceProvider::class);
+
 return $app;

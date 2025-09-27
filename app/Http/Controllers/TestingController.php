@@ -10,11 +10,14 @@ use FilippoToso\PdfWatermarker\PdfWatermarker;
 use FilippoToso\PdfWatermarker\Facades\TextWatermarker;
 use FilippoToso\PdfWatermarker\Support\Position;
 
+use Telegram\Bot\Laravel\Facades\Telegram;
+
 use \Carbon\Carbon;
 use DNS1D;
 use DNS2D;
 
-// use Notification;
+use Notification;
+use App\Notifications\TelegramNotification;
 // use App\Notifications\SendPushNotification;
 
 class TestingController extends Controller
@@ -121,5 +124,19 @@ class TestingController extends Controller
     // {
     //     Notification::send(null,new SendPushNotification('Success','OKE',$fcmTokens));
     // }
+
+    public function testingNotificationTelegram()
+    {
+        // Notification::route('telegram','752617291')->notify(new TelegramNotification());
+        // $response = Telegram::bot('mybot')->getMe();
+        // $response = Telegram::getUpdates();
+        $response = Telegram::sendMessage([
+                        'chat_id' => '752617291',
+                        'text' => 'Hello World'
+                    ]);
+        // $messageId = $response->getMessageId();
+
+        return $response;
+    }
     
 }

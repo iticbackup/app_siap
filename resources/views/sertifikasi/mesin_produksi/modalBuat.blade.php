@@ -10,10 +10,10 @@
             <div class="modal-body">
                 <table class="table">
                     <tr>
-                        <td>Jenis Mesin</td>
+                        <td>Judul Sertifikat</td>
                         <td>:</td>
                         <td>
-                            <input type="text" name="jenis_mesin" class="form-control" placeholder="Jenis Mesin">
+                            <input type="text" name="jenis_mesin" class="form-control" placeholder="Judul Sertifikat">
                         </td>
                     </tr>
                     <tr>

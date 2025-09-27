@@ -101,24 +101,41 @@
                                 <strong>Permission:</strong>
                                 <br />
                                 <div class="row">
-                                    @foreach ($permission as $value)
+                                    {{-- @foreach ($permission as $value) --}}
                                     {{-- @php
                                         $explode_permission = explode('-',$value->name);
                                     @endphp --}}
                                     {{-- <div class="col-6">
                                         <div>{{ $explode_permission[0] }}</div>
                                     </div> --}}
-                                    <div class="col-6">
+                                    {{-- <div class="col-6">
                                         <label>{{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermissions) ? true : false, ['class' => 'name']) }}
                                             {{ ucwords($value->name) }}</label>
-                                    </div>
+                                    </div> --}}
                                         {{-- <br /> --}}
+                                    {{-- @endforeach --}}
+                                    @foreach ($custom_permission as $key => $group)
+                                        <div class="mb-2 mt-2" style="font-weight: bold">* {{ ucfirst($key) }}</div>
+                                        @forelse($group as $permission)
+                                            <div class="col-md-4">
+                                                <div class="mb-3">
+                                                    <input
+                                                        {{ $role->permissions->contains('id', $permission->id) ? 'checked' : '' }}
+                                                        name="permission[]" class="rounded-md border" type="checkbox"
+                                                        value="{{ $permission->name }}">
+                                                    {{ $permission->name }}
+                                                </div>
+                                            </div>
+                                        @empty
+                                            {{ __('No permission in this group !') }}
+                                        @endforelse
                                     @endforeach
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <a href="{{ route('roles.index') }}" class="btn btn-secondary">Back</a>
+                            <button type="submit" class="btn btn-primary">Update</button>
                         </div>
                     </div>
                     {!! Form::close() !!}

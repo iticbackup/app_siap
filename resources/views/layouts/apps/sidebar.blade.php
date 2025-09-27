@@ -96,6 +96,29 @@
                 </li>
             @endcan
 
+            <li class="menu-label mt-0">Dokumen Kontrol</li>
+            <li class="{{ Request::is('document_control*') ? 'mm-active' : '' }}">
+                <a href="javascript: void(0);"> <i data-feather="file-text"
+                        class="align-self-center menu-icon"></i><span>Dokumen Kontrol</span><span class="menu-arrow"><i
+                            class="mdi mdi-chevron-right"></i></span></a>
+                <ul class="nav-second-level {{ Request::is('document_control*') ? 'mm-collapse mm-show' : '' }}" aria-expanded="false">
+                    <li class="nav-item"><a class="nav-link" href="{{ route('dc.category') }}">
+                            <i class="ti-control-record"></i>Kategori</a>
+                    </li>
+                    <li class="nav-item {{ Request::is('document_control/list_validasi*') ? 'active' : '' }}"><a class="nav-link {{ Request::is('document_control/list_validasi*') ? 'active' : '' }}" href="{{ route('dc.listValidasi') }}">
+                            <i class="ti-control-record"></i>List Validasi</a>
+                    </li>
+                    <li class="nav-item {{ Request::is('document_control/departemen*') ? 'active' : '' }}"><a class="nav-link {{ Request::is('document_control/departemen*') ? 'active' : '' }}" href="{{ route('dc.departemen') }}">
+                            <i class="ti-control-record"></i>Departemen</a>
+                    </li>
+                    <li class="nav-item {{ Request::is('document_control/perubahan_dokumen*') ? 'active' : '' }}"><a class="nav-link {{ Request::is('document_control/perubahan_dokumen*') ? 'active' : '' }}" href="{{ route('dc.departemen') }}">
+                            <i class="ti-control-record"></i>Perubahan Dokumen</a>
+                    </li>
+                </ul>
+            </li>
+
+            {{-- <li class="menu-label mt-0">Integrated ISO</li> --}}
+
             @can('hrga_list')
                 <li class="menu-label mt-0">HRGA</li>
                 <li class="{{ Request::is('hrga/biodata_karyawan*') ? 'active' : '' }}">
@@ -107,16 +130,6 @@
                     <a href="{{ route('hrga.biodata_karyawan.buat_karyawan_baru') }}"
                         class="{{ Request::is('hrga/buat_karyawan_baru') ? 'active' : '' }}"><i
                             class="mdi mdi-account-box-multiple"></i> Buat Karyawan Baru</a>
-                </li>
-                <li>
-                    <a href="javascript: void(0);"> <i data-feather="file-text"
-                            class="align-self-center menu-icon"></i><span>Sertifikasi</span><span class="menu-arrow"><i
-                                class="mdi mdi-chevron-right"></i></span></a>
-                    <ul class="nav-second-level" aria-expanded="false">
-                        <li class="nav-item"><a class="nav-link" href="{{ route('hrga.sertifikasi.mesin_produksi') }}">
-                                <i class="ti-control-record"></i>Mesin Produksi</a>
-                        </li>
-                    </ul>
                 </li>
             @endcan
 
@@ -147,6 +160,16 @@
                     <li class="{{ Request::is('qhse/ibprpp*') ? 'active' : '' }}">
                         <a href="{{ route('qhse.ibprpp.periode') }}" class="{{ Request::is('qhse/ibprpp*') ? 'active' : '' }}"><i
                                 class="ti-control-record"></i> Data IBPRPP</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript: void(0);"> <i data-feather="file-text"
+                        class="align-self-center menu-icon"></i><span>Sertifikasi</span><span class="menu-arrow"><i
+                            class="mdi mdi-chevron-right"></i></span></a>
+                <ul class="nav-second-level" aria-expanded="false">
+                    <li class="nav-item"><a class="nav-link" href="{{ route('hrga.sertifikasi.mesin_produksi') }}">
+                            <i class="ti-control-record"></i>Mesin Produksi</a>
                     </li>
                 </ul>
             </li>

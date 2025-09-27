@@ -36,16 +36,30 @@
                     <div class="form-group">
                         <strong>Permission:</strong>
                         <br />
-                        <div class="row">
-                            @foreach ($permission as $value)
+                        <div class="row mt-3">
+                            {{-- @foreach ($permission as $value)
                             <div class="col-3">
                                 <label>{{ Form::checkbox('permission[]', $value->id, false, ['class' => 'form-check-input']) }}
                                     {{ ucwords($value->name) }}</label>
                             </div>
+                            @endforeach --}}
+                            @foreach ($custom_permission as $key => $group)
+                                <div class="mb-2" style="font-weight: bold">{{ ucfirst($key) }}</div>
+                                @forelse($group as $permission)
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            {{ Form::checkbox('permission[]', $permission->name, false, ['class' => 'form-check-input']) }}
+                                            {{ $permission->name }}
+                                        </div>
+                                    </div>
+                                @empty
+                                    {{ __('No permission in this group !') }}
+                                @endforelse
                             @endforeach
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <a href="{{ route('roles.index') }}" class="btn btn-secondary">Back</a>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                     {!! Form::close() !!}

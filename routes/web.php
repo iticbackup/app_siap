@@ -53,46 +53,100 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('users/{nama}/search', [App\Http\Controllers\UserController::class, 'search_nik']);
     Route::resource('products', App\Http\Controllers\ProductController::class);
 
-    Route::prefix('periode')->group(function () {
-        Route::get('/', [App\Http\Controllers\PeriodeController::class, 'index'])->name('periode');
-        Route::post('simpan', [App\Http\Controllers\PeriodeController::class, 'simpan'])->name('periode.simpan');
-        Route::get('{id}/detail', [App\Http\Controllers\PeriodeController::class, 'detail'])->name('periode.detail');
-        Route::post('update', [App\Http\Controllers\PeriodeController::class, 'update'])->name('periode.update');
-        Route::get('{id}/delete', [App\Http\Controllers\PeriodeController::class, 'delete'])->name('periode.delete');
+    Route::controller(App\Http\Controllers\PeriodeController::class)->group(function () {
+        Route::prefix('periode')->group(function () {
+            Route::get('/', 'index')->name('periode');
+            Route::post('simpan', 'simpan')->name('periode.simpan');
+            Route::get('{id}/detail', 'detail')->name('periode.detail');
+            Route::post('update', 'update')->name('periode.update');
+            Route::get('{id}/delete', 'delete')->name('periode.delete');
+        });
     });
 
-    Route::prefix('file_manager')->group(function () {
-        Route::get('/', [App\Http\Controllers\FileManagerController::class, 'index'])->name('file_manager');
-        Route::get('{id}', [App\Http\Controllers\FileManagerController::class, 'detail_departemen'])->name('file_manager.detail_departemen');
-        Route::get('{id}/kategori', [App\Http\Controllers\FileManagerController::class, 'file_manager_kategori'])->name('file_manager.kategori');
-        Route::post('kategori_simpan', [App\Http\Controllers\FileManagerController::class, 'file_manager_kategori_simpan'])->name('file_manager.kategori_simpan');
-        Route::get('kategori/{kategori_id}', [App\Http\Controllers\FileManagerController::class, 'file_manager_list'])->name('file_manager.file_manager_list');
-        Route::post('upload_file/simpan', [App\Http\Controllers\FileManagerController::class, 'file_manager_list_upload_simpan'])->name('file_manager.file_manager_list_upload_simpan');
-        Route::post('upload_file_fr/simpan', [App\Http\Controllers\FileManagerController::class, 'file_manager_list_upload_fr_simpan'])->name('file_manager.file_manager_list_upload_fr_simpan');
-        Route::get('preview/{id}', [App\Http\Controllers\FileManagerController::class, 'file_manager_list_preview'])->name('file_manager.file_manager_list_preview');
-        Route::get('download/{id}', [App\Http\Controllers\FileManagerController::class, 'file_manager_list_download'])->name('file_manager.file_manager_list_download');
-        Route::get('delete/{id}', [App\Http\Controllers\FileManagerController::class, 'file_manager_list_delete'])->name('file_manager.file_manager_list_delete');
+    Route::controller(App\Http\Controllers\FileManagerController::class)->group(function () {
+        Route::prefix('file_manager')->group(function () {
+            Route::get('/', 'index')->name('file_manager');
+            Route::get('{id}', 'detail_departemen')->name('file_manager.detail_departemen');
+            Route::get('{id}/kategori', 'file_manager_kategori')->name('file_manager.kategori');
+            Route::post('kategori_simpan', 'file_manager_kategori_simpan')->name('file_manager.kategori_simpan');
+            Route::get('kategori/{kategori_id}', 'file_manager_list')->name('file_manager.file_manager_list');
+            Route::post('upload_file/simpan', 'file_manager_list_upload_simpan')->name('file_manager.file_manager_list_upload_simpan');
+            Route::post('upload_file_fr/simpan', 'file_manager_list_upload_fr_simpan')->name('file_manager.file_manager_list_upload_fr_simpan');
+            Route::get('preview/{id}', 'file_manager_list_preview')->name('file_manager.file_manager_list_preview');
+            Route::get('download/{id}', 'file_manager_list_download')->name('file_manager.file_manager_list_download');
+            Route::get('delete/{id}', 'file_manager_list_delete')->name('file_manager.file_manager_list_delete');
+        });
     });
-
-    Route::prefix('permission')->group(function () {
-        Route::get('/', [App\Http\Controllers\PermissionController::class, 'index'])->name('permission');
-        Route::post('simpan', [App\Http\Controllers\PermissionController::class, 'simpan'])->name('permission.simpan');
-        Route::get('{id}', [App\Http\Controllers\PermissionController::class, 'detail'])->name('permission.detail');
-        Route::post('update', [App\Http\Controllers\PermissionController::class, 'update'])->name('permission.update');
+    
+    Route::controller(App\Http\Controllers\DcController::class)->group(function () {
+        Route::prefix('document_control')->group(function () {
+            Route::prefix('category')->group(function () {
+                Route::get('/', 'category')->name('dc.category');
+                Route::post('simpan', 'category_store')->name('dc.category.store');
+                Route::post('update', 'category_update')->name('dc.category.update');
+                Route::get('{id}', 'category_detail')->name('dc.category.detail');
+                Route::delete('{id}/delete', 'category_destroy')->name('dc.category.destroy');
+            });
+            Route::prefix('departemen')->group(function () {
+                Route::get('/', 'departemen')->name('dc.departemen');
+                Route::get('{id}', 'departemen_detail')->name('dc.departemen.departemen_detail');
+                Route::post('{id}/simpan', 'departemen_detail_store')->name('dc.departemen.departemen_detail.store');
+                Route::post('{id}/dc/upload-file-simpan', 'departemen_category_document_control_simpan')->name('dc.departemen.document_control.simpan');
+                Route::get('{id}/{dc_category_id}', 'departemen_detail_category_detail')->name('dc.departemen.departemen_detail.category_detail');
+                Route::delete('{id}/{dc_category_id}/delete', 'departemen_detail_category_detail_delete')->name('dc.departemen.departemen_detail.category_detail.delete');
+            });
+        });
     });
-
-    Route::prefix('departemen')->group(function () {
-        Route::get('/', [App\Http\Controllers\DepartemenController::class, 'index'])->name('departemen');
-        Route::post('simpan', [App\Http\Controllers\DepartemenController::class, 'simpan'])->name('departemen.simpan');
-        Route::get('{id}', [App\Http\Controllers\DepartemenController::class, 'detail'])->name('departemen.detail');
-        Route::post('update', [App\Http\Controllers\DepartemenController::class, 'update'])->name('departemen.update');
-        Route::get('{id}/delete', [App\Http\Controllers\DepartemenController::class, 'delete'])->name('departemen.delete');
-        Route::get('{id}/team', [App\Http\Controllers\DepartemenController::class, 'detail_team'])->name('departemen.detail_team');
-        Route::get('{id}/{team_id}/team', [App\Http\Controllers\DepartemenController::class, 'detail_team_group'])->name('departemen.detail_team_group');
-        Route::post('{id}/team/simpan', [App\Http\Controllers\DepartemenController::class, 'team_simpan'])->name('departemen.team_simpan');
-        Route::post('{id}/team/update', [App\Http\Controllers\DepartemenController::class, 'detail_team_update'])->name('departemen.detail_team_update');
-        Route::post('{id}/team/pindah/update', [App\Http\Controllers\DepartemenController::class, 'detail_pindah_team_update'])->name('departemen.detail_pindah_team_update');
-        Route::post('search_nik', [App\Http\Controllers\DepartemenController::class, 'search_nik'])->name('departemen.search_nik');
+    
+    Route::controller(App\Http\Controllers\ListValidasiController::class)->group(function () {
+        Route::prefix('document_control')->group(function () {
+            Route::prefix('list_validasi')->group(function () {
+                Route::get('/', 'indexValidasiDisetujui')->name('dc.listValidasi');
+                Route::post('simpan', 'validasiDisetujuiSimpan')->name('dc.listValidasiDisetujui.simpan');
+                Route::post('update', 'validasiDisetujuiUpdate')->name('dc.listValidasiDisetujui.update');
+                Route::get('{id}', 'validasiDisetujuiDetail')->name('dc.listValidasiDisetujui.detail');
+                Route::delete('{id}/delete', 'validasiDisetujuiDelete')->name('dc.listValidasiDisetujui.delete');
+            });
+            Route::prefix('list_validasi_diperiksa')->group(function () {
+                Route::get('/', 'indexValidasiDiperiksa')->name('dc.listValidasiDiperiksa');
+                Route::post('simpan', 'validasiDiperiksaSimpan')->name('dc.listValidasiDiperiksa.simpan');
+                Route::post('update', 'validasiDiperiksaUpdate')->name('dc.listValidasiDiperiksa.update');
+                Route::get('{id}', 'validasiDiperiksaDetail')->name('dc.listValidasiDiperiksa.detail');
+                Route::delete('{id}/delete', 'validasiDiperiksaDelete')->name('dc.listValidasiDiperiksa.delete');
+            });
+            Route::prefix('list_validasi_dibuat')->group(function () {
+                Route::get('/', 'indexValidasiDibuat')->name('dc.listValidasiDibuat');
+                Route::post('simpan', 'validasiDibuatSimpan')->name('dc.listValidasiDibuat.simpan');
+                Route::post('update', 'validasiDibuatUpdate')->name('dc.listValidasiDibuat.update');
+                Route::get('{id}', 'validasiDibuatDetail')->name('dc.listValidasiDibuat.detail');
+                Route::delete('{id}/delete', 'validasiDibuatDelete')->name('dc.listValidasiDibuat.delete');
+            });
+        });
+    });
+    
+    Route::controller(App\Http\Controllers\PermissionController::class)->group(function () {
+        Route::prefix('permission')->group(function () {
+            Route::get('/', 'index')->name('permission');
+            Route::post('simpan', 'simpan')->name('permission.simpan');
+            Route::get('{id}', 'detail')->name('permission.detail');
+            Route::post('update', 'update')->name('permission.update');
+        });
+    });
+    
+    Route::controller(App\Http\Controllers\DepartemenController::class)->group(function () {
+        Route::prefix('departemen')->group(function () {
+            Route::get('/', 'index')->name('departemen');
+            Route::post('simpan', 'simpan')->name('departemen.simpan');
+            Route::get('{id}', 'detail')->name('departemen.detail');
+            Route::post('update', 'update')->name('departemen.update');
+            Route::get('{id}/delete', 'delete')->name('departemen.delete');
+            Route::get('{id}/team', 'detail_team')->name('departemen.detail_team');
+            Route::get('{id}/{team_id}/team', 'detail_team_group')->name('departemen.detail_team_group');
+            Route::post('{id}/team/simpan', 'team_simpan')->name('departemen.team_simpan');
+            Route::post('{id}/team/update', 'detail_team_update')->name('departemen.detail_team_update');
+            Route::post('{id}/team/pindah/update', 'detail_pindah_team_update')->name('departemen.detail_pindah_team_update');
+            Route::post('search_nik', 'search_nik')->name('departemen.search_nik');
+        });
     });
 
     Route::prefix('rekap_pelatihan')->group(function () {
@@ -369,5 +423,6 @@ Route::group(['middleware' => ['auth']], function() {
         return $data;
     });
     // Route::get('testing', [App\Http\Controllers\TestingController::class, 'testing2'])->name('testing_pdf');
+    Route::get('testing-telegram', [App\Http\Controllers\TestingController::class, 'testingNotificationTelegram']);
 
 });
