@@ -45,7 +45,7 @@ Route::get('modules/{id}/download', [App\Http\Controllers\ModulesController::cla
 //     return request()->ip();
 // });
 
-Route::group(['middleware' => ['auth']], function() {
+Route::group(['middleware' => ['auth', 'LogVisits']], function() {
     Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('activity_log', [App\Http\Controllers\UserController::class, 'activity_log'])->name('activity_log');
     Route::resource('roles', App\Http\Controllers\RoleController::class);

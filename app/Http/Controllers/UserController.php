@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\BiodataKaryawan;
 use App\Models\LogActivity;
+use App\Models\ShetabitVisits;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
@@ -29,10 +30,12 @@ class UserController extends Controller
 
      function __construct(
         User $user,
-        BiodataKaryawan $biodataKaryawan
+        BiodataKaryawan $biodataKaryawan,
+        ShetabitVisits $shetabitVisits
      ){
         $this->user = $user;
         $this->biodataKaryawan = $biodataKaryawan;
+        $this->shetabitVisits = $shetabitVisits;
      }
 
     public function index(Request $request)
@@ -240,25 +243,42 @@ class UserController extends Controller
         // return view('users.index',compact('data'))
         //     ->with('i', ($request->input('page', 1) - 1) * 5);
 
-        if ($request->ajax()) {
-            $data = LogActivity::all();
-            return DataTables::of($data)
-                            ->addIndexColumn()
-                            ->addColumn('method', function($row){
-                                if ($row->method == 'POST') {
-                                    return '<span class="badge bg-success">POST<span>';
-                                }
-                            })
-                            ->addColumn('user_id', function($row){
-                                return $row->user->name;
-                            })
-                            ->addColumn('created_at', function($row){
-                                return Carbon::create($row->created_at)->format('d-m-Y H:i:s');
-                            })
-                            ->rawColumns(['method'])
-                            ->make(true);
-        }
-        return view('users.activity_log');
+        // if ($request->ajax()) {
+        //     // $data = LogActivity::all();
+        //     $data = $this->shetabitVisits->all();
+        //     return DataTables::of($data)
+        //                     ->addIndexColumn()
+        //                     ->addColumn('method', function($row){
+        //                         switch ($row->method) {
+        //                             case 'GET':
+        //                                 return '<span class="badge bg-success">'.$row->method.'<span>';
+        //                                 break;
+        //                             case 'POST':
+        //                                 return '<span class="badge bg-info">'.$row->method.'<span>';
+        //                                 break;
+        //                             case 'DELETE':
+        //                                 return '<span class="badge bg-danger">'.$row->method.'<span>';
+        //                                 break;
+                                    
+        //                             default:
+        //                                 # code...
+        //                                 break;
+        //                         }
+        //                         // if ($row->method == 'POST') {
+        //                         //     return '<span class="badge bg-success">POST<span>';
+        //                         // }
+        //                     })
+        //                     // ->addColumn('user_id', function($row){
+        //                     //     return $row->user->name;
+        //                     // })
+        //                     ->addColumn('created_at', function($row){
+        //                         return Carbon::create($row->created_at)->format('d-m-Y H:i:s');
+        //                     })
+        //                     ->rawColumns(['method'])
+        //                     ->make(true);
+        // }
+        $data['shetabitVisits'] = $this->shetabitVisits->orderBy('created_at','desc')->paginate(20);
+        return view('users.activity_log',$data);
     }
 
     public function updateToken(Request $request){
