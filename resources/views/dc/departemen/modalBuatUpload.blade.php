@@ -9,7 +9,7 @@
                 @csrf
                 {{-- <input type="hidden" name="file_manager_category_id" id="file_manager_category_id"> --}}
                 {{-- <input type="text" name="departemen_id" id="departemen_id"> --}}
-                <input type="hidden" name="modaldc_category_id" id="modalIdKategori">
+                <input type="text" name="modaldc_category_id" id="modalIdKategori">
             <div class="modal-body">
                 {{-- <div class="mb-3">
                     <label class="form-label">No. Dokumen</label>

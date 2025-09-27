@@ -347,6 +347,7 @@ class DcController extends Controller
                             // return DNS2D::getBarcodeHTML($validasiDisetujui,"QRCODE",6,6);
 
         $dc_category_departemen = $this->dc_category_departemen->find($request->modaldc_category_id);
+        // dd($dc_category_departemen);
         // dd($dc_category_departemen->dc_category->dc_category, $dc_category_departemen->departemen->departemen);
         
         foreach ($request->documents as $key => $value) {
@@ -451,7 +452,8 @@ class DcController extends Controller
         return response()->json([
             'success' => true,
             'message_title' => 'Berhasil!',
-            'message_content' => 'Dokumen Kontrol Berhasil Diupload'
+            'message_content' => 'Dokumen Kontrol Berhasil Diupload',
+            'dc_category_id' => $dc_category_departemen->dc_category_id
         ]);
     }
 

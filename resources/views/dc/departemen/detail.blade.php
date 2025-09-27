@@ -773,7 +773,7 @@
                                     message: result.error
                                 });
                             }
-                            departemen_document_control_detail("{{ $departemen->id }}");
+                            departemen_document_control_detail(result.dc_category_id);
                             // document.getElementById('preview_validasi_disetujui').innerHTML = '<img src="data:image/png;base64,' +result.data+ '" alt="barcode"   />';
                             this.reset;
                             $('.modalBuatUpload').modal('hide');
