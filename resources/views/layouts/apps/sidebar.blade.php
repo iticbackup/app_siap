@@ -96,26 +96,36 @@
                 </li>
             @endcan
 
+            @can('documentcontrolnew-list')
             <li class="menu-label mt-0">Dokumen Kontrol</li>
             <li class="{{ Request::is('document_control*') ? 'mm-active' : '' }}">
                 <a href="javascript: void(0);"> <i data-feather="file-text"
                         class="align-self-center menu-icon"></i><span>Dokumen Kontrol</span><span class="menu-arrow"><i
                             class="mdi mdi-chevron-right"></i></span></a>
                 <ul class="nav-second-level {{ Request::is('document_control*') ? 'mm-collapse mm-show' : '' }}" aria-expanded="false">
+                    @can('documentcontrolnew-kategori')
                     <li class="nav-item"><a class="nav-link" href="{{ route('dc.category') }}">
                             <i class="ti-control-record"></i>Kategori</a>
                     </li>
+                    @endcan
+                    @can('documentcontrolnew-listvalidasi')
                     <li class="nav-item {{ Request::is('document_control/list_validasi*') ? 'active' : '' }}"><a class="nav-link {{ Request::is('document_control/list_validasi*') ? 'active' : '' }}" href="{{ route('dc.listValidasi') }}">
                             <i class="ti-control-record"></i>List Validasi</a>
                     </li>
+                    @endcan
+                    @can('documentcontrolnew-departemen')
                     <li class="nav-item {{ Request::is('document_control/departemen*') ? 'active' : '' }}"><a class="nav-link {{ Request::is('document_control/departemen*') ? 'active' : '' }}" href="{{ route('dc.departemen') }}">
                             <i class="ti-control-record"></i>Departemen</a>
                     </li>
+                    @endcan
+                    @can('documentcontrolnew-perubahandokumen')
                     <li class="nav-item {{ Request::is('document_control/perubahan_dokumen*') ? 'active' : '' }}"><a class="nav-link {{ Request::is('document_control/perubahan_dokumen*') ? 'active' : '' }}" href="{{ route('dc.departemen') }}">
                             <i class="ti-control-record"></i>Perubahan Dokumen</a>
                     </li>
+                    @endcan
                 </ul>
             </li>
+            @endcan
 
             {{-- <li class="menu-label mt-0">Integrated ISO</li> --}}
 
