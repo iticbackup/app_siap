@@ -217,6 +217,7 @@
                     @endphp
                     @if (auth()->user()->nik == '1207514' || 
                     auth()->user()->nik == '1711952' ||
+                    auth()->user()->nik == '2103484' ||
                     auth()->user()->nik == '0000000' ||
                     auth()->user()->nik == '0000010' ||
                     auth()->user()->nik == '2007275' ||
