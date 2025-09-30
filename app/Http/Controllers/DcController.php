@@ -9,6 +9,7 @@ use App\Models\DcCategory;
 use App\Models\DcCategoryDepartemen;
 use App\Models\DocumentControl;
 use App\Models\Departemen;
+use App\Models\DepartemenUser;
 use App\Models\ListValidasiDibuat;
 use App\Models\ListValidasiDiperiksa;
 use App\Models\ListValidasiDisetujui;
@@ -39,6 +40,7 @@ class DcController extends Controller
         DcCategory $dc_category,
         DcCategoryDepartemen $dc_category_departemen,
         Departemen $departemen,
+        DepartemenUser $departemen_user,
         ListValidasiDibuat $listValidasiDibuat,
         ListValidasiDiperiksa $listValidasiDiperiksa,
         ListValidasiDisetujui $listValidasiDisetujui,
@@ -48,6 +50,7 @@ class DcController extends Controller
         $this->dc_category = $dc_category;
         $this->dc_category_departemen = $dc_category_departemen;
         $this->departemen = $departemen;
+        $this->departemen_user = $departemen_user;
         $this->listValidasiDibuat = $listValidasiDibuat;
         $this->listValidasiDiperiksa = $listValidasiDiperiksa;
         $this->listValidasiDisetujui = $listValidasiDisetujui;
@@ -312,32 +315,33 @@ class DcController extends Controller
 
     public function departemen_category_document_control_simpan(Request $request, $id)
     {
-        $cekValidasiDisetujui = $this->listValidasiDisetujui->find($request->validasi_disetujui);
-        if (empty($cekValidasiDisetujui)) {
-            return response()->json([
-                'success' => false,
-                'message_title' => 'Gagal',
-                'message_content' => 'Validator Disetujui Tidak Ditemukan'
-            ]);
-        }
+        // $cekValidasiDisetujui = $this->listValidasiDisetujui->find($request->validasi_disetujui);
+        // if (empty($cekValidasiDisetujui)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message_title' => 'Gagal',
+        //         'message_content' => 'Validator Disetujui Tidak Ditemukan'
+        //     ]);
+        // }
 
-        $cekValidasiDiperiksa = $this->listValidasiDiperiksa->find($request->validasi_diperiksa);
-        if (empty($cekValidasiDiperiksa)) {
-            return response()->json([
-                'success' => false,
-                'message_title' => 'Gagal',
-                'message_content' => 'Validator Diperiksa Tidak Ditemukan'
-            ]);
-        }
+        // $cekValidasiDiperiksa = $this->listValidasiDiperiksa->find($request->validasi_diperiksa);
+        // if (empty($cekValidasiDiperiksa)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message_title' => 'Gagal',
+        //         'message_content' => 'Validator Diperiksa Tidak Ditemukan'
+        //     ]);
+        // }
 
-        $cekValidasiDibuat = $this->listValidasiDibuat->find($request->validasi_dibuat);
-        if (empty($cekValidasiDibuat)) {
-            return response()->json([
-                'success' => false,
-                'message_title' => 'Gagal',
-                'message_content' => 'Validator Dibuat Tidak Ditemukan'
-            ]);
-        }
+        // $cekValidasiDibuat = $this->listValidasiDibuat->find($request->validasi_dibuat);
+        // if (empty($cekValidasiDibuat)) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message_title' => 'Gagal',
+        //         'message_content' => 'Validator Dibuat Tidak Ditemukan'
+        //     ]);
+        // }
+
         // $validasiDisetujui = 'Kode Validasi : '.$cekValidasiDisetujui->code."\n".
         //                     'Validasi Oleh : '.$cekValidasiDisetujui->name."\n".
         //                     'Nama Dokumen : '.$cekValidasiDisetujui->name."\n".
@@ -349,6 +353,16 @@ class DcController extends Controller
         $dc_category_departemen = $this->dc_category_departemen->find($request->modaldc_category_id);
         // dd($dc_category_departemen);
         // dd($dc_category_departemen->dc_category->dc_category, $dc_category_departemen->departemen->departemen);
+
+        $listValidasiDibuat = $this->listValidasiDibuat->where('nik',auth()->user()->nik)->first();
+        
+        if (empty($listValidasiDibuat)) {
+            return response()->json([
+                'success' => false,
+                'message_title' => 'Gagal',
+                'message_content' => 'Nama Validator Dibuat Tidak Ditemukan'
+            ]);
+        }
         
         foreach ($request->documents as $key => $value) {
             $path_file_asli = public_path('berkas/'.$dc_category_departemen->departemen->departemen.'/'.$dc_category_departemen->dc_category->dc_category);
@@ -358,39 +372,51 @@ class DcController extends Controller
             }
 
             if ($value['files']) {
+                // Copy
                 $fileDocument = $value['files'];
                 $fileNameDocument = $value['no_dokumen'].' - '.$value['nama_dokumen'].' Rev '.$value['no_revisi'].'.'.$fileDocument->getClientOriginalExtension();
-                $fileDocument->move(public_path('berkas/'.$dc_category_departemen->departemen->departemen.'/'.$dc_category_departemen->dc_category->dc_category), $fileNameDocument);
+                $fileDocument->move(public_path('berkas/'.$dc_category_departemen->departemen->departemen.'/'.$dc_category_departemen->dc_category->dc_category.'/'.'Asli'), $fileNameDocument);
+                // Asli
+                // $fileDocumentAsli = $value['files'];
+                // $fileNameDocumentAsli = $value['no_dokumen'].' - '.$value['nama_dokumen'].' Rev '.$value['no_revisi'].'.'.$fileDocumentAsli->getClientOriginalExtension();
+                // $fileDocumentAsli->move(public_path('berkas/'.$dc_category_departemen->departemen->departemen.'/'.$dc_category_departemen->dc_category->dc_category.'/'.'Asli'), $fileNameDocument);
+                // dd(public_path('berkas/'.$dc_category_departemen->departemen->departemen.'/'.$dc_category_departemen->dc_category->dc_category.'/'.'Asli'));
                 // $fileDocument->move(public_path('berkas/validasi'), $fileNameDocument);
             }
 
-            $validasiDisetujui = 'Kode Validasi : '.$cekValidasiDisetujui->code."\n".
-                                'Validasi Oleh : '.$cekValidasiDisetujui->name."\n".
-                                'Nama Dokumen : '.$value['no_dokumen'].' - '.$value['nama_dokumen'].' - '.$value['no_revisi']."\n".
-                                'Departemen : '.$cekValidasiDisetujui->departemen->departemen."\n".
-                                'Tanggal Validasi : '.Carbon::now()->isoFormat('dddd, D MMMM YYYY');
+            // $validasiDisetujui = 'Kode Validasi : '.$cekValidasiDisetujui->code."\n".
+            //                     'Validasi Oleh : '.$cekValidasiDisetujui->name."\n".
+            //                     'Nama Dokumen : '.$value['no_dokumen'].' - '.$value['nama_dokumen'].' - '.$value['no_revisi']."\n".
+            //                     'Departemen : '.$cekValidasiDisetujui->departemen->departemen."\n".
+            //                     'Tanggal Validasi : '.Carbon::now()->isoFormat('dddd, D MMMM YYYY');
 
-            $validasiDiperiksa = 'Kode Validasi : '.$cekValidasiDiperiksa->code."\n".
-                                'Validasi Oleh : '.$cekValidasiDiperiksa->name."\n".
-                                'Nama Dokumen : '.$value['no_dokumen'].' - '.$value['nama_dokumen'].' - '.$value['no_revisi']."\n".
-                                'Departemen : Manajemen Representative'."\n".
-                                'Tanggal Validasi : '.Carbon::now()->isoFormat('dddd, D MMMM YYYY');
+            // $validasiDiperiksa = 'Kode Validasi : '.$cekValidasiDiperiksa->code."\n".
+            //                     'Validasi Oleh : '.$cekValidasiDiperiksa->name."\n".
+            //                     'Nama Dokumen : '.$value['no_dokumen'].' - '.$value['nama_dokumen'].' - '.$value['no_revisi']."\n".
+            //                     'Departemen : Manajemen Representative'."\n".
+            //                     'Tanggal Validasi : '.Carbon::now()->isoFormat('dddd, D MMMM YYYY');
             
-            $validasiDibuat = 'Kode Validasi : '.$cekValidasiDibuat->code."\n".
-                                'Validasi Oleh : '.$cekValidasiDibuat->name."\n".
-                                'Nama Dokumen : '.$value['no_dokumen'].' - '.$value['nama_dokumen'].' - '.$value['no_revisi']."\n".
-                                'Departemen : '.$cekValidasiDibuat->departemen->departemen."\n".
+            // $validasiDibuat = 'Kode Validasi : '.$cekValidasiDibuat->code."\n".
+            //                     'Validasi Oleh : '.$cekValidasiDibuat->name."\n".
+            //                     'Nama Dokumen : '.$value['no_dokumen'].' - '.$value['nama_dokumen'].' - '.$value['no_revisi']."\n".
+            //                     'Departemen : '.$cekValidasiDibuat->departemen->departemen."\n".
+            //                     'Tanggal Validasi : '.Carbon::now()->isoFormat('dddd, D MMMM YYYY');
+            
+            $validasiDibuat = 'Kode Validasi : '.$listValidasiDibuat->code."\n".
+                                'Validasi Oleh : '.$listValidasiDibuat->name."\n".
+                                'Nama Dokumen : '.$value['no_dokumen'].' - '.$value['nama_dokumen'].' - Rev '.$value['no_revisi']."\n".
+                                'Departemen : '.$listValidasiDibuat->departemen->departemen."\n".
                                 'Tanggal Validasi : '.Carbon::now()->isoFormat('dddd, D MMMM YYYY');
 
             // cover disetujui
-            $barcodeValidasiDisetujui = \Storage::disk('barcode')->put('barcode_validasi_disetujui.png',base64_decode(DNS2D::getBarcodePNG($validasiDisetujui, "QRCODE", 6,6)));
+            // $barcodeValidasiDisetujui = \Storage::disk('barcode')->put('barcode_validasi_disetujui.png',base64_decode(DNS2D::getBarcodePNG($validasiDisetujui, "QRCODE", 6,6)));
             // cover diperiksa
-            $barcodeValidasiDiperiksa = \Storage::disk('barcode')->put('barcode_validasi_diperiksa.png',base64_decode(DNS2D::getBarcodePNG($validasiDiperiksa, "QRCODE", 6,6)));
+            // $barcodeValidasiDiperiksa = \Storage::disk('barcode')->put('barcode_validasi_diperiksa.png',base64_decode(DNS2D::getBarcodePNG($validasiDiperiksa, "QRCODE", 6,6)));
             // cover dibuat
-            $barcodeValidasiDibuat = \Storage::disk('barcode')->put('barcode-validasi-dibuat-'.Str::slug($cekValidasiDibuat->name).'.png',base64_decode(DNS2D::getBarcodePNG($validasiDibuat, "QRCODE", 6,6)));
+            $barcodeValidasiDibuat = \Storage::disk('barcode')->put('barcode-validasi-dibuat-'.Str::slug($listValidasiDibuat->name).'.png',base64_decode(DNS2D::getBarcodePNG($validasiDibuat, "QRCODE", 6,6)));
 
             $pdf = new Fpdi();
-            $page_count = $pdf->setSourceFile(public_path('berkas/'.$dc_category_departemen->departemen->departemen.'/'.$dc_category_departemen->dc_category->dc_category.'/'.$fileNameDocument));
+            $page_count = $pdf->setSourceFile(public_path('berkas/'.$dc_category_departemen->departemen->departemen.'/'.$dc_category_departemen->dc_category->dc_category.'/'.'Asli'.'/'.$fileNameDocument));
             // $page_count = $pdf->setSourceFile(public_path('berkas/validasi'.'/'.$fileNameDocument));
 
             for ($i = 1; $i <= $page_count; $i++) {
@@ -411,9 +437,9 @@ class DcController extends Controller
                     // $pdf->SetXY(($size['width'] / 2) - 50, ($size['height'] / 2));
                     $pdf->SetXY(($size['width'] / 2), ($size['height'] / 2));
                     // $pdf->Cell(0, 0, 'Hanya Halaman Utama', 0, 0, 'C');
-                    $pdf->Image(public_path('barcode/barcode_validasi_disetujui.png'), 49, 166.5, 19);
-                    $pdf->Image(public_path('barcode/barcode_validasi_diperiksa.png'), 98, 166.5, 19);
-                    $pdf->Image(public_path('barcode/barcode-validasi-dibuat-'.Str::slug($cekValidasiDibuat->name).'.png'), 145, 166.5, 19);
+                    // $pdf->Image(public_path('barcode/barcode_validasi_disetujui.png'), 49, 166.5, 19);
+                    // $pdf->Image(public_path('barcode/barcode_validasi_diperiksa.png'), 98, 166.5, 19);
+                    $pdf->Image(public_path('barcode/barcode-validasi-dibuat-'.Str::slug($listValidasiDibuat->name).'.png'), 145, 166.5, 19);
                     // $pdf->Cell(0, 0, public_path('barcode/barcode_validasi_disetujui.png'), 0, 0, 'C');
 
                     // $pdf->SetAlpha(1); // Reset transparansi
@@ -431,17 +457,24 @@ class DcController extends Controller
                 'dc_tanggal_terbit' => Carbon::now()->format('Y-m-d'),
                 'dc_nomor_dokumen' => $value['no_dokumen'],
                 'dc_nomor_revisi' => $value['no_revisi'],
-                'dc_disetujui' => $request->validasi_disetujui,
-                'dc_diperiksa' => $request->validasi_diperiksa,
-                'dc_dibuat' => $request->validasi_dibuat,
+                // 'dc_disetujui' => $request->validasi_disetujui,
+                // 'dc_diperiksa' => $request->validasi_diperiksa,
+                // 'dc_dibuat' => $request->validasi_dibuat,
+                'dc_dibuat' => $listValidasiDibuat->nik.'|'.$listValidasiDibuat->name,
                 'dc_files' => $fileNameDocument,
             ]);
 
-            $user = $this->user->select('telegram_chat_id')->where('nik','0000000')->first();
-
+            // $user = $this->user->select('telegram_chat_id')->where('nik','0000000')->first();
             Telegram::sendMessage([
-                'chat_id' => $user->telegram_chat_id,
-                'text' => Carbon::now()->format('Y-m-d').' : No. Dokumen '.$value['no_dokumen'].' - '.$value['nama_dokumen'].' Berhasil Diupload'
+                'chat_id' => env('TELEGRAM_CHAT_ID'),
+                'text' => 'No. Dokumen : '.$value['no_dokumen']."\n".
+                          'Nama Dokumen : '.$value['nama_dokumen']."\n".
+                          'Revisi : '.$value['no_revisi']."\n".
+                          'Validasi Dibuat : '.$listValidasiDibuat->name."\n".
+                          'Departemen : '.$listValidasiDibuat->departemen->departemen."\n".
+                          'Tanggal Upload : '.Carbon::now()->format('Y-m-d H:i:s')."\n".
+                          'Status : Dokumen ISO Berhasil Diupload'
+                // 'text' => Carbon::now()->format('Y-m-d').' : '.$value['no_dokumen'].' - '.$value['nama_dokumen'].' Berhasil Diupload'
             ]);
 
             // return response($pdf->Output('F',public_path('/berkas/validasi'.'/'.$fileNameDocument)), 200, [
@@ -531,6 +564,7 @@ class DcController extends Controller
     public function departemen_detail_category_detail_delete($id,$dc_id)
     {
         $dc = $this->document_control->find($dc_id);
+        
         if (empty($dc)) {
             return response()->json([
                 'success' => false,
@@ -539,14 +573,19 @@ class DcController extends Controller
             ]);
         }
 
+        Telegram::sendMessage([
+            'chat_id' => env('TELEGRAM_CHAT_ID'),
+            'text' => 'No. Dokumen : '.$dc->dc_nomor_dokumen."\n".
+                        'Nama Dokumen : '.$dc->dc_title."\n".
+                        'Revisi : '.$dc->dc_nomor_revisi."\n".
+                        'Tanggal Hapus : '.Carbon::now()->format('Y-m-d H:i:s')."\n".
+                        'Status : Dokumen ISO Berhasil Dihapus'
+            // 'text' => Carbon::now()->format('Y-m-d').' : '.$dc->dc_nomor_dokumen.' - '.$dc->dc_title.' Berhasil Dihapus.'
+        ]);
+
         $dc->delete();
 
-        $user = $this->user->select('telegram_chat_id')->where('nik','0000000')->first();
-
-        Telegram::sendMessage([
-            'chat_id' => $user->telegram_chat_id,
-            'text' => Carbon::now()->format('Y-m-d').' : '.$dc->dc_nomor_dokumen.' - '.$dc->dc_title.' Berhasil Dihapus.'
-        ]);
+        // $user = $this->user->select('telegram_chat_id')->where('nik','0000000')->first();
 
         return response()->json([
             'success' => true,
@@ -554,5 +593,52 @@ class DcController extends Controller
             'message_content' => 'Dokumen Kontrol Berhasil Dihapus',
             'dc_category_id' => $dc->dc_category_departemen->dc_category->id
         ]);
+    }
+
+    public function dataValidasi(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = $this->document_control->all();
+            return DataTables::of($data)
+                            ->addIndexColumn()
+                            ->addColumn('dc_title', function($row){
+                                return $row->dc_nomor_dokumen.' - '.$row->dc_title;
+                            })
+                            ->addColumn('dc_tanggal_terbit', function($row){
+                                return Carbon::create($row->dc_tanggal_terbit)->isoFormat('dddd, D MMMM YYYY');
+                            })
+                            ->addColumn('status', function($row){
+                                if (empty($row->dc_disetujui) || empty($row->dc_disetujui)) {
+                                    return '<span class="badge bg-warning text-dark">Menunggu Validator Disetujui</span>'.
+                                            '<span class="badge bg-warning text-dark">Menunggu Validator Diperiksa</span>'.
+                                            '<span class="badge bg-success text-dark">'.explode('|',$row->dc_dibuat)[1].'</span>'
+                                            ;
+                                }elseif(empty($row->dc_disetujui)){
+                                    return '<span class="badge bg-warning text-dark">Menunggu Validator Disetujui</span>'.
+                                            '<span class="badge bg-success text-dark">'.explode('|',$row->dc_diperiksa)[1].'</span>'.
+                                            '<span class="badge bg-success text-dark">'.explode('|',$row->dc_dibuat)[1].'</span>'
+                                            ;
+                                }elseif(empty($row->dc_diperiksa)){
+                                    return '<span class="badge bg-success text-dark">'.explode('|',$row->dc_disetujui)[1].'</span>'.
+                                            '<span class="badge bg-warning text-dark">Menunggu Validator Diperiksa</span>'.
+                                            '<span class="badge bg-success text-dark">'.explode('|',$row->dc_dibuat)[1].'</span>'
+                                            ;
+                                }else{
+                                    return '<span class="badge bg-success text-dark">Validasi Telah Disetujui</span>';
+                                }
+                            })
+                            ->addColumn('action', function($row){
+                                $btn = '<div class="button-items">';
+                                $btn .= '<button class="btn btn-success btn-sm text-dark">Preview</button>';
+                                $btn .= '<button class="btn btn-primary btn-sm">Validasi</button>';
+                                $btn .= '</div>';
+
+                                return $btn;
+                            })
+                            ->rawColumns(['action','status'])
+                            ->make(true);
+        }
+
+        return view('dc.dataValidasi.index');
     }
 }

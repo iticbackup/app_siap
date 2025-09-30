@@ -9,7 +9,7 @@
                 @csrf
                 {{-- <input type="hidden" name="file_manager_category_id" id="file_manager_category_id"> --}}
                 {{-- <input type="text" name="departemen_id" id="departemen_id"> --}}
-                <input type="text" name="modaldc_category_id" id="modalIdKategori">
+                <input type="hidden" name="modaldc_category_id" id="modalIdKategori">
             <div class="modal-body">
                 {{-- <div class="mb-3">
                     <label class="form-label">No. Dokumen</label>
@@ -70,7 +70,7 @@
                     </div>
                     <input data-repeater-create type="button" class="btn btn-success" value="Tambah">
                 </div>
-                <hr>
+                {{-- <hr>
                 <div class="mb-3">
                     <label>Validasi</label>
                     <div class="row">
@@ -78,7 +78,6 @@
                             <select name="validasi_disetujui" class="form-control" id="">
                                 <option value="">-- Pilih Disetujui Oleh --</option>
                                 @foreach ($listValidasiDisetujuis as $item)
-                                    {{-- <option value="{{ $item->name.' - '.$item->departemen->departemen }}">{{ $item->name }}</option> --}}
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
@@ -88,7 +87,6 @@
                             <select name="validasi_diperiksa" class="form-control" id="">
                                 <option value="">-- Pilih Diperiksa Oleh --</option>
                                 @foreach ($listValidasiDiperiksas as $item)
-                                    {{-- <option value="{{ $item->name.' - Management Representative' }}">{{ $item->name }}</option> --}}
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
@@ -97,13 +95,12 @@
                             <select name="validasi_dibuat" class="form-control" id="">
                                 <option value="">-- Pilih Dibuat Oleh --</option>
                                 @foreach ($listValidasiDibuats as $item)
-                                    {{-- <option value="{{ $item->name.' - '.$item->departemen->departemen }}">{{ $item->name }}</option> --}}
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 {{-- <div class="mb-3">
                     <label class="form-label">Nama File</label>
                     <input type="text" name="title" class="form-control" placeholder="Nama File">

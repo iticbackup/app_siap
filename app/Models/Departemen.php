@@ -24,7 +24,7 @@ class Departemen extends Model
 
     public function departemen_user_all()
     {
-        return $this->hasMany(\App\Models\DepartemenUser::class, 'departemen_id');
+        return $this->hasMany(\App\Models\DepartemenUser::class, 'departemen_id')->where('status','Y');
     }
 
     public function file_manager_category()

@@ -9,7 +9,7 @@
                 @csrf
                 <input type="hidden" name="id" id="edit_id_validasi_dibuat">
             <div class="modal-body">
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <label class="form-label">Nama Validasi</label>
                     <input type="text" name="name" class="form-control" id="edit_name_validasi_dibuat" placeholder="Nama Validasi">
                 </div>
@@ -19,6 +19,19 @@
                         <option value="">-- Pilih Departemen --</option>
                         @foreach ($departemen_diperiksas as $item)
                         <option value="{{ $item->id }}">{{ $item->departemen }}</option>
+                        @endforeach
+                    </select>
+                </div> --}}
+                <div class="mb-3">
+                    <label class="form-label">Nama Karyawan</label>
+                    <select name="name" class="form-control" id="edit_name_validasi_dibuat">
+                        <option value="">-- Pilih Nama Karyawan --</option>
+                        @foreach ($departemen_dibuats as $item)
+                            <optgroup label="{{ $item->departemen }}">
+                                @foreach ($item->departemen_user_all as $user)
+                                <option value="{{ $user->nik.'|'.$user->team.'|'.$item->id }}">{{ $user->team }}</option>
+                                @endforeach
+                            </optgroup>
                         @endforeach
                     </select>
                 </div>

@@ -95,6 +95,9 @@ Route::group(['middleware' => ['auth', 'LogVisits']], function() {
                 Route::get('{id}/{dc_category_id}', 'departemen_detail_category_detail')->name('dc.departemen.departemen_detail.category_detail');
                 Route::delete('{id}/{dc_category_id}/delete', 'departemen_detail_category_detail_delete')->name('dc.departemen.departemen_detail.category_detail.delete');
             });
+            Route::prefix('validasi')->group(function () {
+                Route::get('/', 'dataValidasi')->name('dc.dataValidasi');
+            });
         });
     });
     

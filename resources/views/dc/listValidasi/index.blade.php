@@ -263,8 +263,7 @@
                 success: (result) => {
                     if (result.success == true) {
                         $('#edit_id_validasi_disetujui').val(result.data.id);
-                        $('#edit_name_validasi_disetujui').val(result.data.name);
-                        $('#edit_departemen_id_validasi_disetujui').val(result.data.departemen_id);
+                        $('#edit_departemen_id_validasi_disetujui').val(result.data.name);
                         $('#edit_status_validasi_disetujui').val(result.data.status);
                         $('.modalEditDisetujui').modal('show');
                     } else {
@@ -337,7 +336,6 @@
                         // $('#edit_id').val(result.data.id);
                         $('#edit_id_validasi_diperiksa').val(result.data.id);
                         $('#edit_name_validasi_diperiksa').val(result.data.name);
-                        $('#edit_departemen_id_validasi_diperiksa').val(result.data.departemen_id);
                         $('#edit_status_validasi_diperiksa').val(result.data.status);
                         // $('#edit_status').val(result.data.status);
                         $('.modalEditDiperiksa').modal('show');
@@ -413,7 +411,6 @@
                         // $('#edit_id').val(result.data.id);
                         $('#edit_id_validasi_dibuat').val(result.data.id);
                         $('#edit_name_validasi_dibuat').val(result.data.name);
-                        $('#edit_departemen_id_validasi_dibuat').val(result.data.departemen_id);
                         $('#edit_status_validasi_dibuat').val(result.data.status);
                         // $('#edit_status').val(result.data.status);
                         $('.modalEditDibuat').modal('show');

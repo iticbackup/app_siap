@@ -8,7 +8,7 @@
             <form id="form-simpan-diperiksa" method="post">
                 @csrf
             <div class="modal-body">
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <label class="form-label">Nama Validasi</label>
                     <input type="text" name="name" class="form-control" placeholder="Nama Validasi">
                 </div>
@@ -20,7 +20,19 @@
                         <option value="{{ $item->id }}">{{ $item->departemen }}</option>
                         @endforeach
                     </select>
-                    {{-- <input type="text" name="departemen" class="form-control" placeholder="Departemen"> --}}
+                </div> --}}
+                <div class="mb-3">
+                    <label class="form-label">Nama Karyawan</label>
+                    <select name="name" class="form-control" id="">
+                        <option value="">-- Pilih Nama Karyawan --</option>
+                        @foreach ($departemen_diperiksas as $item)
+                            <optgroup label="{{ $item->departemen }}">
+                                @foreach ($item->departemen_user_all as $user)
+                                <option value="{{ $user->nik.'|'.$user->team.'|'.$item->id }}">{{ $user->team }}</option>
+                                @endforeach
+                            </optgroup>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Status</label>

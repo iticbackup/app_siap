@@ -113,9 +113,12 @@
                             <i class="ti-control-record"></i>List Validasi</a>
                     </li>
                     @endcan
+                    <li class="nav-item {{ Request::is('document_control/validasi*') ? 'active' : '' }}"><a class="nav-link {{ Request::is('document_control/validasi*') ? 'active' : '' }}" href="{{ route('dc.dataValidasi') }}">
+                            <i class="ti-control-record"></i>Validasi</a>
+                    </li>
                     @can('documentcontrolnew-departemen')
                     <li class="nav-item {{ Request::is('document_control/departemen*') ? 'active' : '' }}"><a class="nav-link {{ Request::is('document_control/departemen*') ? 'active' : '' }}" href="{{ route('dc.departemen') }}">
-                            <i class="ti-control-record"></i>Departemen</a>
+                            <i class="ti-control-record"></i>Dokumen ISO</a>
                     </li>
                     @endcan
                     @can('documentcontrolnew-perubahandokumen')

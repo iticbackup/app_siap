@@ -16,6 +16,7 @@ class CreateDcListValidasiTable extends Migration
         Schema::create('dc_list_validasi_disetujui', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('code');
+            $table->string('nik');
             $table->string('name');
             $table->bigInteger('departemen_id');
             $table->enum('status',['Active','InActive']);
@@ -26,6 +27,7 @@ class CreateDcListValidasiTable extends Migration
         Schema::create('dc_list_validasi_diperiksa', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('code');
+            $table->string('nik');
             $table->string('name');
             $table->bigInteger('departemen_id');
             $table->enum('status',['Active','InActive']);
@@ -36,6 +38,7 @@ class CreateDcListValidasiTable extends Migration
         Schema::create('dc_list_validasi_dibuat', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('code');
+            $table->string('nik');
             $table->string('name');
             $table->bigInteger('departemen_id');
             $table->enum('status',['Active','InActive']);

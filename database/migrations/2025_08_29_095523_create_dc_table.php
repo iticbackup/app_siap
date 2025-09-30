@@ -23,9 +23,9 @@ class CreateDcTable extends Migration
             $table->date('dc_tanggal_terbit');
             $table->string('dc_nomor_dokumen');
             $table->string('dc_nomor_revisi');
-            $table->text('dc_disetujui');
-            $table->text('dc_diperiksa');
-            $table->text('dc_dibuat');
+            $table->text('dc_disetujui')->nullable();
+            $table->text('dc_diperiksa')->nullable();
+            $table->text('dc_dibuat')->nullable();
             $table->text('dc_files');
             $table->timestamps();
             $table->softDeletes();

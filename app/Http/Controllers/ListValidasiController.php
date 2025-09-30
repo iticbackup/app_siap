@@ -72,6 +72,7 @@ class ListValidasiController extends Controller
         }
         $data['departemen_disetujuis'] = $this->departemen->where('id',1)->get();
         $data['departemen_diperiksas'] = $this->departemen->whereIn('id',[3,4,5,6,7,8,9,10,13])->get();
+        $data['departemen_dibuats'] = $this->departemen->whereIn('id',[3,4,5,6,7,8,9,10,13])->get();
         return view('dc.listValidasi.index',$data);
     }
 
@@ -79,13 +80,11 @@ class ListValidasiController extends Controller
     {
         $rules = [
             'name' => 'required',
-            'departemen_id' => 'required',
             'status' => 'required',
         ];
 
         $messages = [
             'name.required'  => 'Nama Validasi Disetujui wajib diisi.',
-            'departemen_id.required'  => 'Departemen wajib diisi.',
             'status.required'  => 'Status wajib diisi.',
         ];
 
@@ -94,8 +93,10 @@ class ListValidasiController extends Controller
         if ($validator->passes()) {
             $input['id'] = Str::uuid()->toString();
             $input['code'] = 'VALID'.rand(1000,9999);
-            $input['name'] = $request->name;
-            $input['departemen_id'] = $request->departemen_id;
+            $input['nik'] = explode('|',$request->name)[0];
+            $input['name'] = explode('|',$request->name)[1];
+            $input['departemen_id'] = explode('|',$request->name)[2];
+            // $input['departemen_id'] = $request->departemen_id;
             $input['status'] = $request->status;
 
             $simpan = $this->listValidasiDisetujui->create($input);
@@ -128,13 +129,11 @@ class ListValidasiController extends Controller
     {
         $rules = [
             'name' => 'required',
-            'departemen_id' => 'required',
             'status' => 'required',
         ];
 
         $messages = [
             'name.required'  => 'Nama Validasi Disetujui wajib diisi.',
-            'departemen_id.required'  => 'Departemen wajib diisi.',
             'status.required'  => 'Status wajib diisi.',
         ];
 
@@ -144,7 +143,10 @@ class ListValidasiController extends Controller
             $update = $this->listValidasiDisetujui->find($request->id);
             
             $input['name'] = $request->name;
-            $input['departemen_id'] = $request->departemen_id;
+            // $input['departemen_id'] = $request->departemen_id;
+            $input['nik'] = explode('|',$request->name)[0];
+            $input['name'] = explode('|',$request->name)[1];
+            $input['departemen_id'] = explode('|',$request->name)[2];
             $input['status'] = $request->status;
 
             $update->update($input);
@@ -211,7 +213,11 @@ class ListValidasiController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $data
+            'data' => [
+                'id' => $data->id,
+                'name' => $data->nik.'|'.$data->name.'|'.$data->departemen_id,
+                'status' => $data->status,
+            ]
         ]);
     }
 
@@ -258,13 +264,11 @@ class ListValidasiController extends Controller
     {
         $rules = [
             'name' => 'required',
-            'departemen_id' => 'required',
             'status' => 'required',
         ];
 
         $messages = [
             'name.required'  => 'Nama Validasi Diperiksa wajib diisi.',
-            'departemen_id.required'  => 'Departemen wajib diisi.',
             'status.required'  => 'Status wajib diisi.',
         ];
 
@@ -273,8 +277,10 @@ class ListValidasiController extends Controller
         if ($validator->passes()) {
             $input['id'] = Str::uuid()->toString();
             $input['code'] = 'VALID'.rand(1000,9999);
-            $input['name'] = $request->name;
-            $input['departemen_id'] = $request->departemen_id;
+            $input['nik'] = explode('|',$request->name)[0];
+            $input['name'] = explode('|',$request->name)[1];
+            $input['departemen_id'] = explode('|',$request->name)[2];
+            // $input['departemen_id'] = $request->departemen_id;
             $input['status'] = $request->status;
 
             $simpan = $this->listValidasiDiperiksa->create($input);
@@ -317,7 +323,12 @@ class ListValidasiController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $data
+            // 'data' => $data
+            'data' => [
+                'id' => $data->id,
+                'name' => $data->nik.'|'.$data->name.'|'.$data->departemen_id,
+                'status' => $data->status,
+            ]
         ]);
     }
 
@@ -325,13 +336,11 @@ class ListValidasiController extends Controller
     {
         $rules = [
             'name' => 'required',
-            'departemen_id' => 'required',
             'status' => 'required',
         ];
 
         $messages = [
             'name.required'  => 'Nama Validasi Disetujui wajib diisi.',
-            'departemen_id.required'  => 'Departemen wajib diisi.',
             'status.required'  => 'Status wajib diisi.',
         ];
 
@@ -341,7 +350,10 @@ class ListValidasiController extends Controller
             $update = $this->listValidasiDiperiksa->find($request->id);
             
             $input['name'] = $request->name;
-            $input['departemen_id'] = $request->departemen_id;
+            // $input['departemen_id'] = $request->departemen_id;
+            $input['nik'] = explode('|',$request->name)[0];
+            $input['name'] = explode('|',$request->name)[1];
+            $input['departemen_id'] = explode('|',$request->name)[2];
             $input['status'] = $request->status;
 
             $update->update($input);
@@ -443,13 +455,11 @@ class ListValidasiController extends Controller
     {
         $rules = [
             'name' => 'required',
-            'departemen_id' => 'required',
             'status' => 'required',
         ];
 
         $messages = [
             'name.required'  => 'Nama Validasi Diperiksa wajib diisi.',
-            'departemen_id.required'  => 'Departemen wajib diisi.',
             'status.required'  => 'Status wajib diisi.',
         ];
 
@@ -458,8 +468,10 @@ class ListValidasiController extends Controller
         if ($validator->passes()) {
             $input['id'] = Str::uuid()->toString();
             $input['code'] = 'VALID'.rand(1000,9999);
-            $input['name'] = $request->name;
-            $input['departemen_id'] = $request->departemen_id;
+            $input['nik'] = explode('|',$request->name)[0];
+            $input['name'] = explode('|',$request->name)[1];
+            $input['departemen_id'] = explode('|',$request->name)[2];
+            // $input['departemen_id'] = $request->departemen_id;
             $input['status'] = $request->status;
 
             $simpan = $this->listValidasiDibuat->create($input);
@@ -502,7 +514,12 @@ class ListValidasiController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $data
+            // 'data' => $data
+            'data' => [
+                'id' => $data->id,
+                'name' => $data->nik.'|'.$data->name.'|'.$data->departemen_id,
+                'status' => $data->status,
+            ]
         ]);
     }
 
@@ -510,13 +527,11 @@ class ListValidasiController extends Controller
     {
         $rules = [
             'name' => 'required',
-            'departemen_id' => 'required',
             'status' => 'required',
         ];
 
         $messages = [
             'name.required'  => 'Nama Validasi Disetujui wajib diisi.',
-            'departemen_id.required'  => 'Departemen wajib diisi.',
             'status.required'  => 'Status wajib diisi.',
         ];
 
@@ -526,7 +541,10 @@ class ListValidasiController extends Controller
             $update = $this->listValidasiDibuat->find($request->id);
             
             $input['name'] = $request->name;
-            $input['departemen_id'] = $request->departemen_id;
+            // $input['departemen_id'] = $request->departemen_id;
+            $input['nik'] = explode('|',$request->name)[0];
+            $input['name'] = explode('|',$request->name)[1];
+            $input['departemen_id'] = explode('|',$request->name)[2];
             $input['status'] = $request->status;
 
             $update->update($input);
