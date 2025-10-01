@@ -146,6 +146,20 @@
                 </li>
             @endcan
 
+            {{-- <li class="menu-label mt-0">Validasi</li>
+            <li>
+                <a href="javascript: void(0);">
+                    <i data-feather="box" class="align-self-center menu-icon"></i><span>Dokumen Kontrol</span><span
+                        class="menu-arrow"><i class="mdi mdi-chevron-right"></i></span>
+                </a>
+                <ul class="nav-second-level" aria-expanded="false">
+                    <li class="{{ Request::is('qhse') ? 'active' : '' }}">
+                        <a href="{{ route('validasiRepresentative') }}" class="{{ Request::is('qhse') ? 'active' : '' }}"><i
+                                class="ti-control-record"></i> List Validasi</a>
+                    </li>
+                </ul>
+            </li> --}}
+
             <li class="menu-label mt-0">QHSE</li>
             <li>
                 <a href="javascript: void(0);">

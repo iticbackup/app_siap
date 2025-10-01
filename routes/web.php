@@ -151,6 +151,25 @@ Route::group(['middleware' => ['auth', 'LogVisits']], function() {
             Route::post('search_nik', 'search_nik')->name('departemen.search_nik');
         });
     });
+    
+    Route::controller(App\Http\Controllers\ValidasiDocumentControlController::class)->group(function () {
+        Route::prefix('validasi_document_control')->group(function () {
+            Route::get('/', 'index')->name('validasiRepresentative');
+            Route::prefix('representative')->group(function () {
+                Route::get('/', 'validasiRepresentativeIndex')->name('validasiRepresentative.index');
+                Route::post('simpan', 'validasiRepresentativeSimpan')->name('validasiRepresentative.simpan');
+                Route::post('update', 'validasiRepresentativeUpdate')->name('validasiRepresentative.update');
+                Route::get('{id}', 'validasiRepresentativeDetail')->name('validasiRepresentative.detail');
+                Route::delete('{id}/delete', 'validasiRepresentativeDelete')->name('validasiRepresentative.delete');
+            });
+            Route::prefix('document_control')->group(function () {
+                Route::get('/', 'validasiDocumentControlIndex')->name('validasiDocumentControl.index');
+                Route::post('simpan', 'validasiDocumentControlSimpan')->name('validasiDocumentControl.simpan');
+                Route::post('update', 'validasiDocumentControlUpdate')->name('validasiDocumentControl.update');
+                Route::get('{id}', 'validasiDocumentControlDetail')->name('validasiDocumentControl.detail');
+            });
+        });
+    });
 
     Route::prefix('rekap_pelatihan')->group(function () {
         Route::prefix('kategori')->group(function () {
