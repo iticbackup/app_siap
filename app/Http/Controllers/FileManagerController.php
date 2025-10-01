@@ -149,7 +149,7 @@ class FileManagerController extends Controller
         $kategori = $this->file_manager_kategori->find($kategori_id);
         $data = $this->file_manager_list->where('file_manager_category_id',$kategori_id)->get();
         $live_date = Carbon::today()->format('Y-m-d');
-        $start_date = Carbon::createFromDate(2022,10,01)->format('Y-m-d');
+        $start_date = Carbon::createFromDate(2025,10,01)->format('Y-m-d');
         $end_date = Carbon::createFromDate(2025,10,03)->format('Y-m-d');
         if ($live_date >= $start_date && $live_date <= $end_date) {
             $status_aktif = true;
