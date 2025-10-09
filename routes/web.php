@@ -97,6 +97,7 @@ Route::group(['middleware' => ['auth', 'LogVisits']], function() {
             });
             Route::prefix('validasi')->group(function () {
                 Route::get('/', 'dataValidasi')->name('dc.dataValidasi');
+                Route::get('{id}', 'dataValidasiDetail')->name('dc.dataValidasi.detail');
             });
         });
     });

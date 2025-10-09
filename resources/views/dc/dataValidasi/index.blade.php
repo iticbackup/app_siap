@@ -24,6 +24,8 @@
         @endslot
     @endcomponent
 
+    @include('dc.dataValidasi.modalPreview')
+
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -41,7 +43,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">Nama Dokumen</th>
-                                    {{-- <th class="text-center">Departemen</th> --}}
+                                    <th class="text-center">Departemen</th>
                                     <th class="text-center">Revisi</th>
                                     <th class="text-center">Tanggal Terbit</th>
                                     <th class="text-center">Status</th>
@@ -93,6 +95,10 @@
                     name: 'dc_title'
                 },
                 {
+                    data: 'departemen',
+                    name: 'departemen'
+                },
+                {
                     data: 'dc_nomor_revisi',
                     name: 'dc_nomor_revisi'
                 },
@@ -116,5 +122,39 @@
                 targets: [1,2,3,4]
             }]
         });
+
+        function previewValidasi(id)
+        {
+            // alert(id);
+            $.ajax({
+                type:'GET',
+                url: "{{ url('document_control/validasi/') }}"+'/'+id,
+                contentType: "application/json;  charset=utf-8",
+                cache: false,
+                success: (result) => {
+                    if(result.success == true){
+                        // alert(result.data.id)
+                        document.getElementById('preview_no_dokumen').innerHTML = result.data.dc_nomor_dokumen;
+                        document.getElementById('preview_nama_dokumen').innerHTML = result.data.dc_title;
+                        document.getElementById('preview_tanggal_terbit').innerHTML = result.data.dc_tanggal_terbit;
+                        document.getElementById('preview_no_revisi').innerHTML = result.data.dc_nomor_revisi;
+                        document.getElementById('preview_disetujui').innerHTML = result.data.dc_disetujui;
+                        document.getElementById('preview_diperiksa').innerHTML = result.data.dc_diperiksa;
+                        document.getElementById('preview_dibuat').innerHTML = result.data.dc_dibuat;
+                        document.getElementById('preview_file').innerHTML = '<iframe src="' + result.data.dc_files +
+                            '" width="100%" height="720px" scrolling="auto" frameBorder="0"></frame>';
+                        $('.modalPreview').modal('show');
+                    }else{
+
+                    }
+                },
+                error: function (request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            });
+        }
     </script>
 @endsection

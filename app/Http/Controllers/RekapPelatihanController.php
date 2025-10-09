@@ -774,6 +774,7 @@ class RekapPelatihanController extends Controller
         );
         $data['departemens'] = $this->departemen->whereIn('departemen',$departemen)->get();
         // dd($data);
+        // dd($data);
         return view('rekap_pelatihan.excel_rekapan_all_dep',$data);
         // return Excel::download(new RekapPelatihanAllDepExcel($periode), 'Rekap Pelatihan & Seminar PT Indonesian Tobacco Tbk All Departemen Periode '.$periode.'.xlsx');
     }

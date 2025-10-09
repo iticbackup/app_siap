@@ -429,8 +429,8 @@ class DcController extends Controller
                 // Tambahkan watermark hanya pada halaman pertama
                 if ($i === 1) {
                     // Atur posisi dan style watermark
-                    $pdf->SetFont('Arial', 'B', 40);
-                    $pdf->SetTextColor(255, 0, 0); // Warna merah
+                    // $pdf->SetFont('Arial', 'B', 40);
+                    // $pdf->SetTextColor(255, 0, 0); // Warna merah
                     // $pdf->SetAlpha(0.2); // Transparansi
 
                     // Posisi watermark di tengah halaman
@@ -443,6 +443,8 @@ class DcController extends Controller
                     // $pdf->Cell(0, 0, public_path('barcode/barcode_validasi_disetujui.png'), 0, 0, 'C');
 
                     // $pdf->SetAlpha(1); // Reset transparansi
+                }else{
+                    $pdf->Image(public_path('berkas/Terkendali-Rahasia-Edit.png'), 50, 280, 120);
                 }
             }
 
@@ -465,17 +467,17 @@ class DcController extends Controller
             ]);
 
             // $user = $this->user->select('telegram_chat_id')->where('nik','0000000')->first();
-            Telegram::sendMessage([
-                'chat_id' => env('TELEGRAM_CHAT_ID'),
-                'text' => 'No. Dokumen : '.$value['no_dokumen']."\n".
-                          'Nama Dokumen : '.$value['nama_dokumen']."\n".
-                          'Revisi : '.$value['no_revisi']."\n".
-                          'Validasi Dibuat : '.$listValidasiDibuat->name."\n".
-                          'Departemen : '.$listValidasiDibuat->departemen->departemen."\n".
-                          'Tanggal Upload : '.Carbon::now()->format('Y-m-d H:i:s')."\n".
-                          'Status : Dokumen ISO Berhasil Diupload'
-                // 'text' => Carbon::now()->format('Y-m-d').' : '.$value['no_dokumen'].' - '.$value['nama_dokumen'].' Berhasil Diupload'
-            ]);
+            // Telegram::sendMessage([
+            //     'chat_id' => env('TELEGRAM_CHAT_ID'),
+            //     'text' => 'No. Dokumen : '.$value['no_dokumen']."\n".
+            //               'Nama Dokumen : '.$value['nama_dokumen']."\n".
+            //               'Revisi : '.$value['no_revisi']."\n".
+            //               'Validasi Dibuat : '.$listValidasiDibuat->name."\n".
+            //               'Departemen : '.$listValidasiDibuat->departemen->departemen."\n".
+            //               'Tanggal Upload : '.Carbon::now()->format('Y-m-d H:i:s')."\n".
+            //               'Status : Dokumen ISO Berhasil Diupload'
+            //     // 'text' => Carbon::now()->format('Y-m-d').' : '.$value['no_dokumen'].' - '.$value['nama_dokumen'].' Berhasil Diupload'
+            // ]);
 
             // return response($pdf->Output('F',public_path('/berkas/validasi'.'/'.$fileNameDocument)), 200, [
             //     'Content-Type' => 'application/pdf',
@@ -573,15 +575,33 @@ class DcController extends Controller
             ]);
         }
 
-        Telegram::sendMessage([
-            'chat_id' => env('TELEGRAM_CHAT_ID'),
-            'text' => 'No. Dokumen : '.$dc->dc_nomor_dokumen."\n".
-                        'Nama Dokumen : '.$dc->dc_title."\n".
-                        'Revisi : '.$dc->dc_nomor_revisi."\n".
-                        'Tanggal Hapus : '.Carbon::now()->format('Y-m-d H:i:s')."\n".
-                        'Status : Dokumen ISO Berhasil Dihapus'
-            // 'text' => Carbon::now()->format('Y-m-d').' : '.$dc->dc_nomor_dokumen.' - '.$dc->dc_title.' Berhasil Dihapus.'
-        ]);
+        $path_file_asli = public_path('berkas/'.
+                    $dc->dc_category_departemen->departemen->departemen.'/'.
+                    $dc->dc_category_departemen->dc_category->dc_category.'/Asli/'.
+                    $dc->dc_files);
+
+        if(!File::isDirectory($path_file_asli)){
+            File::delete($path_file_asli);
+        }
+
+        $path_file_validasi = public_path('berkas/'.
+                    $dc->dc_category_departemen->departemen->departemen.'/'.
+                    $dc->dc_category_departemen->dc_category->dc_category.'/'.
+                    $dc->dc_files);
+
+        if(!File::isDirectory($path_file_validasi)){
+            File::delete($path_file_validasi);
+        }
+
+        // Telegram::sendMessage([
+        //     'chat_id' => env('TELEGRAM_CHAT_ID'),
+        //     'text' => 'No. Dokumen : '.$dc->dc_nomor_dokumen."\n".
+        //                 'Nama Dokumen : '.$dc->dc_title."\n".
+        //                 'Revisi : '.$dc->dc_nomor_revisi."\n".
+        //                 'Tanggal Hapus : '.Carbon::now()->format('Y-m-d H:i:s')."\n".
+        //                 'Status : Dokumen ISO Berhasil Dihapus'
+        //     // 'text' => Carbon::now()->format('Y-m-d').' : '.$dc->dc_nomor_dokumen.' - '.$dc->dc_title.' Berhasil Dihapus.'
+        // ]);
 
         $dc->delete();
 
@@ -603,6 +623,9 @@ class DcController extends Controller
                             ->addIndexColumn()
                             ->addColumn('dc_title', function($row){
                                 return $row->dc_nomor_dokumen.' - '.$row->dc_title;
+                            })
+                            ->addColumn('departemen', function($row){
+                                return $row->dc_category_departemen->departemen->departemen;
                             })
                             ->addColumn('dc_tanggal_terbit', function($row){
                                 return Carbon::create($row->dc_tanggal_terbit)->isoFormat('dddd, D MMMM YYYY');
@@ -629,7 +652,7 @@ class DcController extends Controller
                             })
                             ->addColumn('action', function($row){
                                 $btn = '<div class="button-items">';
-                                $btn .= '<button class="btn btn-success btn-sm text-dark">Preview</button>';
+                                $btn .= '<button class="btn btn-success btn-sm text-dark" onclick="previewValidasi(`'.$row->id.'`)">Preview</button>';
                                 $btn .= '<button class="btn btn-primary btn-sm">Validasi</button>';
                                 $btn .= '</div>';
 
@@ -640,5 +663,39 @@ class DcController extends Controller
         }
 
         return view('dc.dataValidasi.index');
+    }
+
+    public function dataValidasiDetail($id)
+    {
+        $data = $this->document_control->find($id);
+
+        if (empty($data)) {
+            return response()->json([
+                'success' => false,
+                'message_title' => 'Gagal!',
+                'message_content' => 'Validasi Dokumen Kontrol Tidak Ditemukan'
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id' => $data->id,
+                'dc_code' => $data->dc_code,
+                'dc_title' => $data->dc_title,
+                'dc_tanggal_terbit' => $data->dc_tanggal_terbit,
+                'dc_nomor_dokumen' => $data->dc_nomor_dokumen,
+                'dc_nomor_revisi' => $data->dc_nomor_revisi,
+                'dc_disetujui' => empty($data->dc_disetujui) ? '<span class="badge bg-warning text-dark">Menunggu Validator Disetujui</span>' : explode('|',$data->dc_disetujui)[1],
+                'dc_diperiksa' => empty($data->dc_diperiksa) ? '<span class="badge bg-warning text-dark">Menunggu Validator Diperiksa</span>' : explode('|',$data->dc_diperiksa)[1],
+                'dc_dibuat' => empty($data->dc_dibuat) ? '<span class="badge bg-warning text-dark">Menunggu Validator Dibuat</span>' : explode('|',$data->dc_dibuat)[1],
+                'dc_files' => asset(
+                    'public/berkas/'.
+                    $data->dc_category_departemen->departemen->departemen.'/'.
+                    $data->dc_category_departemen->dc_category->dc_category.'/'.
+                    $data->dc_files
+                ),
+            ]
+        ]);
     }
 }

@@ -12,6 +12,9 @@ use App\Models\Departemen;
 use App\Models\DepartemenUser;
 use App\Models\VerifikasiDokumen;
 
+use App\Models\ValidasiDocumentControl;
+use App\Models\ValidasiRepresentative;
+
 use FilippoToso\PdfWatermarker\Support\Pdf;
 use FilippoToso\PdfWatermarker\Facades\ImageWatermarker;
 use FilippoToso\PdfWatermarker\Watermarks\ImageWatermark;
@@ -37,6 +40,8 @@ class PerubahanDataFileManagerController extends Controller
         FileManagerList $file_manager_list,
         Departemen $departemen,
         DepartemenUser $departemen_user,
+        ValidasiDocumentControl $validasiDocumentControl,
+        ValidasiRepresentative $validasiRepresentative,
         VerifikasiDokumen $verifikasi_dokumen
     )
     {
@@ -47,19 +52,38 @@ class PerubahanDataFileManagerController extends Controller
         $this->departemen = $departemen;
         $this->departemen_user = $departemen_user;
         $this->verifikasi_dokumen = $verifikasi_dokumen;
+        $this->validasi_representative = $validasiRepresentative;
+        $this->validasi_document_control = $validasiDocumentControl;
     }
 
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            if (auth()->user()->nik == '0000000' || 
-            auth()->user()->nik == '1207514' || 
-            auth()->user()->nik == '1711952' || 
-            // auth()->user()->nik == '2007275' ||
-            auth()->user()->nik == '2103484' ||
-            auth()->user()->nik == '2207603' ||
-            auth()->user()->nik == '0000010'
-            ){
+            $validasiRepresentative = $this->validasi_representative->where('nik',auth()->user()->nik)->select('nik')->first();
+            
+            if (empty($validasiRepresentative)) {
+                $nikValidasiRepresentative = 0;
+            }else{
+                $nikValidasiRepresentative = $validasiRepresentative->nik;
+            }
+
+            $validasiDocumentControl = $this->validasi_document_control->where('nik',auth()->user()->nik)->select('nik')->first();
+
+            if (empty($validasiDocumentControl)) {
+                $nikValidasiDocumentControl = 0;
+            }else{
+                $nikValidasiDocumentControl = $validasiDocumentControl->nik;
+            }
+
+            // if (auth()->user()->nik == '0000000' || 
+            // auth()->user()->nik == '1207514' || 
+            // auth()->user()->nik == '1711952' || 
+            // // auth()->user()->nik == '2007275' ||
+            // auth()->user()->nik == '2103484' ||
+            // auth()->user()->nik == '2207603' ||
+            // auth()->user()->nik == '0000010'
+            // )
+            if(auth()->user()->nik == '0000000' || auth()->user()->nik == $nikValidasiRepresentative || auth()->user()->nik == $nikValidasiDocumentControl){
                 $data = $this->file_manager_perubahan_data->all();
             }else{
                 $departemen_user = $this->departemen_user->where('nik',auth()->user()->nik)->first();
@@ -426,6 +450,23 @@ class PerubahanDataFileManagerController extends Controller
         if (empty($data['file_manager_perubahan_data'])) {
             return redirect()->back();
         }
+
+        $validasiRepresentative = $this->validasi_representative->where('nik',auth()->user()->nik)->select('nik')->first();
+            
+        if (empty($validasiRepresentative)) {
+            $data['nikValidasiRepresentative'] = 0;
+        }else{
+            $data['nikValidasiRepresentative'] = $validasiRepresentative->nik;
+        }
+
+        $validasiDocumentControl = $this->validasi_document_control->where('nik',auth()->user()->nik)->select('nik')->first();
+
+        if (empty($validasiDocumentControl)) {
+            $data['nikValidasiDocumentControl'] = 0;
+        }else{
+            $data['nikValidasiDocumentControl'] = $validasiDocumentControl->nik;
+        }
+
         $data['file_manager_perubahan_data_details'] = $this->file_manager_perubahan_data_detail->where('file_manager_perubahan_data_id',$id)->get();
         return view('file_manager.perubahan_data.detail',$data);
     }
@@ -437,6 +478,22 @@ class PerubahanDataFileManagerController extends Controller
             return redirect()->back();
         }
         $data['file_manager_perubahan_data_details'] = $this->file_manager_perubahan_data_detail->where('file_manager_perubahan_data_id',$id)->get();
+
+        $validasiRepresentative = $this->validasi_representative->where('nik',auth()->user()->nik)->select('nik')->first();
+            
+        if (empty($validasiRepresentative)) {
+            $data['nikValidasiRepresentative'] = 0;
+        }else{
+            $data['nikValidasiRepresentative'] = $validasiRepresentative->nik;
+        }
+
+        $validasiDocumentControl = $this->validasi_document_control->where('nik',auth()->user()->nik)->select('nik')->first();
+
+        if (empty($validasiDocumentControl)) {
+            $data['nikValidasiDocumentControl'] = 0;
+        }else{
+            $data['nikValidasiDocumentControl'] = $validasiDocumentControl->nik;
+        }
         // dd($data);
         return view('file_manager.perubahan_data.validasi',$data);
     }
@@ -448,6 +505,23 @@ class PerubahanDataFileManagerController extends Controller
         // dd($file_manager_perubahan_data->file_manager_perubahan_data_detail);
         
         $departemen_user = $this->departemen_user->where('nik',auth()->user()->nik)->first();
+
+        $validasiRepresentative = $this->validasi_representative->where('nik',auth()->user()->nik)->select('nik')->first();
+            
+        if (empty($validasiRepresentative)) {
+            $nikValidasiRepresentative = 0;
+        }else{
+            $nikValidasiRepresentative = $validasiRepresentative->nik;
+        }
+
+        $validasiDocumentControl = $this->validasi_document_control->where('nik',auth()->user()->nik)->select('nik')->first();
+
+        if (empty($validasiDocumentControl)) {
+            $nikValidasiDocumentControl = 0;
+        }else{
+            $nikValidasiDocumentControl = $validasiDocumentControl->nik;
+        }
+        
         if (empty($file_manager_perubahan_data->disetujui_signature)) {
             $input['disetujui_signature'] = $departemen_user->team.' - '.$departemen_user->nik;
             $message = 'Disetujui Document Center';
@@ -464,7 +538,8 @@ class PerubahanDataFileManagerController extends Controller
         }
 
         if (empty($file_manager_perubahan_data->represtative_signature)) {
-            if ($departemen_user->nik == 1711952) {
+            // if ($departemen_user->nik == 1711952) {
+            if ($departemen_user->nik == $nikValidasiRepresentative) {
                 if ($request->validasi_management_repesentative == 'y') {
                     $input['represtative_signature'] = $departemen_user->team.' - '.$departemen_user->nik;
                     $message = 'Disetujui Management Repestative';
