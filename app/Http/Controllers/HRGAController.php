@@ -1205,11 +1205,8 @@ class HRGAController extends Controller
             $input['nama'] = $request->nama;
             $input['tempat_lahir'] = $request->tempat_lahir;
             $input['tgl_lahir'] = $request->tanggal_lahir;
-            $input['alamat'] = $request->alamat;
-            $input['kecamatan'] = ucwords($request->kecamatan);
-            $input['kelurahan'] = ucwords($request->kelurahan);
-            $input['kab_kota'] = ucwords($request->kab_kota);
-            $input['provinsi'] = ucwords($request->provinsi);
+            $input['alamat'] = $request->alamat.' '.ucwords($request->kelurahan).', '.ucwords($request->kecamatan).', '.ucwords($request->kab_kota).', '.ucwords($request->provinsi);
+            // $input['alamat'] = $request->alamat;
             $input['jenis_kelamin'] = $request->jenis_kelamin == 'Laki - Laki' ? 'L' : 'P';
             $input['no_npwp'] = $request->no_npwp;
             $input['id_posisi'] = $request->posisi;
@@ -1235,6 +1232,12 @@ class HRGAController extends Controller
                 //     'tanggal' => $request->tanggal_masuk
                 // ]);
                 $no_id = $this->hrga_biodata_karyawan->max('id');
+
+                $input2['kecamatan'] = ucwords($request->kecamatan);
+                $input2['kelurahan'] = ucwords($request->kelurahan);
+                $input2['kab_kota'] = ucwords($request->kab_kota);
+                $input2['provinsi'] = ucwords($request->provinsi);
+                
                 $this->hrga_biodata_karyawan->create([
                     'id' => $no_id+1,
                     'nik' => $input['nik'],
@@ -1244,7 +1247,11 @@ class HRGAController extends Controller
                     'no_rekening_bca' => $input['no_rekening_bca'],
                     'tempat_lahir' => $input['tempat_lahir'],
                     'tanggal_lahir' => $input['tgl_lahir'],
-                    'alamat' => $input['alamat'],
+                    'alamat' => $request->alamat,
+                    'kecamatan' => $input2['kecamatan'],
+                    'kelurahan' => $input2['kelurahan'],
+                    'kab_kota' => $input2['kab_kota'],
+                    'provinsi' => $input2['provinsi'],
                     'jenis_kelamin' => $request->jenis_kelamin,
                     'status_keluarga' => $input['status_klg'],
                 ]);
