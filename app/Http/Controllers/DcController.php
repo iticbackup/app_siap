@@ -653,7 +653,7 @@ class DcController extends Controller
                             ->addColumn('action', function($row){
                                 $btn = '<div class="button-items">';
                                 $btn .= '<button class="btn btn-success btn-sm text-dark" onclick="previewValidasi(`'.$row->id.'`)">Preview</button>';
-                                $btn .= '<button class="btn btn-primary btn-sm">Validasi</button>';
+                                $btn .= '<a href='.route('dc.dataValidasi.verifikasi',['id' => $row->id]).' class="btn btn-primary btn-sm">Validasi</a>';
                                 $btn .= '</div>';
 
                                 return $btn;
@@ -697,5 +697,16 @@ class DcController extends Controller
                 ),
             ]
         ]);
+    }
+
+    public function dataValidasiVerifikasi($id)
+    {
+        $data['dc'] = $this->document_control->find($id);
+
+        if (empty($data['dc'])) {
+            return redirect()->back()->with('error','Validasi Dokumen Kontrol Tidak Ditemukan');
+        }
+
+        return view('dc.dataValidasi.verifikasi',$data);
     }
 }
