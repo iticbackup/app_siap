@@ -1221,6 +1221,7 @@ class HRGAController extends Controller
             $input['kewarganegaraan'] = $request->kewarganegaraan;
             $input['agama'] = $request->agama;
             $input['tanggal_masuk'] = $request->tanggal_masuk;
+            $input['status_karyawan'] = 'K';
 
             $biodata_karyawan = $this->biodata_karyawan->create($input);
             if ($biodata_karyawan) {
@@ -2314,12 +2315,12 @@ class HRGAController extends Controller
                                                 'select COUNT(biodata_karyawan.status_karyawan) as status_karyawan 
                                                 from itic_emp_new.biodata_karyawan
                                                 join hrga_biodata_karyawan on hrga_biodata_karyawan.nik = itic_emp_new.biodata_karyawan.nik
-                                                where biodata_karyawan.status_karyawan = "A"
+                                                where itic_emp_new.biodata_karyawan.status_karyawan = "A"
                                                 UNION ALL
                                                 select COUNT(biodata_karyawan.status_karyawan) as status_karyawan 
                                                 from itic_emp_new.biodata_karyawan
                                                 join hrga_biodata_karyawan on hrga_biodata_karyawan.nik = itic_emp_new.biodata_karyawan.nik
-                                                where biodata_karyawan.status_karyawan = "K"
+                                                where itic_emp_new.biodata_karyawan.status_karyawan = "K"
                                                 '
                                             ));
 

@@ -251,7 +251,8 @@
                                 <div class="form-floating mb-2">
                                     <select name="edit_status_karyawan" class="form-control" id="edit_status_karyawan">
                                         <option value="">-- Pilih Status Karyawan --</option>
-                                        <option value="Y">Aktif</option>
+                                        <option value="Y">Tetap</option>
+                                        <option value="K">Kontrak</option>
                                         <option value="T">Non Aktif</option>
                                     </select>
                                     <label for="">Status Karyawan</label>
