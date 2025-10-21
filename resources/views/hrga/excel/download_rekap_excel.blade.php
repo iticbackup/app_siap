@@ -118,33 +118,33 @@
                 @foreach ($group_jabatan as $gj)
                 @php
                     $hrga_biodata_karyawans = \App\Models\HrgaBiodataKaryawan::select([
-                                                                            'hrga_biodata_karyawan.id as id',
-                                                                            'hrga_biodata_karyawan.nik as nik',
-                                                                            'hrga_biodata_karyawan.no_urut_level as no_urut_level',
-                                                                            'hrga_biodata_karyawan.no_urut_departemen as no_urut_departemen',
-                                                                            'hrga_biodata_karyawan.no_telepon as no_telepon',
-                                                                            'hrga_biodata_karyawan.no_bpjs_ketenagakerjaan as no_bpjs_ketenagakerjaan',
-                                                                            'hrga_biodata_karyawan.no_bpjs_kesehatan as no_bpjs_kesehatan',
-                                                                            'hrga_biodata_karyawan.no_rekening_mandiri as no_rekening_mandiri',
-                                                                            'hrga_biodata_karyawan.no_rekening_bws as no_rekening_bws',
-                                                                            'hrga_biodata_karyawan.no_rekening_bca as no_rekening_bca',
-                                                                            'hrga_biodata_karyawan.no_npwp as no_npwp',
-                                                                            'hrga_biodata_karyawan.departemen_dept as departemen_dept',
-                                                                            'hrga_biodata_karyawan.departemen_bagian as departemen_bagian',
-                                                                            'hrga_biodata_karyawan.departemen_level as departemen_level',
-                                                                            'hrga_biodata_karyawan.tempat_lahir as tempat_lahir',
-                                                                            'hrga_biodata_karyawan.tanggal_lahir as tanggal_lahir',
-                                                                            'hrga_biodata_karyawan.jenis_kelamin as jenis_kelamin',
-                                                                            'hrga_biodata_karyawan.status_keluarga as status_keluarga',
-                                                                            'hrga_biodata_karyawan.golongan_darah as golongan_darah',
-                                                                            'hrga_biodata_karyawan.pendidikan as pendidikan',
-                                                                            'hrga_biodata_karyawan.email as email',
-                                                                            'hrga_biodata_karyawan.sim_kendaraan as sim_kendaraan',
-                                                                            'hrga_biodata_karyawan.alamat as alamat',
-                                                                            'hrga_biodata_karyawan.kunci_loker as kunci_loker',
+                                                                            'hrga_biodata_karyawan_new.id as id',
+                                                                            'hrga_biodata_karyawan_new.nik as nik',
+                                                                            // 'hrga_biodata_karyawan_new.no_urut_level as no_urut_level',
+                                                                            // 'hrga_biodata_karyawan_new.no_urut_departemen as no_urut_departemen',
+                                                                            'hrga_biodata_karyawan_new.no_telepon as no_telepon',
+                                                                            'hrga_biodata_karyawan_new.no_bpjs_ketenagakerjaan as no_bpjs_ketenagakerjaan',
+                                                                            'hrga_biodata_karyawan_new.no_bpjs_kesehatan as no_bpjs_kesehatan',
+                                                                            'hrga_biodata_karyawan_new.no_rekening_mandiri as no_rekening_mandiri',
+                                                                            'hrga_biodata_karyawan_new.no_rekening_bws as no_rekening_bws',
+                                                                            'hrga_biodata_karyawan_new.no_rekening_bca as no_rekening_bca',
+                                                                            'hrga_biodata_karyawan_new.no_npwp as no_npwp',
+                                                                            'hrga_biodata_karyawan_new.departemen_dept as departemen_dept',
+                                                                            'hrga_biodata_karyawan_new.departemen_bagian as departemen_bagian',
+                                                                            'hrga_biodata_karyawan_new.departemen_level as departemen_level',
+                                                                            'hrga_biodata_karyawan_new.tempat_lahir as tempat_lahir',
+                                                                            'hrga_biodata_karyawan_new.tanggal_lahir as tanggal_lahir',
+                                                                            'hrga_biodata_karyawan_new.jenis_kelamin as jenis_kelamin',
+                                                                            'hrga_biodata_karyawan_new.status_keluarga as status_keluarga',
+                                                                            'hrga_biodata_karyawan_new.golongan_darah as golongan_darah',
+                                                                            'hrga_biodata_karyawan_new.pendidikan as pendidikan',
+                                                                            'hrga_biodata_karyawan_new.email as email',
+                                                                            'hrga_biodata_karyawan_new.sim_kendaraan as sim_kendaraan',
+                                                                            'hrga_biodata_karyawan_new.alamat as alamat',
+                                                                            'hrga_biodata_karyawan_new.kunci_loker as kunci_loker',
                                                                             'biodata_karyawan.tanggal_masuk as tanggal_masuk',
                                                                         ])
-                                                                        ->join('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','hrga_biodata_karyawan.nik')
+                                                                        ->join('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','hrga_biodata_karyawan_new.nik')
                                                                         // ->rightjoin('hrga_karyawan_resign','hrga_karyawan_resign.hrga_biodata_karyawan_id','!=','hrga_biodata_karyawan.id')
                                                                         // ->where('hrga_karyawan_resign.hrga_biodata_karyawan_id','!=','hrga_biodata_karyawan.id')
                                                                         // ->where(function($query) use($tanggal){
@@ -176,11 +176,13 @@
                                                                         // ->orwhere('hrga_biodata_karyawan.tanggal_resign', null)
                                                                         // ->where('hrga_karyawan_resign.tanggal_resign','>=',\Carbon\Carbon::create($tanggal)->format('Y-m-d'))
                                                                         // ->where('hrga_karyawan_resign.tanggal_resign','>=',\Carbon\Carbon::create($tanggal)->format('Y-m-d'))
-                                                                        ->where('hrga_biodata_karyawan.status_karyawan','Y')
-                                                                        ->where('hrga_biodata_karyawan.departemen_dept',$departemen->departemen_dept)
-                                                                        ->where('hrga_biodata_karyawan.departemen_level',$gj->departemen_level)
+                                                                        ->whereIn('hrga_biodata_karyawan_new.status_karyawan',['Y','K'])
+                                                                        ->where('hrga_biodata_karyawan_new.departemen_dept',$departemen->departemen_dept)
+                                                                        ->where('hrga_biodata_karyawan_new.departemen_level',$gj->departemen_level)
                                                                         ->orderBy('id','asc')
                                                                         ->get();
+
+                                                                        // dd($hrga_biodata_karyawans);
                 @endphp
                 @if ($gj->departemen_level == 'Staff' || $gj->departemen_level == 'Direktur')
                 <tr>

@@ -20,15 +20,27 @@
                         Periode {{ $periode }}
                     </h4>
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title text-center">Berdasarkan Tingkatan</h4>
-                                    <div id="berdasarkan-tingkatan"></div>
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title text-center">Berdasarkan Tingkatan</h4>
+                                            <div id="berdasarkan-tingkatan"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title text-center">Berdasarkan Bagian Operator</h4>
+                                            <div id="berdasarkan-bagian-operator"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title text-center">Berdasarkan Gender</h4>
@@ -36,7 +48,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title text-center">Berdasarkan Status Karyawan</h4>
@@ -54,7 +66,6 @@
                         <div class="col-md-4">
                             <div class="card">
                                 <div class="card-body">
-                                    {{-- <h4 class="card-title text-center">Berdasarkan Pendidikan</h4> --}}
                                     <div id="berdasarkan-pendidikan"></div>
                                 </div>
                             </div>
@@ -62,7 +73,6 @@
                         <div class="col-md-4">
                             <div class="card">
                                 <div class="card-body">
-                                    {{-- <h4 class="card-title text-center">Berdasarkan Usia</h4> --}}
                                     <div id="berdasarkan-usia"></div>
                                 </div>
                             </div>
@@ -70,32 +80,24 @@
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
-                                    {{-- <h4 class="card-title text-center">Berdasarkan Kecamatan</h4> --}}
                                     <div id="berdasarkan-kecamatan"></div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
-                                    {{-- <h4 class="card-title text-center">Berdasarkan Kecamatan</h4> --}}
-                                    <div id="berdasarkan-kelurahan"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    {{-- <h4 class="card-title text-center">Berdasarkan Kecamatan</h4> --}}
                                     <div id="berdasarkan-kab-kota"></div>
                                 </div>
                             </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div id="berdasarkan-provinsi"></div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
-                                    {{-- <h4 class="card-title text-center">Berdasarkan Kecamatan</h4> --}}
-                                    <div id="berdasarkan-provinsi"></div>
+                                    <div id="berdasarkan-kelurahan"></div>
                                 </div>
                             </div>
                         </div>
@@ -155,6 +157,71 @@
 
         var chart = new ApexCharts(
             document.querySelector("#berdasarkan-tingkatan"),
+            options
+        );
+
+        chart.render();
+
+        var options = {
+            series: [
+                {
+                    data: @json($berdasarkan_pengerjaan)
+                }
+            ],
+            chart: {
+                type: 'bar',
+                height: 500,
+                stacked: true,
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    borderRadiusApplication: 'end',
+                    horizontal: true,
+                    dataLabels: {
+                        position: 'top',
+                        colors: ['#2D4F2B']
+                    }
+                }
+            },
+            title: {
+                text: 'Berdasarkan Bagian Operator'
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val
+                    }
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'left',
+                offsetX: 40
+            },
+            dataLabels: {
+                enabled: true,
+                style: {
+                    colors: ['#2D4F2B']
+                },
+                offsetX: 30
+            },
+            xaxis: {
+                type: 'category',
+                labels: {
+                    formatter: function(val) {
+                        return val
+                    }
+                }
+            },
+            colors: ["#4E61D3"]
+        };
+
+        var chart = new ApexCharts(
+            document.querySelector("#berdasarkan-bagian-operator"),
             options
         );
 
@@ -357,10 +424,13 @@
                         ',' .
                         $berdasarkan_pendidikan[1]->pendidikan .
                         ',' .
-                        $berdasarkan_pendidikan[0]->pendidikan }}
+                        $berdasarkan_pendidikan[0]->pendidikan .
+                        ',' .
+                        $berdasarkan_pendidikan[6]->pendidikan
+                    }}
                 ]
             }],
-            labels: ["Pascasarjana", "D4/S1", "D1 s.d D3", "SMA", "SMP", "SD"],
+            labels: ["Pascasarjana", "D4/S1", "D1 s.d D3", "SMA", "SMP", "SD", "Tidak Ada"],
             chart: {
                 type: 'bar',
                 height: 350,
@@ -403,7 +473,7 @@
                 offsetX: 30
             },
             xaxis: {
-                categories: ["Pascasarjana", "D4/S1", "D1 s.d D3", "SMA", "SMP", "SD"],
+                categories: ["Pascasarjana", "D4/S1", "D1 s.d D3", "SMA", "SMP", "SD", "Tidak Ada"],
                 labels: {
                     formatter: function(val) {
                         return val
@@ -562,7 +632,7 @@
             ],
             chart: {
                 type: 'bar',
-                height: 1366,
+                height: 1366+screen.height,
                 stacked: true,
             },
             plotOptions: {
@@ -743,7 +813,7 @@
                     }
                 }
             },
-            colors: ["#52357B"]
+            colors: ["#4E61D3"]
         };
 
         var chart = new ApexCharts(

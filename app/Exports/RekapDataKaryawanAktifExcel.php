@@ -72,16 +72,16 @@ WithColumnFormatting
         //                             ->orderBy('hrga_biodata_karyawan.departemen_dept','asc')
         //                             ->get();
         $data['departemens'] = HrgaBiodataKaryawan::select([
-                                        'hrga_biodata_karyawan.departemen_dept as departemen_dept'
+                                        'hrga_biodata_karyawan_new.departemen_dept as departemen_dept'
                                     ])
                                     // ->whereHas('log_posisi', function($query) use($tanggal) {
                                     //     return $query->where('log_posisi.tanggal',$tanggal);
                                     // })
-                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','hrga_biodata_karyawan.nik')
+                                    ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','=','hrga_biodata_karyawan_new.nik')
                                     ->where('itic_emp_new.biodata_karyawan.tanggal_masuk','<=',$this->tanggal)
-                                    ->where('hrga_biodata_karyawan.status_karyawan','Y')
-                                    ->groupBy('hrga_biodata_karyawan.departemen_dept')
-                                    ->orderBy('hrga_biodata_karyawan.departemen_dept','asc')
+                                    ->whereIn('hrga_biodata_karyawan_new.status_karyawan',['Y','K'])
+                                    ->groupBy('hrga_biodata_karyawan_new.departemen_dept')
+                                    ->orderBy('hrga_biodata_karyawan_new.departemen_dept','asc')
                                     ->get();
         // return $data;
         return view('hrga.excel.download_rekap_excel',$data);
