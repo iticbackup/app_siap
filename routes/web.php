@@ -22,6 +22,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('test-ip', function () {
+    return request()->ip();
+});
+
 // Route::resource('login', App\Http\Controllers\Auth\LoginController::class);
 Route::prefix('docs')->group(function () {
     Route::get('/', function(){
