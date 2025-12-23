@@ -510,7 +510,8 @@
                     request()->ip() == '192.168.1.121' || 
                     request()->ip() == '192.168.1.122' || 
                     request()->ip() == '192.168.1.123' || 
-                    request()->ip() == '192.168.1.124'
+                    request()->ip() == '192.168.1.124' ||
+                    request()->ip() == '192.168.1.181'
                     )
                     {{-- <div class="p-6">
                         <div class="flex items-center">
