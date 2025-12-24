@@ -67,12 +67,24 @@
                     // ->addDay(3)
                     ->format('Y-m-d H:i');
 
-                if (\Carbon\Carbon::create($explode_tanggal[0])->format('Y-m-d') == \Carbon\Carbon::create($explode_tanggal[1])->format('Y-m-d')) {
+                if (
+                    \Carbon\Carbon::create($explode_tanggal[0])->format('Y-m-d') ==
+                    \Carbon\Carbon::create($explode_tanggal[1])->format('Y-m-d')
+                ) {
                     $date = \Carbon\Carbon::create($explode_tanggal[1])->isoFormat('LL');
-                    $pukul = \Carbon\Carbon::create($explode_tanggal[0])->format('H:i') . ' - ' . \Carbon\Carbon::create($explode_tanggal[1])->format('H:i');
+                    $pukul =
+                        \Carbon\Carbon::create($explode_tanggal[0])->format('H:i') .
+                        ' - ' .
+                        \Carbon\Carbon::create($explode_tanggal[1])->format('H:i');
                 } else {
-                    $date = \Carbon\Carbon::create($explode_tanggal[0])->format('d') . ' - ' . \Carbon\Carbon::create($explode_tanggal[1])->isoFormat('LL');
-                    $pukul = \Carbon\Carbon::create($explode_tanggal[0])->format('H:i') . ' - ' . \Carbon\Carbon::create($explode_tanggal[1])->format('H:i');
+                    $date =
+                        \Carbon\Carbon::create($explode_tanggal[0])->format('d') .
+                        ' - ' .
+                        \Carbon\Carbon::create($explode_tanggal[1])->isoFormat('LL');
+                    $pukul =
+                        \Carbon\Carbon::create($explode_tanggal[0])->format('H:i') .
+                        ' - ' .
+                        \Carbon\Carbon::create($explode_tanggal[1])->format('H:i');
                 }
                 // $start_date = $explode_tanggal[0];
                 // $end_date = $explode_tanggal[1];
@@ -105,82 +117,120 @@
                 </div>
             @endif
         @empty
-                
         @endforelse
 
         @if (auth()->user()->hasRole('Admin') || auth()->user()->hasRole('HRGA Admin'))
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card report-card bg-primary">
-                        <div class="card-body">
-                            <div class="row d-flex justify-content-center">
-                                <div class="col">
-                                    <p class="text-dark mb-0 fw-semibold text-white">Total Employees</p>
-                                    <h3 class="m-0 text-white">{{ $total_employees[0]->total }} Employees</h3>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card report-card bg-primary">
+                            <div class="card-body">
+                                <div class="row d-flex justify-content-center">
+                                    <div class="col">
+                                        <p class="text-dark mb-0 fw-semibold text-white">Total Employees</p>
+                                        <h3 class="m-0 text-white">{{ $total_employees[0]->total }} Employees</h3>
+                                    </div>
+                                    <div class="col-auto align-self-center">
+                                        <div class="report-main-icon bg-light-alt">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-tabler icons-tabler-outline icon-tabler-users">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                                                <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                                <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+                                            </svg>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-auto align-self-center">
-                                    <div class="report-main-icon bg-light-alt">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-users"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card report-card bg-warning">
+                            <div class="card-body">
+                                <div class="row d-flex justify-content-center">
+                                    <div class="col">
+                                        <p class="text-dark mb-0 fw-semibold">Male</p>
+                                        <h3 class="m-0">{{ $berdasarkan_gender[0]->jenis_kelamin }} Employees</h3>
+                                    </div>
+                                    <div class="col-auto align-self-center">
+                                        <div class="report-main-icon bg-light-alt">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-tabler icons-tabler-outline icon-tabler-gender-male">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M10 14m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0" />
+                                                <path d="M19 5l-5.4 5.4" />
+                                                <path d="M19 5h-5" />
+                                                <path d="M19 5v5" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card report-card bg-danger">
+                            <div class="card-body">
+                                <div class="row d-flex justify-content-center">
+                                    <div class="col">
+                                        <p class="text-dark mb-0 fw-semibold text-white">Female</p>
+                                        <h3 class="m-0 text-white">{{ $berdasarkan_gender[1]->jenis_kelamin }} Employees
+                                        </h3>
+                                    </div>
+                                    <div class="col-auto align-self-center">
+                                        <div class="report-main-icon bg-light-alt">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-tabler icons-tabler-outline icon-tabler-gender-female">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M12 9m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0" />
+                                                <path d="M12 14v7" />
+                                                <path d="M9 18h6" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card report-card bg-success">
+                            <div class="card-body">
+                                <div class="row d-flex justify-content-center">
+                                    <div class="col">
+                                        <p class="text-dark mb-0 fw-semibold text-white">Average Age</p>
+                                        <h3 class="m-0 text-white">{{ round($average_age[0]->rata_rata) }} Years (0 - >45)
+                                        </h3>
+                                    </div>
+                                    <div class="col-auto align-self-center">
+                                        <div class="report-main-icon bg-light-alt">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-tabler icons-tabler-outline icon-tabler-rating-18-plus">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                                <path d="M11.5 10.5m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" />
+                                                <path d="M11.5 13.5m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" />
+                                                <path d="M7 15v-6" />
+                                                <path d="M15.5 12h3" />
+                                                <path d="M17 10.5v3" />
+                                            </svg>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card report-card bg-warning">
-                        <div class="card-body">
-                            <div class="row d-flex justify-content-center">
-                                <div class="col">
-                                    <p class="text-dark mb-0 fw-semibold">Male</p>
-                                    <h3 class="m-0">{{ $berdasarkan_gender[0]->jenis_kelamin }} Employees</h3>
-                                </div>
-                                <div class="col-auto align-self-center">
-                                    <div class="report-main-icon bg-light-alt">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-gender-male"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 14m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0" /><path d="M19 5l-5.4 5.4" /><path d="M19 5h-5" /><path d="M19 5v5" /></svg>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card report-card bg-danger">
-                        <div class="card-body">
-                            <div class="row d-flex justify-content-center">
-                                <div class="col">
-                                    <p class="text-dark mb-0 fw-semibold text-white">Female</p>
-                                    <h3 class="m-0 text-white">{{ $berdasarkan_gender[1]->jenis_kelamin }} Employees</h3>
-                                </div>
-                                <div class="col-auto align-self-center">
-                                    <div class="report-main-icon bg-light-alt">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-gender-female"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0" /><path d="M12 14v7" /><path d="M9 18h6" /></svg>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card report-card bg-success">
-                        <div class="card-body">
-                            <div class="row d-flex justify-content-center">
-                                <div class="col">
-                                    <p class="text-dark mb-0 fw-semibold text-white">Average Age</p>
-                                    <h3 class="m-0 text-white">{{ round($average_age[0]->rata_rata) }} Years (0 - >45)</h3>
-                                </div>
-                                <div class="col-auto align-self-center">
-                                    <div class="report-main-icon bg-light-alt">
-                                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-rating-18-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M11.5 10.5m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M11.5 13.5m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" /><path d="M7 15v-6" /><path d="M15.5 12h3" /><path d="M17 10.5v3" /></svg>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- <div class="card">
+                {{-- <div class="card">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
@@ -189,7 +239,7 @@
                     </div>
                 </div>
             </div> --}}
-        </div>
+            </div>
         @endif
 
         @if (auth()->user()->nik == 1207514 || auth()->user()->nik == 1711952 || auth()->user()->nik == 0000000)
@@ -202,175 +252,193 @@
                         <div id="ana_dash_1" class="apex-charts"></div>
                     </div>
                 </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h5>Status Perubahan Dokumen</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav-border nav nav-pills" role="tablist">
+                            @foreach ($departemens as $key_tab => $departemen)
+                                <li class="nav-item">
+                                    <a class="nav-link {{ $key_tab + 1 == 1 ? 'active' : null }} font-weight-semibold pt-0"
+                                        data-bs-toggle="tab" href="#Project{{ $key_tab + 1 }}_Tab"
+                                        role="tab">{{ $departemen->departemen }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="tab-content">
+                            @foreach ($departemens as $key => $departemen)
+                                @php
+                                    $file_manager_perubahan_datas = \App\Models\FileManagerPerubahanData::where(
+                                        'departemen_id',
+                                        $departemen->id,
+                                    )
+                                        ->whereYear('tanggal_formulir', $year)
+                                        ->whereMonth('tanggal_formulir', $month)
+                                        ->orderBy('created_at', 'desc')
+                                        ->get();
+                                @endphp
+                                <div class="tab-pane {{ $key + 1 == 1 ? 'active' : null }}"
+                                    id="Project{{ $key + 1 }}_Tab" role="tabpanel">
+                                    @foreach ($file_manager_perubahan_datas as $key_file_perubahan => $file_manager_perubahan_data)
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="media mb-3">
+                                                        <img src="{{ URL::asset('public/assets/images/widgets/project2.jpg') }}"
+                                                            alt="" class="thumb-lg rounded-circle">
+                                                        <div class="media-body align-self-center text-truncate ms-3">
+                                                            <h4 class="m-0 font-weight-semibold text-dark font-16">
+                                                                {{ $file_manager_perubahan_data->kode_formulir }}</h4>
+                                                            <p class="text-muted mb-0 font-13"><span
+                                                                    class="text-dark">Departemen :
+                                                                </span>{{ $file_manager_perubahan_data->departemen->departemen }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 text-lg-right">
+                                                    <h6 class="font-weight-semibold m-0">Tanggal Dibuat : <span
+                                                            class="text-muted font-weight-normal">
+                                                            {{ $file_manager_perubahan_data->created_at->isoFormat('LLLL') }}</span>
+                                                    </h6>
+                                                    <h6 class="font-weight-semibold  mb-0 mt-2">Tanggal Perubahan :
+                                                        <span class="text-muted font-weight-normal">
+                                                            {{ $file_manager_perubahan_data->updated_at->isoFormat('LLLL') }}</span>
+                                                    </h6>
+                                                </div>
+                                            </div>
+
+                                            <div class="holder">
+                                                <ul class="steppedprogress pt-1">
+                                                    @if ($file_manager_perubahan_data->is_open == 'y')
+                                                        <li class="complete continuous"><span>Planing</span></li>
+                                                        <li class="complete"><span>Waiting Verifikasi</span></li>
+                                                        <li class="complete"><span>Approved / Rejected</span></li>
+                                                    @elseif($file_manager_perubahan_data->is_open == 'n')
+                                                        @if (empty($file_manager_perubahan_data->status))
+                                                            <li class="complete"><span>Planing</span></li>
+                                                            <li class="complete continuous"><span>Waiting
+                                                                    Verifikasi</span></li>
+                                                            <li class="complete"><span>Approved / Rejected</span></li>
+                                                        @else
+                                                            @php
+                                                                $explode_status = explode(
+                                                                    '|',
+                                                                    $file_manager_perubahan_data->status,
+                                                                );
+                                                            @endphp
+
+                                                            @if ($explode_status[0] == 'y' && $explode_status[2] == 'y')
+                                                                <li class="complete"><span>Planing</span></li>
+                                                                <li class="complete"><span>Waiting Verifikasi</span>
+                                                                </li>
+                                                                <li class="complete finish success">
+                                                                    <span>Approved</span>
+                                                                </li>
+                                                            @elseif ($explode_status[0] == 'y' && $explode_status[2] == null)
+                                                                <li class="complete"><span>Planing</span></li>
+                                                                <li class="complete continuous"><span>Waiting
+                                                                        Verifikasi</span></li>
+                                                                <li class="complete"><span>Approved</span></li>
+                                                            @elseif($explode_status[0] == 'n' && $explode_status[2] == null)
+                                                                <li class="complete"><span>Planing</span></li>
+                                                                <li class="complete"><span>Waiting Verifikasi</span>
+                                                                </li>
+                                                                <li class="complete finish danger"><span>Rejected
+                                                                        Document Control</span></li>
+                                                            @elseif($explode_status[0] == 'y' && $explode_status[2] == 'n')
+                                                                <li class="complete"><span>Planing</span></li>
+                                                                <li class="complete"><span>Waiting Verifikasi</span>
+                                                                </li>
+                                                                <li class="complete finish danger"><span>Rejected
+                                                                        Management Representative</span></li>
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                </ul>
+                                            </div>
+
+                                            <div class="task-box">
+                                                <div class="task-priority-icon"><i class="fas fa-circle text-success"></i>
+                                                </div>
+                                                <p class="text-muted mb-1">{{ $file_manager_perubahan_data->remaks }}
+                                                </p>
+                                                @if ($file_manager_perubahan_data->is_open == 'y')
+                                                    <p class="text-muted text-end mb-1">0% Complete</p>
+                                                    <div class="progress mb-3" style="height: 4px;">
+                                                        <div class="progress-bar bg-primary" role="progressbar"
+                                                            style="width: 0%;" aria-valuenow="0" aria-valuemin="0"
+                                                            aria-valuemax="100"></div>
+                                                    </div>
+                                                @elseif($file_manager_perubahan_data->is_open == 'n')
+                                                    @if (empty($file_manager_perubahan_data->status))
+                                                        <p class="text-muted text-end mb-1">25% Complete</p>
+                                                        <div class="progress mb-3" style="height: 4px;">
+                                                            <div class="progress-bar bg-primary" role="progressbar"
+                                                                style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
+                                                                aria-valuemax="100"></div>
+                                                        </div>
+                                                    @else
+                                                        @php
+                                                            $explode_status = explode(
+                                                                '|',
+                                                                $file_manager_perubahan_data->status,
+                                                            );
+                                                        @endphp
+                                                        @if ($explode_status[0] == 'y' && $explode_status[2] == 'y')
+                                                            <p class="text-muted text-end mb-1">100% Complete</p>
+                                                            <div class="progress mb-3" style="height: 4px;">
+                                                                <div class="progress-bar bg-success" role="progressbar"
+                                                                    style="width: 100%;" aria-valuenow="100"
+                                                                    aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        @elseif($explode_status[0] == 'y' && $explode_status[2] == null)
+                                                            <p class="text-muted text-end mb-1">75% Complete</p>
+                                                            <div class="progress mb-3" style="height: 4px;">
+                                                                <div class="progress-bar bg-primary" role="progressbar"
+                                                                    style="width: 75%;" aria-valuenow="75"
+                                                                    aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        @elseif($explode_status[0] == 'n' && $explode_status[2] == null)
+                                                            <p class="text-muted text-end mb-1">100% Complete</p>
+                                                            <div class="progress mb-3" style="height: 4px;">
+                                                                <div class="progress-bar bg-danger" role="progressbar"
+                                                                    style="width: 100%;" aria-valuenow="100"
+                                                                    aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        @elseif($explode_status[0] == 'y' && $explode_status[2] == 'n')
+                                                            <p class="text-muted text-end mb-1">100% Complete</p>
+                                                            <div class="progress mb-3" style="height: 4px;">
+                                                                <div class="progress-bar bg-danger" role="progressbar"
+                                                                    style="width: 100%;" aria-valuenow="100"
+                                                                    aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        @endif
+                                                    @endif
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
             </div>
         @endif
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">
-                        <h5>Status Perubahan Dokumen</h5>
+                        List Karyawan Kontrak Habis {{ \Carbon\Carbon::now()->isoFormat('MMMM YYYY') }}
                     </div>
                 </div>
-                <div class="card-body">
-                    <ul class="nav-border nav nav-pills" role="tablist">
-                        @foreach ($departemens as $key_tab => $departemen)
-                            <li class="nav-item">
-                                <a class="nav-link {{ $key_tab + 1 == 1 ? 'active' : null }} font-weight-semibold pt-0"
-                                    data-bs-toggle="tab" href="#Project{{ $key_tab + 1 }}_Tab"
-                                    role="tab">{{ $departemen->departemen }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-                <div class="card-body pt-0">
-                    <div class="tab-content">
-                        @foreach ($departemens as $key => $departemen)
-                            @php
-                                $file_manager_perubahan_datas = \App\Models\FileManagerPerubahanData::where('departemen_id', $departemen->id)
-                                    ->whereYear('tanggal_formulir', $year)
-                                    ->whereMonth('tanggal_formulir', $month)
-                                    ->orderBy('created_at', 'desc')
-                                    ->get();
-                            @endphp
-                            <div class="tab-pane {{ $key + 1 == 1 ? 'active' : null }}"
-                                id="Project{{ $key + 1 }}_Tab" role="tabpanel">
-                                @foreach ($file_manager_perubahan_datas as $key_file_perubahan => $file_manager_perubahan_data)
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="media mb-3">
-                                                    <img src="{{ URL::asset('public/assets/images/widgets/project2.jpg') }}"
-                                                        alt="" class="thumb-lg rounded-circle">
-                                                    <div class="media-body align-self-center text-truncate ms-3">
-                                                        <h4 class="m-0 font-weight-semibold text-dark font-16">
-                                                            {{ $file_manager_perubahan_data->kode_formulir }}</h4>
-                                                        <p class="text-muted mb-0 font-13"><span
-                                                                class="text-dark">Departemen :
-                                                            </span>{{ $file_manager_perubahan_data->departemen->departemen }}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 text-lg-right">
-                                                <h6 class="font-weight-semibold m-0">Tanggal Dibuat : <span
-                                                        class="text-muted font-weight-normal">
-                                                        {{ $file_manager_perubahan_data->created_at->isoFormat('LLLL') }}</span>
-                                                </h6>
-                                                <h6 class="font-weight-semibold  mb-0 mt-2">Tanggal Perubahan :
-                                                    <span class="text-muted font-weight-normal">
-                                                        {{ $file_manager_perubahan_data->updated_at->isoFormat('LLLL') }}</span>
-                                                </h6>
-                                            </div>
-                                        </div>
-
-                                        <div class="holder">
-                                            <ul class="steppedprogress pt-1">
-                                                @if ($file_manager_perubahan_data->is_open == 'y')
-                                                    <li class="complete continuous"><span>Planing</span></li>
-                                                    <li class="complete"><span>Waiting Verifikasi</span></li>
-                                                    <li class="complete"><span>Approved / Rejected</span></li>
-                                                @elseif($file_manager_perubahan_data->is_open == 'n')
-                                                    @if (empty($file_manager_perubahan_data->status))
-                                                        <li class="complete"><span>Planing</span></li>
-                                                        <li class="complete continuous"><span>Waiting
-                                                                Verifikasi</span></li>
-                                                        <li class="complete"><span>Approved / Rejected</span></li>
-                                                    @else
-                                                        @php
-                                                            $explode_status = explode('|', $file_manager_perubahan_data->status);
-                                                        @endphp
-
-                                                        @if ($explode_status[0] == 'y' && $explode_status[2] == 'y')
-                                                            <li class="complete"><span>Planing</span></li>
-                                                            <li class="complete"><span>Waiting Verifikasi</span>
-                                                            </li>
-                                                            <li class="complete finish success">
-                                                                <span>Approved</span>
-                                                            </li>
-                                                        @elseif ($explode_status[0] == 'y' && $explode_status[2] == null)
-                                                            <li class="complete"><span>Planing</span></li>
-                                                            <li class="complete continuous"><span>Waiting
-                                                                    Verifikasi</span></li>
-                                                            <li class="complete"><span>Approved</span></li>
-                                                        @elseif($explode_status[0] == 'n' && $explode_status[2] == null)
-                                                            <li class="complete"><span>Planing</span></li>
-                                                            <li class="complete"><span>Waiting Verifikasi</span>
-                                                            </li>
-                                                            <li class="complete finish danger"><span>Rejected
-                                                                    Document Control</span></li>
-                                                        @elseif($explode_status[0] == 'y' && $explode_status[2] == 'n')
-                                                            <li class="complete"><span>Planing</span></li>
-                                                            <li class="complete"><span>Waiting Verifikasi</span>
-                                                            </li>
-                                                            <li class="complete finish danger"><span>Rejected
-                                                                    Management Representative</span></li>
-                                                        @endif
-                                                    @endif
-                                                @endif
-                                            </ul>
-                                        </div>
-
-                                        <div class="task-box">
-                                            <div class="task-priority-icon"><i class="fas fa-circle text-success"></i></div>
-                                            <p class="text-muted mb-1">{{ $file_manager_perubahan_data->remaks }}
-                                            </p>
-                                            @if ($file_manager_perubahan_data->is_open == 'y')
-                                                <p class="text-muted text-end mb-1">0% Complete</p>
-                                                <div class="progress mb-3" style="height: 4px;">
-                                                    <div class="progress-bar bg-primary" role="progressbar"
-                                                        style="width: 0%;" aria-valuenow="0" aria-valuemin="0"
-                                                        aria-valuemax="100"></div>
-                                                </div>
-                                            @elseif($file_manager_perubahan_data->is_open == 'n')
-                                                @if (empty($file_manager_perubahan_data->status))
-                                                    <p class="text-muted text-end mb-1">25% Complete</p>
-                                                    <div class="progress mb-3" style="height: 4px;">
-                                                        <div class="progress-bar bg-primary" role="progressbar"
-                                                            style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
-                                                            aria-valuemax="100"></div>
-                                                    </div>
-                                                @else
-                                                    @php
-                                                        $explode_status = explode('|', $file_manager_perubahan_data->status);
-                                                    @endphp
-                                                    @if ($explode_status[0] == 'y' && $explode_status[2] == 'y')
-                                                        <p class="text-muted text-end mb-1">100% Complete</p>
-                                                        <div class="progress mb-3" style="height: 4px;">
-                                                            <div class="progress-bar bg-success" role="progressbar"
-                                                                style="width: 100%;" aria-valuenow="100"
-                                                                aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    @elseif($explode_status[0] == 'y' && $explode_status[2] == null)
-                                                        <p class="text-muted text-end mb-1">75% Complete</p>
-                                                        <div class="progress mb-3" style="height: 4px;">
-                                                            <div class="progress-bar bg-primary" role="progressbar"
-                                                                style="width: 75%;" aria-valuenow="75" aria-valuemin="0"
-                                                                aria-valuemax="100"></div>
-                                                        </div>
-                                                    @elseif($explode_status[0] == 'n' && $explode_status[2] == null)
-                                                        <p class="text-muted text-end mb-1">100% Complete</p>
-                                                        <div class="progress mb-3" style="height: 4px;">
-                                                            <div class="progress-bar bg-danger" role="progressbar"
-                                                                style="width: 100%;" aria-valuenow="100"
-                                                                aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    @elseif($explode_status[0] == 'y' && $explode_status[2] == 'n')
-                                                        <p class="text-muted text-end mb-1">100% Complete</p>
-                                                        <div class="progress mb-3" style="height: 4px;">
-                                                            <div class="progress-bar bg-danger" role="progressbar"
-                                                                style="width: 100%;" aria-valuenow="100"
-                                                                aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    @endif
-                                                @endif
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
+                <div class="card-body" id="karyawanKontrak"></div>
             </div>
         </div>
     </div>
@@ -394,6 +462,9 @@
 
     {{-- <script src="{{ URL::asset('public/assets/js/pages/jquery.calendar.js') }}"></script> --}}
     <script>
+        $(document).ready(function(){
+            $('#karyawanKontrak').load("{{ route('realtime.karyawanKontrak') }}");
+        });
         // $(document).ready(function(){
         //     const memory = navigator.deviceMemory;
         //     // const memory = navigator.hardwareConcurrency;

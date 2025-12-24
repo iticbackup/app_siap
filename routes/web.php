@@ -57,6 +57,12 @@ Route::group(['middleware' => ['auth', 'LogVisits']], function() {
     Route::get('users/{nama}/search', [App\Http\Controllers\UserController::class, 'search_nik']);
     Route::resource('products', App\Http\Controllers\ProductController::class);
 
+    Route::controller(App\Http\Controllers\RealTimeController::class)->group(function () {
+        Route::prefix('realtime')->group(function () {
+            Route::get('karyawanKontrak', 'karyawanKontrak')->name('realtime.karyawanKontrak');
+        });
+    });
+
     Route::controller(App\Http\Controllers\PeriodeController::class)->group(function () {
         Route::prefix('periode')->group(function () {
             Route::get('/', 'index')->name('periode');
