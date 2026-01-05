@@ -33,12 +33,13 @@ class RealTimeController extends Controller
                                                 ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','hrga_biodata_karyawan_new.nik')
                                                 ->leftJoin('hrga_status_kerja','hrga_status_kerja.hrga_biodata_karyawan_id','hrga_biodata_karyawan_new.id')
                                                 ->where('hrga_status_kerja.pk','!=','Tetap')
-                                                ->orderBy('hrga_status_kerja.id','desc')
+                                                // ->orderBy('hrga_status_kerja.id','desc')
                                                 // ->whereYear('hrga_status_kerja.tgl_mulai','>=',Carbon::now()->subYears()->format('Y'))
                                                 ->where('hrga_status_kerja.tgl_mulai','LIKE','%'.Carbon::now()->subYears()->format('Y-m').'%')
                                                 ->whereIn('hrga_biodata_karyawan_new.status_karyawan',['Y','K'])
                                                 // ->where('hrga_status_kerja.tgl_mulai','>=',Carbon::now()->format('Y-m-d'))
                                                 // ->limit(1)
+                                                ->orderBy('hrga_status_kerja.tgl_mulai','asc')
                                                 ->get();
 
                                                 // return Carbon::now()->subDay(9)->format('Y-m-d');
