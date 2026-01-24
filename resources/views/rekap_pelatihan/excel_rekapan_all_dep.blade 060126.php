@@ -61,8 +61,7 @@
             <td style="text-align: center; border: 1px solid black;">
                 @foreach ($departemen->departemen_user_all as $departemen_user_all)
                 @php
-                    $rekap = \App\Models\RekapPelatihanSeminarPeserta::select('rekap_pelatihan_seminar_peserta.id')
-                                                                    ->leftJoin('rekap_pelatihan_seminar','rekap_pelatihan_seminar.id','=','rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id')
+                    $rekap = \App\Models\RekapPelatihanSeminarPeserta::leftJoin('rekap_pelatihan_seminar','rekap_pelatihan_seminar.id','=','rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id')
                                                                     ->where('rekap_pelatihan_seminar_peserta.peserta',$departemen_user_all->team)
                                                                     // ->where('rekap_pelatihan_seminar_peserta.departemen_id',$departemen_user_all->departemen_id)
                                                                     ->where('rekap_pelatihan_seminar.periode',$periode)
@@ -75,25 +74,6 @@
                     array_push($total_all_peserta_pelatihan,array_sum($total_peserta_pelatihan))
                 @endphp
                 {{ array_sum($total_peserta_pelatihan) }}
-                {{-- @foreach ($departemen->departemen_user_all as $departemen_user_all)
-                @php
-                    $rekap_jumlah_peserta_pelatihan = \DB::select(
-                        \DB::raw(
-                            'select rekap_pelatihan_seminar_peserta.id from rekap_pelatihan_seminar_peserta left join rekap_pelatihan_seminar on rekap_pelatihan_seminar.id = rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id where rekap_pelatihan_seminar_peserta.peserta = '.$departemen_user_all->team.' and rekap_pelatihan_seminar.periode = '.$periode.' and rekap_pelatihan_seminar_peserta.deleted_at is null'
-                        )
-                    );
-
-                    dd($rekap_jumlah_peserta_pelatihan);
-
-                    $simpan_rekap = count($rekap_jumlah_peserta_pelatihan);
-                    dd($simpan_rekap);
-                    array_push($total_peserta_pelatihan,$simpan_rekap);
-                @endphp
-                @endforeach
-                @php
-                    array_push($total_all_peserta_pelatihan,array_sum($total_peserta_pelatihan))
-                @endphp
-                {{ array_sum($total_peserta_pelatihan) }} --}}
             </td>
             @endforeach
             <td style="text-align: center; border: 1px solid black;">{{ array_sum($total_all_peserta_pelatihan) }}</td>
@@ -107,26 +87,27 @@
             @endphp
             <td style="text-align: center; border: 1px solid black;">
                 @php
-                    $rekap_waktu_pelatihans = \DB::select(
-                        \DB::raw(
-                            'select count(rekap_pelatihan_seminar_peserta.departemen_id) * (rekap_pelatihan_seminar.jml_jam_dlm_hari * rekap_pelatihan_seminar.jml_hari) as jml_jam '.
-                            'from rekap_pelatihan_seminar_peserta '.
-                            'left join rekap_pelatihan_seminar '.
-                            'on rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id = rekap_pelatihan_seminar.id '.
-                            'where rekap_pelatihan_seminar_peserta.departemen_id = '.$departemen->id.' and rekap_pelatihan_seminar.periode='.$periode.' and rekap_pelatihan_seminar_peserta.deleted_at is null group by rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id, rekap_pelatihan_seminar.jml_jam_dlm_hari, rekap_pelatihan_seminar.jml_hari'
-                        )
-                    );
-
+                    $rekap_waktu_pelatihans = \DB::select(\DB::raw(
+                        'select count(rekap_pelatihan_seminar_peserta.departemen_id) * sum(jml_jam_dlm_hari) * sum(jml_hari) as jml_jam 
+                        from rekap_pelatihan_seminar_peserta 
+                        left join rekap_pelatihan_seminar 
+                        on rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id = rekap_pelatihan_seminar.id '.
+                        // 'where rekap_pelatihan_seminar_peserta.departemen_id = '.$departemen->id.' and rekap_pelatihan_seminar.periode='.$periode.' and rekap_pelatihan_seminar_peserta.deleted_at is null group by rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id'
+                        'where rekap_pelatihan_seminar_peserta.departemen_id = '.$departemen->id.' and rekap_pelatihan_seminar.periode='.$periode.' and rekap_pelatihan_seminar_peserta.deleted_at is null group by rekap_pelatihan_seminar_peserta.rekap_pelatihan_seminar_id'
+                    ));
+                    // dd($rekap_waktu_pelatihans);
                     foreach ($rekap_waktu_pelatihans as $rekap_waktu_pelatihan) {
                         array_push($total_waktu_pelatihan,$rekap_waktu_pelatihan->jml_jam);
                     }
-
+                @endphp
+                 @php
                     array_push($total_all_waktu_pelatihan,array_sum($total_waktu_pelatihan))
                 @endphp
                 {{ array_sum($total_waktu_pelatihan) }}
             </td>
             @endforeach
             <td style="text-align: center; border: 1px solid black;">{{ array_sum($total_all_waktu_pelatihan) }}</td>
+
         </tr>
 
         <tr>
