@@ -28,7 +28,13 @@ class SertifikasiMesinProduksiController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->sertifikasi_mesin_produksi->all();
+            $data = $this->sertifikasi_mesin_produksi->with('sertifikasiMesinProduksiList')
+                                                    // ->whereHas('sertifikasi_mesin_produksi_list', function($query){
+                                                    //     $query->orderBy('tgl_resertifikat_terakhir','asc');
+                                                    // })
+                                                    ->get()
+                                                    // ->sortByDesc('sertifikasi_mesin_produksi_list.tgl_resertifikat_selanjutnya')
+                                                    ;
             return DataTables::of($data)
                             ->addIndexColumn()
                             ->addColumn('tgl_sertifikat_pertama', function($row){
@@ -36,13 +42,14 @@ class SertifikasiMesinProduksiController extends Controller
                             })
                             ->addColumn('status', function($row){
                                 $live_date = Carbon::now()->format('Y-m-d');
-                                $data_sertifikasi_mesin_produksi_list = $this->sertifikasi_mesin_produksi_list->where('sertifikasi_mesin_id',$row->id)
-                                                                            // ->where('tgl_resertifikat_selanjutnya','like','%'.$live_date.'%')
-                                                                            ->orderBy('tgl_resertifikat_selanjutnya','asc')
-                                                                            ->limit(2)
-                                                                            ->get();
+                                dd($row->sertifikasiMesinProduksiList->orderBy('tgl_resertifikat_terakhir','desc')->first());
+                                // $data_sertifikasi_mesin_produksi_list = $this->sertifikasi_mesin_produksi_list->where('sertifikasi_mesin_id',$row->id)
+                                //                                             // ->where('tgl_resertifikat_selanjutnya','like','%'.$live_date.'%')
+                                //                                             ->orderBy('tgl_resertifikat_terakhir','asc')
+                                //                                             ->limit(2)
+                                //                                             ->get();
                                                                             // dd($data_sertifikasi_mesin_produksi_list);
-                                foreach ($data_sertifikasi_mesin_produksi_list as $key => $mesin_produksi_list) {
+                                foreach ($row->sertifikasi_mesin_produksi_list as $key => $mesin_produksi_list) {
                                     // if(strtotime(Carbon::create($mesin_produksi_list->tgl_resertifikat_selanjutnya)->subMonth()->format('Y-m-d')) >= strtotime($live_date) || strtotime(Carbon::create($mesin_produksi_list->tgl_resertifikat_selanjutnya)->subMonth()->format('Y-m-d')) <= strtotime($live_date)){
                                     //     return '<span class="badge bg-success">'.'Aktif '.$mesin_produksi_list->tgl_resertifikat_selanjutnya.'</span>';
                                     // }elseif (strtotime(Carbon::create($mesin_produksi_list->tgl_resertifikat_selanjutnya)->subMonth()->format('Y-m-d')) >= strtotime($live_date)) {
@@ -50,11 +57,11 @@ class SertifikasiMesinProduksiController extends Controller
                                     // }else{
                                     //     return '<span class="badge bg-danger">'.'Kadaluwarsa '.$mesin_produksi_list->tgl_resertifikat_selanjutnya.'</span>';
                                     // }
-
-                                    if (strtotime($live_date) >= strtotime(Carbon::create($mesin_produksi_list->tgl_resertifikat_selanjutnya)->subMonth()->format('Y-m-d'))) {
-                                        return '<span class="badge bg-warning">'.'Resertifikasi '.$mesin_produksi_list->tgl_resertifikat_selanjutnya.'</span>';
+                                    // dd($mesin_produksi_list);
+                                    if (strtotime($live_date) >= strtotime(Carbon::create($mesin_produksi_list->tgl_resertifikat_terakhir)->subMonth()->format('Y-m-d'))) {
+                                        return '<span class="badge bg-warning">'.'Resertifikasi '.$mesin_produksi_list->tgl_resertifikat_terakhir.'</span>';
                                     }else{
-                                        return '<span class="badge bg-success">'.'Aktif '.$mesin_produksi_list->tgl_resertifikat_selanjutnya.'</span>';
+                                        return '<span class="badge bg-success">'.'Aktif '.$mesin_produksi_list->tgl_resertifikat_terakhir.'</span>';
                                     }
                                 }
                             })
@@ -268,8 +275,10 @@ class SertifikasiMesinProduksiController extends Controller
             $input['tgl_periksa_uji'] = $request->tgl_periksa_uji;
             $input['tgl_terbit_sertifikat'] = $request->tgl_terbit_sertifikat;
             $input['no_sertifikat_terakhir'] = $request->no_sertifikat_terakhir;
-            $input['tgl_resertifikat_selanjutnya'] = Carbon::create($input['tgl_periksa_uji'])->addYear($sertifikasi_mesin_produksi->periode_resertifikasi)->format('Y-m-d');
+            $input['tgl_resertifikat_terakhir'] = Carbon::create($input['tgl_periksa_uji'])->addYear()->format('Y-m-d');
             $input['keterangan'] = $request->keterangan;
+
+            // dd(Carbon::create($input['tgl_periksa_uji'])->addYear()->format('Y-m-d'));
 
             $sertifikasi_mesin_produksi_list = $this->sertifikasi_mesin_produksi_list->create($input);
             if ($sertifikasi_mesin_produksi_list) {

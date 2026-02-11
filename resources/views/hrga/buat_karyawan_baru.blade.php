@@ -426,7 +426,7 @@
 
         function getProvinsi()
         {
-            axios.post('https://alamat.thecloudalert.com/api/provinsi/get/')
+            axios.post('http://alamat.thecloudalert.com/api/provinsi/get/')
                 .then(function(response) {
                     // console.log(response.data.result)
                     $('.provinsi').empty();

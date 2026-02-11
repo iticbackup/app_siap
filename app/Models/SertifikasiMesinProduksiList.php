@@ -19,7 +19,7 @@ class SertifikasiMesinProduksiList extends Model
         'tgl_terbit_sertifikat',
         'no_sertifikat_terakhir',
         'keterangan',
-        'tgl_resertifikat_selanjutnya',
+        'tgl_resertifikat_terakhir',
     ];
 
     public function sertifikasi_mesin_produksi()

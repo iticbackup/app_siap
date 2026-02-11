@@ -22,6 +22,11 @@ class SertifikasiMesinProduksi extends Model
 
     public function sertifikasi_mesin_produksi_list()
     {
-        return $this->hasMany(\App\Models\SertifikasiMesinProduksiList::class, 'sertifikasi_mesin_id', 'id');
+        return $this->hasMany(\App\Models\SertifikasiMesinProduksiList::class, 'sertifikasi_mesin_id', 'id')->orderBy('tgl_resertifikat_terakhir','asc');
+    }
+
+    public function sertifikasiMesinProduksiList()
+    {
+        return $this->belongsTo(\App\Models\SertifikasiMesinProduksiList::class, 'id', 'sertifikasi_mesin_id');
     }
 }

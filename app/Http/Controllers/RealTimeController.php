@@ -37,6 +37,7 @@ class RealTimeController extends Controller
                                                 // ->whereYear('hrga_status_kerja.tgl_mulai','>=',Carbon::now()->subYears()->format('Y'))
                                                 ->where('hrga_status_kerja.tgl_mulai','LIKE','%'.Carbon::now()->subYears()->format('Y-m').'%')
                                                 ->whereIn('hrga_biodata_karyawan_new.status_karyawan',['Y','K'])
+                                                // ->whereIn('biodata_karyawan.status_karyawan','!=','R')
                                                 // ->where('hrga_status_kerja.tgl_mulai','>=',Carbon::now()->format('Y-m-d'))
                                                 // ->limit(1)
                                                 ->orderBy('hrga_status_kerja.tgl_mulai','asc')

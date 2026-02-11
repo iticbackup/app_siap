@@ -123,8 +123,8 @@
                     name: 'no_sertifikat_terakhir'
                 },
                 {
-                    data: 'tgl_resertifikasi_selanjutnya',
-                    name: 'tgl_resertifikasi_selanjutnya'
+                    data: 'tgl_resertifikat_terakhir',
+                    name: 'tgl_resertifikat_terakhir'
                 },
                 {
                     data: 'keterangan',

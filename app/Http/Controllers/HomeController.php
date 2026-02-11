@@ -44,6 +44,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // dd(auth()->user());
         $date = Carbon::now();
         // $reminders = Cache::remember('rekap_pelatihan', 60 * 12, function () {
         //     // return User::all();
@@ -107,6 +108,8 @@ class HomeController extends Controller
             }
         }
 
+        // dd($data);
+
         // if (auth()->user()->nik == '0000000') {
         //     $data['file_manager_perubahan_datas'] = $this->file_manager_perubahan_data->get();
         // }else{
@@ -131,6 +134,8 @@ class HomeController extends Controller
             $departemen_user = $this->departemen_user->select('id','departemen_id')->where('nik',auth()->user()->nik)->first();
             $data['departemens'] = $this->departemen->where('id',$departemen_user->departemen_id)->get();
         }
+
+        // dd($data);
         
         $data['year'] = Carbon::now()->format('Y');
         $data['month'] = Carbon::now()->format('m');
@@ -143,6 +148,7 @@ class HomeController extends Controller
                                         join hrga_biodata_karyawan on hrga_biodata_karyawan.nik = itic_emp_new.biodata_karyawan.nik
                                         where itic_emp_new.biodata_karyawan.status_karyawan IN ("A","K")'
                                     ));
+                                    // dd($data);
             $data['berdasarkan_gender'] = DB::select(DB::raw(
                                             'select COUNT(biodata_karyawan.jenis_kelamin) as jenis_kelamin 
                                             from itic_emp_new.biodata_karyawan
