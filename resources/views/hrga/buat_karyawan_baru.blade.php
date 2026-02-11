@@ -101,8 +101,11 @@
                                     {{-- <input type="text" name="provinsi" class="form-control" placeholder="Provinsi"
                                     id="provinsi"> --}}
                                     <select name="provinsi" class="form-control provinsi" id="provinsi">
+                                        @foreach ($provinsis as $provinsi)
+                                        <option value="{{ $provinsi['text'] }}">{{ $provinsi['text'] }}</option>
+                                        @endforeach
                                     </select>
-                                    <label for="provinsi">Provinsi</label>
+                                    {{-- <label for="provinsi">Provinsi</label> --}}
                                 </div>
                             </div>
                         </div>
@@ -424,24 +427,24 @@
             })
         });
 
-        function getProvinsi()
-        {
-            axios.post('http://alamat.thecloudalert.com/api/provinsi/get/')
-                .then(function(response) {
-                    // console.log(response.data.result)
-                    $('.provinsi').empty();
-                    if (!response.data.result) {
-                        $('.provinsi').append(new Option(null,null));
-                    }else{
-                        $.each(response.data.result, function(id, value) {
-                            $('.provinsi').append(new Option(value.text, value.text));
-                        })
-                    }
-                });
-        }
+        // function getProvinsi()
+        // {
+        //     axios.post('https://alamat.thecloudalert.com/api/provinsi/get/')
+        //         .then(function(response) {
+        //             // console.log(response.data.result)
+        //             $('.provinsi').empty();
+        //             if (!response.data.result) {
+        //                 $('.provinsi').append(new Option(null,null));
+        //             }else{
+        //                 $.each(response.data.result, function(id, value) {
+        //                     $('.provinsi').append(new Option(value.text, value.text));
+        //                 })
+        //             }
+        //         });
+        // }
 
-        $(document).ready(function(){
-            getProvinsi()
-        });
+        // $(document).ready(function(){
+        //     getProvinsi()
+        // });
     </script>
 @endsection

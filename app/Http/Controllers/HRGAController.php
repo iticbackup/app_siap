@@ -1128,6 +1128,108 @@ class HRGAController extends Controller
         $data['posisis'] = $this->emp_posisi->get();
         $data['jabatans'] = $this->emp_jabatan->get();
         $data['departemens'] = $this->itic_departemen->get();
+
+        $data['provinsis'] = [
+            [
+                'text' => 'Bali'
+            ],
+            [
+                'text' => 'Bangka Belitung'
+            ],
+            [
+                'text' => 'Banten'
+            ],
+            [
+                'text' => 'Bengkulu'
+            ],
+            [
+                'text' => 'DI Yogyakarta'
+            ],
+            [
+                'text' => 'DKI Jakarta'
+            ],
+            [
+                'text' => 'Gorontalo'
+            ],
+            [
+                'text' => 'Jambi'
+            ],
+            [
+                'text' => 'Jawa Barat'
+            ],
+            [
+                'text' => 'Jawa Tengah'
+            ],
+            [
+                'text' => 'Jawa Timur'
+            ],
+            [
+                'text' => 'Kalimantan Barat'
+            ],
+            [
+                'text' => 'Kalimantan Selatan'
+            ],
+            [
+                'text' => 'Kalimantan Tengah'
+            ],
+            [
+                'text' => 'Kalimantan Timur'
+            ],
+            [
+                'text' => 'Kalimantan Utara'
+            ],
+            [
+                'text' => 'Kepulauan Riau'
+            ],
+            [
+                'text' => 'Lampung'
+            ],
+            [
+                'text' => 'Maluku'
+            ],
+            [
+                'text' => 'Maluku Utara'
+            ],
+            [
+                'text' => 'Nanggroe Aceh Darussalam'
+            ],
+            [
+                'text' => 'Nusa Tenggara Barat'
+            ],
+            [
+                'text' => 'Nusa Tenggara Timur'
+            ],
+            [
+                'text' => 'Papua'
+            ],
+            [
+                'text' => 'Papua Barat'
+            ],
+            [
+                'text' => 'Riau'
+            ],
+            [
+                'text' => 'Sulawesi Barat'
+            ],
+            [
+                'text' => 'Sulawesi Selatan'
+            ],
+            [
+                'text' => 'Sulawesi Tenggara'
+            ],
+            [
+                'text' => 'Sulawesi Utara'
+            ],
+            [
+                'text' => 'Sumatera Barat'
+            ],
+            [
+                'text' => 'Sumatera Selatan'
+            ],
+            [
+                'text' => 'Sumatera Utara'
+            ],
+        ];
         // dd($data);
         return view('hrga.buat_karyawan_baru',$data);
     }
