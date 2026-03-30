@@ -149,7 +149,7 @@ class HRGAController extends Controller
                                 }else{
                                     return '<div class="col">'.
                                                 '<div class="media">'.
-                                                    '<img src='.asset('public/berkas/HRGA/data_karyawan/'.$row->foto_karyawan).' class="rounded-circle thumb-lg align-self-center">'.
+                                                    '<img src='.asset('public/berkas/HRGA/data_karyawan/'.$row->foto_karyawan).' class="rounded-circle thumb-lg align-self-center" style="object-fit: cover;">'.
                                                     '<div class="media-body ms-3 align-self-center">'.
                                                         '<h5 class="mt-0 mb-1">'.$row->nik.' - '.$row->nama.'</h5>'.
                                                         '<p class="mb-0">'.strtoupper($row->departemen_dept.' - '.$row->departemen_bagian).'</p>'.
