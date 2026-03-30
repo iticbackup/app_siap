@@ -44,13 +44,13 @@
                     <div class="col-md-3">
                         <div class="mb-3">
                             <label class="mb-1" style="font-weight: bold">Tanggal Sertifikat Pertama</label>
-                            <p>{{ $mesin_produksi->tgl_sertifikat_pertama }}</p>
+                            <p>{{ \Carbon\Carbon::create($mesin_produksi->tgl_sertifikat_pertama)->format('d-m-Y') }}</p>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="mb-3">
                             <label class="mb-1" style="font-weight: bold">Periode Resertifikasi</label>
-                            <p>{{ $mesin_produksi->periode_resertifikasi }} Tahun</p>
+                            <p>{{ $mesin_produksi->periode_resertifikasi }}</p>
                         </div>
                     </div>
                 </div>

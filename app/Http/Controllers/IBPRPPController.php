@@ -164,7 +164,7 @@ class IBPRPPController extends Controller
                                         ->where('ibprpp_departemen_id',$departemen_id)
                                         ->orderBy('created_at','asc')
                                         ->get();
-        
+        // dd($data);
         if (empty($data['ibprpps'])) {
             return back()->with('error', 'IBPRPP Tidak Ditemukan');
         }
@@ -172,6 +172,121 @@ class IBPRPPController extends Controller
         // dd($data);
 
         return view('ibprpp.preview',$data);
+    }
+
+    public function ibprpp_departemen_input_edit($periode,$departemen_id,$id)
+    {
+        $data['ibprpp'] = $this->ibprpp->whereHas('ibprpp_periode', function($query) use($periode){
+                                            $query->where('periode',$periode);
+                                        })
+                                        // ->where('ibprpp_periode_id',$data['periode']['id'])
+                                        ->where('ibprpp_departemen_id',$departemen_id)
+                                        ->where('id',$id)
+                                        ->first();
+
+        if (empty($data['ibprpp'])) {
+            return back()->with('error', 'IBPRPP Tidak Ditemukan');
+        }
+
+        $data['category_areas'] = $this->ibprpp_category_area->select('id','category_area')->where('status','aktif')->get();
+        $data['departemen_id'] = $departemen_id;
+
+        return view('ibprpp.edit',$data);
+    }
+
+    public function ibprpp_departemen_input_update(Request $request, $periode, $departemen_id, $id)
+    {
+        $rules = [
+            // 'aktifitas_pekerja' => 'required',
+        ];
+
+        $messages = [
+            // 'aktifitas_pekerja.required' => 'Aktifitas Pekerja Wajib Diisi',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->passes()) {
+            // dd($request->all());
+            $ibprpp = $this->ibprpp->whereHas('ibprpp_periode', function($query) use($periode){
+                                        $query->where('periode',$periode);
+                                    })
+                                    // ->where('ibprpp_periode_id',$data['periode']['id'])
+                                    ->where('ibprpp_departemen_id',$departemen_id)
+                                    ->where('id',$id)
+                                    ->first();
+            if (empty($ibprpp)) {
+                return response()->json([
+                    'success' => false,
+                    'message_title' => 'Gagal',
+                    'message_content' => 'Data Tidak Ditemukan'
+                ]);
+            }
+
+            $input['ibprpp_periode_id'] = $ibprpp->ibprpp_periode->id;
+            $input['ibprpp_category_area_id'] = $request->ibprpp_category_area_id;
+            $input['ibprpp_departemen_id'] = $departemen_id;
+            $input['aktivitas_pekerja'] = $request->aktifitas_pekerja;
+            $input['jenis_aktivitas'] = $request->jenis_aktivitas;
+            $input['body'] = json_encode($request->body);
+            $input['status'] = 'Aktif';
+            $ibprpp->update($input);
+
+            if ($ibprpp) {
+                $message_title="Berhasil !";
+                $message_content="IBPRPP Berhasil Dibuat";
+                $message_type="success";
+                $message_succes = true;
+            }
+
+            $array_message = array(
+                'success' => $message_succes,
+                'message_title' => $message_title,
+                'message_content' => $message_content,
+                'message_type' => $message_type,
+            );
+
+            return response()->json($array_message);
+        }
+
+        return response()->json(
+            [
+                'success' => false,
+                'error' => $validator->errors()->all()
+            ]
+        );
+    }
+
+    public function ibprpp_departemen_input_delete(Request $request, $periode, $departemen_id)
+    {
+        $ibprpp = $this->ibprpp->find($request->id);
+        
+        if (empty($ibprpp)) {
+            return response()->json([
+                'success' => false,
+                'message_title' => 'Gagal',
+                'message_content' => 'IBPRPP Tidak Ditemukan'
+            ]);
+        }
+
+        $ibprpp->delete();
+
+        if ($ibprpp) {
+            $message_title="Berhasil !";
+            $message_content="IBPRPP Berhasil Dihapus";
+            $message_type="success";
+            $message_succes = true;
+        }
+
+        $array_message = array(
+            'success' => $message_succes,
+            'message_title' => $message_title,
+            'message_content' => $message_content,
+            'message_type' => $message_type,
+        );
+
+        return response()->json($array_message);
+
     }
 
     public function ibprpp_departemen_download_pdf($periode,$departemen_id)

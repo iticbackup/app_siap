@@ -165,7 +165,7 @@
                         <a href="#" class="{{ Request::is('qhse') ? 'active' : '' }}"><i
                                 class="ti-control-record"></i> Kategori Area</a>
                     </li> --}}
-                    <li>
+                    {{-- <li>
                         <a href="javascript: void(0);"><i class="ti-control-record"></i>Kategori <span
                                 class="menu-arrow left-has-menu"><i class="mdi mdi-chevron-right"></i></span></a>
                         <ul>
@@ -173,7 +173,7 @@
                             <li><a href="ui-alerts">Kategori Area</a></li>
                             <li><a href="ui-alerts">Departemen</a></li>
                         </ul>
-                    </li>
+                    </li> --}}
                     <li class="{{ Request::is('qhse/ibprpp*') ? 'active' : '' }}">
                         <a href="{{ route('qhse.ibprpp.periode') }}" class="{{ Request::is('qhse/ibprpp*') ? 'active' : '' }}"><i
                                 class="ti-control-record"></i> Data IBPRPP</a>

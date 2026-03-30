@@ -30,6 +30,7 @@
     @include('hrga.modalEdit')
     @include('hrga.modalDetail')
     @include('hrga.modalBuatKontrak')
+    @include('hrga.modalBuatEmail')
     @include('hrga.modalBuatRiwayatKonseling')
     @include('hrga.modalBuatRiwayatTraining')
     @include('hrga.modalExcelPeriode')
@@ -95,12 +96,14 @@
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
-                                {{-- <th class="text-center" style="width: 10%">#</th> --}}
-                                <th class="text-center" style="width: 10%">Foto</th>
-                                <th class="text-center" style="width: 10%">NIK</th>
-                                <th class="text-center">Nama Karyawan</th>
-                                <th class="text-center" style="width: 10%">Departemen</th>
+                                {{-- <th class="text-center" style="width: 3%">#</th> --}}
+                                {{-- <th class="text-center" style="width: 10%">Foto</th> --}}
+                                {{-- <th class="text-center" style="width: 10%">NIK</th> --}}
+                                {{-- <th class="text-center">Nama Karyawan</th> --}}
+                                <th class="text-center" style="width: 10%">Karyawan</th>
+                                {{-- <th class="text-center" style="width: 10%">Departemen</th> --}}
                                 <th class="text-center" style="width: 10%">No. Telpon</th>
+                                <th class="text-center" style="width: 10%">Pin</th>
                                 <th class="text-center" style="width: 10%">Status Kerja</th>
                                 <th class="text-center" style="width: 10%">Status Karyawan</th>
                                 <th class="text-center" style="width: 20%">Action</th>
@@ -173,28 +176,42 @@
             ajax: "{{ route('hrga.biodata_karyawan') }}",
             columns: [
                 // {
+                //     data: 'DT_RowIndex', 
+                //     name: 'DT_RowIndex', 
+                //     orderable: false, 
+                //     searchable: false
+                // },
+                // {
                 //     data: 'id',
                 //     name: 'id'
                 // },
+                // {
+                //     data: 'foto_karyawan',
+                //     name: 'foto_karyawan'
+                // },
+                // {
+                //     data: 'nik',
+                //     name: 'nik'
+                // },
+                // {
+                //     data: 'nama',
+                //     name: 'nama'
+                // },
                 {
-                    data: 'foto_karyawan',
-                    name: 'foto_karyawan'
+                    data: 'karyawan',
+                    name: 'karyawan'
                 },
-                {
-                    data: 'nik',
-                    name: 'nik'
-                },
-                {
-                    data: 'nama',
-                    name: 'nama'
-                },
-                {
-                    data: 'id_departemen',
-                    name: 'id_departemen'
-                },
+                // {
+                //     data: 'id_departemen',
+                //     name: 'id_departemen'
+                // },
                 {
                     data: 'no_telp',
                     name: 'no_telp'
+                },
+                {
+                    data: 'pin',
+                    name: 'pin'
                 },
                 {
                     data: 'status_karyawan',
@@ -215,7 +232,8 @@
                 // { className: 'text-right', targets: [7, 10, 11, 14, 16] },
                 {
                     className: 'text-center',
-                    targets: [0,1,3,4,5,6,7]
+                    // targets: [0,1,3,4,5,6,7]
+                    targets: [1,2,3,4,5]
                 },
             ],
         });
@@ -908,6 +926,32 @@
             });
         }
 
+        function buat_email(nik)
+        {
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('hrga/biodata_karyawan/') }}"+'/'+nik+'/detail',
+                contentType: "application/json;  charset=utf-8",
+                cache: false,
+                beforeSend: function() {
+                },
+                success: (result) => {
+                    $('#email_id').val(result.data.id);
+                    document.getElementById('email_nik').innerHTML = result.data.nik;
+                    document.getElementById('email_karyawan').innerHTML = result.data.nama_karyawan;
+                    // $('#email_nama').val(result.data.nama_karyawan);
+                    
+                    $('.modalBuatEmail').modal('show');
+                },
+                error: function(request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            });
+        }
+
         $('#form-simpan').submit(function(e) {
             e.preventDefault();
             let formData = new FormData(this);
@@ -1358,6 +1402,65 @@
 
             
             // alert('test');
+        });
+
+        $('#email_simpan').submit(function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            Swal.fire({
+                title: 'Apakah sudah yakin?',
+                // text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '$success',
+                cancelButtonColor: '$danger',
+                confirmButtonText: 'Yes'
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('hrga.biodata_karyawan.email_simpan') }}",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Proses...',
+                                text: 'Data sedang diproses',
+                                imageHeight: 80,
+                                animation: false,
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            })
+                        },
+                        success: (result) => {
+                            if (result.success == true) {
+                                Swal.fire(
+                                    result.message_title,
+                                    result.message_content,
+                                    'success'
+                                );
+                                table.ajax.reload(null, false);
+                                $('.modalBuatEmail').modal('hide');
+                            }else{
+                                Swal.fire(
+                                    result.message_title,
+                                    result.message_content,
+                                    'warning'
+                                );
+                            }
+                        },
+                        error: function(request, status, error) {
+                            Swal.fire(
+                                'Error',
+                                error,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            })
         });
 
         $('#search_rekap_all').submit(function(e) {

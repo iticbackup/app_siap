@@ -315,10 +315,13 @@ Route::group(['middleware' => ['auth', 'LogVisits']], function() {
             Route::get('{nik}/cetak', [App\Http\Controllers\HRGAController::class, 'cetak_data_karyawan'])->name('hrga.biodata_karyawan.cetak_data_karyawan');
             Route::post('kontrak_kerja/simpan', [App\Http\Controllers\HRGAController::class, 'kontrak_kerja_simpan'])->name('hrga.biodata_karyawan.kontrak_kerja_simpan');
             Route::post('riwayat_konseling/simpan', [App\Http\Controllers\HRGAController::class, 'riwayat_konseling_simpan'])->name('hrga.biodata_karyawan.riwayat_konseling_simpan');
+            Route::post('email_karyawan/simpan', [App\Http\Controllers\HRGAController::class, 'email_simpan'])->name('hrga.biodata_karyawan.email_simpan');
             Route::get('download_rekap_excel/{tanggal}', [App\Http\Controllers\HRGAController::class, 'download_rekap_excel'])->name('hrga.biodata_karyawan.donwload_rekap_excel');
             Route::post('karyawan_resign/simpan', [App\Http\Controllers\HRGAController::class, 'resign_simpan'])->name('hrga.biodata_karyawan.resign_simpan');
             Route::get('{nama}/cek_rekap_training', [App\Http\Controllers\HRGAController::class, 'cek_riwayat_training_karyawan'])->name('hrga.biodata_karyawan.cek_riwayat_training_karyawan');
             Route::post('riwayat_training/simpan', [App\Http\Controllers\HRGAController::class, 'riwayat_training_simpan'])->name('hrga.biodata_karyawan.riwayat_training_simpan');
+            
+            Route::get('download_rekap', [App\Http\Controllers\HRGAController::class, 'download_rekap']);
             
             Route::get('aktif', [App\Http\Controllers\HRGAController::class, 'index_biodata_karyawan_aktif'])->name('hrga.biodata_karyawan.aktif');
             Route::prefix('non_aktif')->group(function () {
@@ -373,6 +376,9 @@ Route::group(['middleware' => ['auth', 'LogVisits']], function() {
             Route::get('{periode}/{departemen_id}/table-matriks',[App\Http\Controllers\IBPRPPController::class,'ibprpp_departemen_download_table_matriks'])->name('qhse.ibprpp.departemen_download_table_matriks');
             Route::get('{periode}/{departemen_id}/input',[App\Http\Controllers\IBPRPPController::class,'ibprpp_departemen_input'])->name('qhse.ibprpp.departemen_input');
             Route::post('{periode}/{departemen_id}/simpan',[App\Http\Controllers\IBPRPPController::class,'ibprpp_departemen_input_simpan'])->name('qhse.ibprpp.departemen_simpan');
+            Route::delete('{periode}/{departemen_id}/delete',[App\Http\Controllers\IBPRPPController::class,'ibprpp_departemen_input_delete'])->name('qhse.ibprpp.departemen_delete');
+            Route::get('{periode}/{departemen_id}/edit/{id}',[App\Http\Controllers\IBPRPPController::class,'ibprpp_departemen_input_edit'])->name('qhse.ibprpp.departemen_edit');
+            Route::post('{periode}/{departemen_id}/update/{id}',[App\Http\Controllers\IBPRPPController::class,'ibprpp_departemen_input_update'])->name('qhse.ibprpp.departemen_update');
         });
     });
 

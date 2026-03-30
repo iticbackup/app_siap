@@ -82,10 +82,11 @@
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
-                                {{-- <th class="text-center" style="width: 10%">#</th> --}}
-                                <th class="text-center" style="width: 10%">Foto</th>
+                                <th class="text-center" style="width: 3%">#</th>
+                                {{-- <th class="text-center" style="width: 10%">Foto</th>
                                 <th class="text-center" style="width: 10%">NIK</th>
-                                <th class="text-center">Nama Karyawan</th>
+                                <th class="text-center">Nama Karyawan</th> --}}
+                                <th class="text-center" style="width: 10%">Karyawan</th>
                                 <th class="text-center" style="width: 10%">No. Telpon</th>
                                 <th class="text-center" style="width: 10%">Status Kerja</th>
                                 <th class="text-center" style="width: 10%">Tanggal Resign</th>
@@ -129,16 +130,26 @@
             ajax: "{{ route('hrga.biodata_karyawan.non_aktif') }}",
             columns: [
                 {
-                    data: 'foto_karyawan',
-                    name: 'foto_karyawan'
+                    data: 'DT_RowIndex', 
+                    name: 'DT_RowIndex', 
+                    orderable: false, 
+                    searchable: false
                 },
+                // {
+                //     data: 'foto_karyawan',
+                //     name: 'foto_karyawan'
+                // },
+                // {
+                //     data: 'nik',
+                //     name: 'nik'
+                // },
+                // {
+                //     data: 'nama_karyawan',
+                //     name: 'nama_karyawan'
+                // },
                 {
-                    data: 'nik',
-                    name: 'nik'
-                },
-                {
-                    data: 'nama_karyawan',
-                    name: 'nama_karyawan'
+                    data: 'karyawan',
+                    name: 'karyawan'
                 },
                 {
                     data: 'no_telepon',
@@ -163,7 +174,8 @@
                 // { className: 'text-right', targets: [7, 10, 11, 14, 16] },
                 {
                     className: 'text-center',
-                    targets: [0,1,2,3,4,5,6]
+                    // targets: [0,1,2,3,4,5,6]
+                    targets: [0,2,3,4,5]
                 },
             ],
         });

@@ -219,7 +219,7 @@
                             txt = txt+  "<td class='text-center'>"+value.tgl_periksa_uji+"</td>";
                             txt = txt+  "<td class='text-center'>"+value.tgl_terbit_sertifikat+"</td>";
                             txt = txt+  "<td class='text-center'>"+value.no_sertifikat_terakhir+"</td>";
-                            txt = txt+  "<td class='text-center'>"+value.tgl_resertifikat_selanjutnya+"</td>";
+                            txt = txt+  "<td class='text-center'>"+value.tgl_resertifikat_terakhir+"</td>";
                             txt = txt+"</tr>";
                         }
 

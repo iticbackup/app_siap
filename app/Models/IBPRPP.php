@@ -37,7 +37,7 @@ class IBPRPP extends Model
 
     public function ibprpp_periode()
     {
-        return $this->belongsTo(\App\Models\IBPRPPPeriode::class, 'ibprpp_periode_id', 'id')->select('periode');
+        return $this->belongsTo(\App\Models\IBPRPPPeriode::class, 'ibprpp_periode_id', 'id')->select('id','periode');
     }
 
     public function ibprpp_category_area()
@@ -47,6 +47,6 @@ class IBPRPP extends Model
 
     public function ibprpp_departemen()
     {
-        return $this->belongsTo(\App\Models\IBPRPPDepartemen::class, 'ibprpp_departemen_id', 'id')->select('departemen');
+        return $this->belongsTo(\App\Models\IBPRPPDepartemen::class, 'ibprpp_departemen_id', 'id')->select('id','departemen');
     }
 }

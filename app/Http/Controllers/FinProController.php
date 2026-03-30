@@ -26,7 +26,7 @@ class FinProController extends Controller
 
     public function device()
     {
-        $data['device_fin_pros'] = DB::connection('fin_pro')->table('device')->get();
+        $data['device_fin_pros'] = DB::connection('fin_pro')->table('device')->orderBy('dev_id','asc')->get();
         $data['dev_ids'] = DB::connection('fin_pro')->table('dev_type')->get();
         // $data['device_fin_pros'] = DB::connection('fin_pro')->table('device')->get();
         // $data['dev_ids'] = DB::connection('fin_pro')->table('dev_type')->get();
