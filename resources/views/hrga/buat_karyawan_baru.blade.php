@@ -26,7 +26,7 @@
                     @csrf
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <input type="text" id="nik" name="nik" class="form-control" placeholder="NIK">
                                     <label for="nik">NIK Karyawan</label>
@@ -38,21 +38,21 @@
                                     <label for="nama_karyawan">Nama Karyawan</label>
                                 </div>
                             </div>
-                            <div class="col-md-1">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <input type="text" name="tempat_lahir" class="form-control"
                                     placeholder="Tempat Lahir" id="tempat_lahir">
                                     <label for="tempat_lahir">Tempat Lahir</label>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <input type="date" name="tanggal_lahir" class="form-control"
                                     placeholder="Tanggal Lahir" id="tanggal_lahir">
                                     <label for="tanggal_lahir">Tanggal Lahir</label>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <select name="jenis_kelamin" class="form-control" id="jenis_kelamin">
                                         <option value="">-- Pilih Jenis Kelamin --</option>
@@ -62,45 +62,46 @@
                                     <label for="jenis_kelamin">Jenis Kelamin</label>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <input type="text" name="no_npwp" class="form-control" placeholder="No. NPWP"
                                     id="no_npwp">
                                     <label for="no_npwp">No. NPWP</label>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <textarea class="form-control" name="alamat" placeholder="Alamat" id="alamat"></textarea>
                                     <label for="alamat">Alamat</label>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <input type="text" name="kelurahan" class="form-control" placeholder="Kelurahan"
                                     id="kelurahan">
                                     <label for="kelurahan">Kelurahan</label>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <input type="text" name="kecamatan" class="form-control" placeholder="Kecamatan"
                                     id="kecamatan">
                                     <label for="kecamatan">Kecamatan</label>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <input type="text" name="kab_kota" class="form-control" placeholder="Kab/Kota"
                                     id="kab_kota">
                                     <label for="kab_kota">Kab/Kota</label>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     {{-- <input type="text" name="provinsi" class="form-control" placeholder="Provinsi"
                                     id="provinsi"> --}}
                                     <select name="provinsi" class="form-control provinsi" id="provinsi">
+                                        <option value="">-- Pilih Provinsi --</option>
                                         @foreach ($provinsis as $provinsi)
                                         <option value="{{ $provinsi['text'] }}">{{ $provinsi['text'] }}</option>
                                         @endforeach
@@ -108,9 +109,7 @@
                                     {{-- <label for="provinsi">Provinsi</label> --}}
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <select name="posisi" class="form-control" id="posisi">
                                         <option value="">-- Pilih Posisi --</option>
@@ -121,7 +120,7 @@
                                     <label for="posisi">Posisi</label>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <select name="jabatan" class="form-control" id="jabatan">
                                         <option value="">-- Pilih Jabatan --</option>
@@ -132,7 +131,7 @@
                                     <label for="jabatan">Jabatan</label>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="mb-3">
                                     <div class="form-floating mb-3">
                                         <select name="departemen" class="form-control" id="departemen">
@@ -145,58 +144,56 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2" id="view_departemen_bagian">
+                            <div class="col-md-3" id="view_departemen_bagian">
                                 <div class="form-floating mb-3">
                                     <select name="departemen_bagian" class="form-control" id="departemen_bagian">  
                                     </select>
                                     <label for="departemen_bagian">Departemen Bagian</label>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <input type="text" name="no_rekening_mandiri" class="form-control"
                                     placeholder="No. Rekening Mandiri" id="rekening_mandiri">
                                     <label for="rekening_mandiri">No. Rekening Mandiri</label>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <input type="text" name="no_rekening_bws" class="form-control"
                                     placeholder="No. Rekening BWS" id="rekening_bws">
                                     <label for="rekening_bws">No. Rekening BWS</label>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <input type="text" name="no_rekening_bca" class="form-control"
                                     placeholder="No. Rekening BCA" id="rekening_bca">
                                     <label for="rekening_bca">No. Rekening BCA</label>
                                 </div>
                             </div>
-                            <div class="col-md-1">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <input type="text" name="status_klg" class="form-control"
                                     placeholder="Status Keluarga" id="status_keluarga">
                                     <label for="status_keluarga">Status Keluarga</label>
                                 </div>
                             </div>
-                            <div class="col-md-1">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <input type="text" name="pin" class="form-control" placeholder="PIN"
                                     value="{{ $pin + 1 }}" readonly id="pin">
                                     <label for="pin">PIN</label>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <input type="text" name="kewarganegaraan" class="form-control"
                                     placeholder="Kewarganegaraan" id="kewarganegaraan">
                                     <label for="kewarganegaraan">Kewarganegaraan</label>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <select name="agama" class="form-control" id="agama">
                                         <option value="">-- Pilih Agama --</option>
@@ -210,7 +207,7 @@
                                     <label for="agama">Agama</label>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-floating mb-3">
                                     <input type="date" name="tanggal_masuk" class="form-control" id="tanggal_masuk">
                                     <label for="tanggal_masuk">Tanggal Masuk</label>

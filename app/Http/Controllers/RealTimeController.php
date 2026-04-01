@@ -28,7 +28,7 @@ class RealTimeController extends Controller
                                                     'hrga_biodata_karyawan_new.departemen_dept as departemen_dept',
                                                     'hrga_status_kerja.pk as pekerja',
                                                     'hrga_status_kerja.ke as ke',
-                                                    'hrga_status_kerja.tgl_mulai as tgl_mulai',
+                                                    'hrga_biodata_karyawan_new.foto_karyawan as foto_karyawan',
                                                 ])
                                                 ->leftJoin('itic_emp_new.biodata_karyawan','biodata_karyawan.nik','hrga_biodata_karyawan_new.nik')
                                                 ->leftJoin('hrga_status_kerja','hrga_status_kerja.hrga_biodata_karyawan_id','hrga_biodata_karyawan_new.id')

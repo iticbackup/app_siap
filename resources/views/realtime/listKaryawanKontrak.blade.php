@@ -1,4 +1,4 @@
-<table id="datatables" class="table table-bordered dt-responsive nowrap"
+{{-- <table id="datatables" class="table table-bordered dt-responsive nowrap"
     style="border-collapse: collapse; border-spacing: 0; width: 100%;">
     <thead>
         <tr>
@@ -24,4 +24,19 @@
             </tr>
         @endforelse
     </tbody>
-</table>
+</table> --}}
+<ul class="list-group custom-list-group mb-n3">
+    @forelse ($karyawanKontraks as $key => $item)
+    <li class="list-group-item align-items-center d-flex justify-content-between pt-0">
+        <div class="media">
+            <img src="{{ asset('public/berkas/HRGA/data_karyawan/'.$item->foto_karyawan) }}" height="30" class="me-3 align-self-center rounded" alt="...">
+            <div class="media-body align-self-center">
+                <h5 class="mb-2">{{ $item->nik.' - '.$item->nama }}</h5>
+                <p class="mb-0">Departemen : {{ $item->departemen_dept }}</p>
+                <p class="mb-0">Kontrak Terakhir : {{ \Carbon\Carbon::create($item->tgl_mulai)->addYears()->format('d-m-Y') }}</p>
+            </div><!--end media body-->
+        </div>
+    </li>
+    @empty
+    @endforelse
+</ul>

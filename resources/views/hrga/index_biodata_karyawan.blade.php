@@ -104,6 +104,7 @@
                                 {{-- <th class="text-center" style="width: 10%">Departemen</th> --}}
                                 <th class="text-center" style="width: 10%">No. Telpon</th>
                                 <th class="text-center" style="width: 10%">Pin</th>
+                                <th class="text-center" style="width: 10%">BPJS</th>
                                 <th class="text-center" style="width: 10%">Status Kerja</th>
                                 <th class="text-center" style="width: 10%">Status Karyawan</th>
                                 <th class="text-center" style="width: 20%">Action</th>
@@ -214,6 +215,10 @@
                     name: 'pin'
                 },
                 {
+                    data: 'bpjs',
+                    name: 'bpjs'
+                },
+                {
                     data: 'status_karyawan',
                     name: 'status_karyawan'
                 },
@@ -233,7 +238,7 @@
                 {
                     className: 'text-center',
                     // targets: [0,1,3,4,5,6,7]
-                    targets: [1,2,3,4,5]
+                    targets: [1,2,4,5,6]
                 },
             ],
         });

@@ -170,6 +170,12 @@ class HRGAController extends Controller
                                     return '<img src='.asset('public/berkas/HRGA/data_karyawan/'.$row->foto_karyawan).' style="width: 100px; height: 137px; object-fit: cover;">';
                                 }
                             })
+                            ->addColumn('bpjs', function($row){
+                                return '<ul>'.
+                                            '<li>Kesehatan : '.$row->no_bpjs_kesehatan.'</li>'.
+                                            '<li>Ketenagakerjaan : '.$row->no_bpjs_ketenagakerjaan.'</li>'.
+                                        '</ul>';
+                            })
                             ->addColumn('id_departemen', function($row){
                                 // if ($row->id_departemen == 0 || $row->id_departemen >= 11) {
                                 //     return '-';
@@ -238,7 +244,7 @@ class HRGAController extends Controller
                                 return $btn;
                                 // return $row->nik;
                             })
-                            ->rawColumns(['karyawan','foto_karyawan','status_karyawan','status_karyawan_resign','action'])
+                            ->rawColumns(['karyawan','bpjs','foto_karyawan','status_karyawan','status_karyawan_resign','action'])
                             ->make(true);
         }
 

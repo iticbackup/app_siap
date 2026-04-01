@@ -408,8 +408,12 @@ Route::group(['middleware' => ['auth', 'LogVisits']], function() {
         // return auth()->user()->update(['fcm_token'=>request()->token]);
     });
     Route::post('/send-notification',[App\Http\Controllers\UserController::class,'notification'])->name('notification');
+    // Route::get('testing', [App\Http\Controllers\TestingController::class, 'testing2'])->name('testing_pdf');
+    Route::get('testing-telegram', [App\Http\Controllers\TestingController::class, 'testingNotificationTelegram']);
 
-    Route::get('test', function(){
+});
+
+Route::get('test', function(){
         // $data = \DB::table('fin_pro.att_log')
         //             ->addSelect(\DB::raw(
         //                 "
@@ -431,19 +435,19 @@ Route::group(['middleware' => ['auth', 'LogVisits']], function() {
         //             ->orderBy('scan_date', 'asc')
         //             ->first();
 
-        $data = \DB::table('fin_pro.att_log')
-                    ->select(
-                        \DB::raw('DATE(scan_date) AS tanggal'),
-                        'pin',
-                        \DB::raw("MAX(CASE WHEN DATE_FORMAT(scan_date,'%H:%i') <= '11:59:59' THEN DATE_FORMAT(scan_date,'%H:%i') ELSE NULL END) AS jam_masuk"),
-                        \DB::raw("MAX(CASE WHEN DATE_FORMAT(scan_date,'%H:%i') >= '12:00:00' THEN DATE_FORMAT(scan_date,'%H:%i') ELSE NULL END) AS jam_pulang")
-                    )
-                    ->where('pin', 1298)
-                    // Menggunakan whereDate() adalah cara yang lebih baik dan aman daripada LIKE untuk memfilter tanggal
-                    ->whereDate('scan_date', '2025-08-01')
-                    ->groupBy(\DB::raw('DATE(scan_date)'), 'pin')
-                    ->orderBy(\DB::raw('DATE(scan_date)'))
-                    ->first();
+        // $data = \DB::table('fin_pro.att_log')
+        //             ->select(
+        //                 \DB::raw('DATE(scan_date) AS tanggal'),
+        //                 'pin',
+        //                 \DB::raw("MAX(CASE WHEN DATE_FORMAT(scan_date,'%H:%i') <= '11:59:59' THEN DATE_FORMAT(scan_date,'%H:%i') ELSE NULL END) AS jam_masuk"),
+        //                 \DB::raw("MAX(CASE WHEN DATE_FORMAT(scan_date,'%H:%i') >= '12:00:00' THEN DATE_FORMAT(scan_date,'%H:%i') ELSE NULL END) AS jam_pulang")
+        //             )
+        //             ->where('pin', 1298)
+        //             // Menggunakan whereDate() adalah cara yang lebih baik dan aman daripada LIKE untuk memfilter tanggal
+        //             ->whereDate('scan_date', '2025-08-01')
+        //             ->groupBy(\DB::raw('DATE(scan_date)'), 'pin')
+        //             ->orderBy(\DB::raw('DATE(scan_date)'))
+        //             ->first();
 
         // $data = \DB::select(\DB::raw(
         //     '
@@ -460,9 +464,7 @@ Route::group(['middleware' => ['auth', 'LogVisits']], function() {
         //     '
         // ));
 
-        return $data;
-    });
-    // Route::get('testing', [App\Http\Controllers\TestingController::class, 'testing2'])->name('testing_pdf');
-    Route::get('testing-telegram', [App\Http\Controllers\TestingController::class, 'testingNotificationTelegram']);
+        // return $data;
 
-});
+        return gethostbyaddr($_SERVER['192.168.1.2']);
+    });
