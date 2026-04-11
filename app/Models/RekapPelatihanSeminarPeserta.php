@@ -39,4 +39,9 @@ class RekapPelatihanSeminarPeserta extends Model
     {
         return $this->belongsTo(\App\Models\Departemen::class, 'departemen_id', 'id');
     }
+
+    public function hrga_karyawan()
+    {
+        return $this->belongsTo(\App\Models\BiodataKaryawan::class, 'peserta', 'nama')->where('status_karyawan','!=','R');
+    }
 }

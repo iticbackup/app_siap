@@ -198,6 +198,7 @@ Route::group(['middleware' => ['auth', 'LogVisits']], function() {
         Route::post('simpan', [App\Http\Controllers\RekapPelatihanController::class, 'rekap_pelatihan_simpan'])->name('rekap_pelatihan.simpan');
         Route::get('{id}', [App\Http\Controllers\RekapPelatihanController::class, 'rekap_pelatihan_detail'])->name('rekap_pelatihan.rekap_pelatihan_detail');
         Route::get('{id}/edit', [App\Http\Controllers\RekapPelatihanController::class, 'rekap_pelatihan_edit'])->name('rekap_pelatihan.rekap_pelatihan_edit');
+        Route::get('{id}/download_rekap_pelatihan_peserta', [App\Http\Controllers\RekapPelatihanController::class, 'download_pdf_rekap_pelatihan_peserta'])->name('rekap_pelatihan.download_rekap_pelatihan_peserta');
         Route::post('canvas_right_update', [App\Http\Controllers\RekapPelatihanController::class, 'rekap_pelatihan_canvas_right_update'])->name('rekap_pelatihan.canvas_right_update');
         Route::post('{id}/update', [App\Http\Controllers\RekapPelatihanController::class, 'rekap_pelatihan_update'])->name('rekap_pelatihan.rekap_pelatihan_update');
         Route::get('{id}/delete', [App\Http\Controllers\RekapPelatihanController::class, 'rekap_pelatihan_delete'])->name('rekap_pelatihan.rekap_pelatihan_delete');

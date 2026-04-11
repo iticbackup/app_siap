@@ -22,6 +22,7 @@ use File;
 use Validator;
 use DataTables;
 use Excel;
+use PDF;
 
 class RekapPelatihanController extends Controller
 {
@@ -327,8 +328,11 @@ class RekapPelatihanController extends Controller
                                     }else{
                                         if (empty($row->file_sertifikat) || empty($row->file_absensi)) {
                                             $btn.= '<button type="button" onclick="upload_file(`'.$row->id.'`)" class="btn btn-primary btn-icon">
-                                                    <i class="fa fa-upload"></i> Upload File
-                                                </button>';
+                                                        <i class="fa fa-upload"></i> Upload File
+                                                    </button>';
+                                            $btn.= '<a href='.route('rekap_pelatihan.download_rekap_pelatihan_peserta',['id' => $row->id]).' class="btn btn-pink btn-icon">
+                                                        <i class="fa fa-print"></i> Cetak Rekap
+                                                    </a>';
                                         }
                                     }
                                 }
@@ -799,6 +803,18 @@ class RekapPelatihanController extends Controller
         // return view('rekap_pelatihan.excel_rekap_periode',$data);
         return Excel::download(new TotalRekapPelatihanExcel($periode), 'Total Rekap Pelatihan & Seminar PT Indonesian Tobacco Tbk Periode '.$periode.'.xlsx');
 
+    }
+
+    public function download_pdf_rekap_pelatihan_peserta($id)
+    {
+        $data['rekap_pelatihan'] = $this->rekap_pelatihan->with('rekap_pelatihan_seminar_peserta')->find($id);
+
+        if (empty($data['rekap_pelatihan'])) {
+            return redirect()->back()->with('error','Rekap Pelatihan Tidak Ditemukan');
+        }
+
+        $pdf = PDF::loadView('rekap_pelatihan.pdf_rekap_pelatihan_peserta',$data);
+        return $pdf->stream('Rekap Pelatihan Peserta - '.$data['rekap_pelatihan']['tema'].'.pdf');
     }
 
     public function search_rekapan_pelatihan(Request $request)
