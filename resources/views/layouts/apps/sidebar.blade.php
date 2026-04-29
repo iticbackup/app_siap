@@ -69,7 +69,7 @@
                     </ul>
                 </li>
             @endcan
-            @can('kpi_list')
+            {{-- @can('kpi_list')
                 <li>
                     <a href="javascript: void(0);"> <i data-feather="file-text"
                             class="align-self-center menu-icon"></i><span>KPI</span><span class="menu-arrow"><i
@@ -80,9 +80,6 @@
                                     <i class="ti-control-record"></i>Departemen</a>
                             </li>
                         @endcan
-                        {{-- <li class="nav-item"><a class="nav-link" href="#">
-                        <i class="ti-control-record"></i>Bobot</a>
-                    </li> --}}
                         @can('kpi_indikator')
                             <li class="nav-item"><a class="nav-link" href="{{ route('kpi_indikator') }}">
                                     <i class="ti-control-record"></i>Indikator</a>
@@ -98,7 +95,7 @@
                         </li>
                     </ul>
                 </li>
-            @endcan
+            @endcan --}}
 
             @can('documentcontrolnew-list')
             <li class="menu-label mt-0">Dokumen Kontrol</li>

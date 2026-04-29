@@ -232,14 +232,15 @@ class HRGAController extends Controller
                             })
                             ->addColumn('action', function($row){
                                 $btn = '<div class="button-items">';
-                                $btn .= '<a href='.route('hrga.biodata_karyawan.cetak_data_karyawan',['nik' => $row->nik]).' class="btn" style="background-color: #550527; color: white" target="_blank"><i class="fa fa-file-pdf"></i> Download</a>';
+                                $btn .= '<a href='.route('hrga.biodata_karyawan.cetak_data_karyawan',['nik' => $row->nik]).' class="btn" style="background-color: #550527; color: white" target="_blank"><i class="fa fa-file-pdf"></i></a>';
                                 // $btn .= '<button class="btn" onclick="download_data_karyawan(`'.$row->nik.'`)" style="background-color: #550527; color: white" target="_blank"><i class="fa fa-file-pdf"></i> Download PDF</button>';
                                 if (empty($row->email)) {
                                     $btn .= '<button class="btn" style="background-color: #2C687B; color: white" onclick="buat_email(`'.$row->nik.'`)">'.'<i class="fas fa-envelope"></i> '.'Daftar Email'.'</button>';
                                 }
-                                $btn .= '<button class="btn btn-info" onclick="buat_kontrak(`'.$row->nik.'`)">'.'<i class="fas fa-eye"></i> '.'Detail Kontrak'.'</button>';
-                                $btn .= '<button class="btn btn-primary" onclick="detail(`'.$row->nik.'`)">'.'<i class="fas fa-eye"></i> '.'Detail'.'</button>';
-                                $btn .= '<button class="btn btn-warning" onclick="edit(`'.$row->nik.'`)">'.'<i class="fas fa-edit"></i> '.'Edit'.'</button>';
+                                // $btn .= '<button class="btn btn-info" onclick="buat_kontrak(`'.$row->nik.'`)">'.'<i class="fas fa-plus"></i> '.'Input Kontrak'.'</button>';
+                                $btn .= '<button class="btn btn-danger" onclick="buatTransferPin(`'.$row->nik.'`)">'.'<i class="fas fa-exchange-alt"></i> '.'Transfer PIN'.'</button>';
+                                $btn .= '<button class="btn btn-success" onclick="detail(`'.$row->nik.'`)">'.'<i class="fas fa-eye"></i></button>';
+                                $btn .= '<button class="btn btn-warning" onclick="edit(`'.$row->nik.'`)">'.'<i class="fas fa-edit"></i></button>';
                                 $btn .= '</div>';
                                 return $btn;
                                 // return $row->nik;
@@ -1366,6 +1367,15 @@ class HRGAController extends Controller
                     'agama' => 6
                 ]);
 
+                $no_hrga_status_kerja = $this->hrga_status_kerja->max('id');
+                $this->hrga_status_kerja->create([
+                    'id' => $no_hrga_status_kerja+1,
+                    'hrga_biodata_karyawan_id' => $no_id+1,
+                    'pk' => 'Kontrak',
+                    'ke' => 1,
+                    'tgl_mulai' => $request->tanggal_masuk
+                ]);
+
                 $message_title="Berhasil !";
                 $message_content= $request->nik." ".$request->nama." Berhasil Dibuat";
                 $message_type="success";
@@ -1844,6 +1854,94 @@ class HRGAController extends Controller
             'success' => true,
             'data' => $data_status_kerja
         ]);
+    }
+
+    public function detailTransferPin($nik)
+    {
+        $data = $this->biodata_karyawan->find($nik);
+
+        if (empty($data)) {
+            return response()->json([
+                'success' => false,
+                'message_title' => 'Gagal',
+                'message_content' => 'NIK Karyawan Tidak Ditemukan'
+            ]);
+        }
+
+        $dataBaru = $this->biodata_karyawan->where('nama',$data->nama)->orderBy('created_at','desc')->first();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'karyawan_lama' => [
+                    'id' => $data->id,
+                    'nik' => $data->nik,
+                    'nama' => $data->nama,
+                    'pin' => $data->pin,
+                ],
+                'karyawan_baru' => [
+                    'id' => $dataBaru->id,
+                    'nik' => $dataBaru->nik,
+                    'nama' => $dataBaru->nama,
+                    'pin' => $dataBaru->pin,
+                ]
+            ]
+        ]);
+    }
+
+    public function transferPinSimpan(Request $request)
+    {
+        $rules = [
+            'nik' => 'required',
+            'pin' => 'required',
+        ];
+
+        $messages = [
+            'nik.required'  => 'NIK Karyawan wajib diisi.',
+            'pin.required'  => 'PIN Karyawan wajib diisi.',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->passes()) {
+            $karyawan = $this->biodata_karyawan->find($request->nik);
+            
+            if (empty($karyawan)) {
+                return response()->json([
+                    'success' => false,
+                    'message_title' => 'Gagal',
+                    'message_content' => 'NIK Karyawan Tidak Ditemukan'
+                ]);
+            }
+
+            $karyawan->update([
+                'pin' => $request->pin
+            ]);
+
+            if($karyawan){
+                $message_title="Berhasil !";
+                $message_content= "Karyawan ".$karyawan->nik.' - '.$karyawan->nama." Berhasil Diupdate";
+                $message_type="success";
+                $message_succes = true;
+            }
+
+            $array_message = array(
+                'success' => $message_succes,
+                'message_title' => $message_title,
+                'message_content' => $message_content,
+                'message_type' => $message_type,
+            );
+
+            return response()->json($array_message);
+        }
+
+        return response()->json(
+            [
+                'success' => false,
+                'error' => $validator->errors()->all()
+            ]
+        );
+
     }
 
     public function kontrak_kerja_simpan(Request $request)

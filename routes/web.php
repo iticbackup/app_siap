@@ -314,6 +314,8 @@ Route::group(['middleware' => ['auth', 'LogVisits']], function() {
             Route::get('{nik}/detail', [App\Http\Controllers\HRGAController::class, 'detail'])->name('hrga.biodata_karyawan.detail');
             Route::get('{nik}/detail_kontrak_kerja', [App\Http\Controllers\HRGAController::class, 'detail_kontrak_kerja'])->name('hrga.biodata_karyawan.detail_kontrak_kerja');
             Route::get('{nik}/cetak', [App\Http\Controllers\HRGAController::class, 'cetak_data_karyawan'])->name('hrga.biodata_karyawan.cetak_data_karyawan');
+            Route::get('{nik}/detailTransferPin', [App\Http\Controllers\HRGAController::class, 'detailTransferPin'])->name('hrga.biodata_karyawan.detailTransferPin');
+            Route::post('transferPin/simpan', [App\Http\Controllers\HRGAController::class, 'transferPinSimpan'])->name('hrga.biodata_karyawan.transferPinSimpan');
             Route::post('kontrak_kerja/simpan', [App\Http\Controllers\HRGAController::class, 'kontrak_kerja_simpan'])->name('hrga.biodata_karyawan.kontrak_kerja_simpan');
             Route::post('riwayat_konseling/simpan', [App\Http\Controllers\HRGAController::class, 'riwayat_konseling_simpan'])->name('hrga.biodata_karyawan.riwayat_konseling_simpan');
             Route::post('email_karyawan/simpan', [App\Http\Controllers\HRGAController::class, 'email_simpan'])->name('hrga.biodata_karyawan.email_simpan');

@@ -25,8 +25,10 @@
         @endslot
     @endcomponent
 
+    @include('hrga.modalBuatTransferPin')
     @include('hrga.modalBuat')
     @include('hrga.modalBuatDataResign')
+    @include('hrga.modalCaraPenggunaan')
     @include('hrga.modalEdit')
     @include('hrga.modalDetail')
     @include('hrga.modalBuatKontrak')
@@ -76,7 +78,8 @@
                             <h4 class="card-title text-white">@yield('title')</h4>
                         </div>
                         <div class="col-auto">
-                            <a href="{{ route('hrga.biodata_karyawan.demografi') }}" class="btn" style="background-color: #FFEAC5; color: black" target="_blank"><i class="fa fa-line-chart"></i> Demografi</a>
+                            <button class="btn btn-primary" onclick="caraPenggunaan()"><i class="fas fa-bookmark"></i> Cara Penggunaan</button>
+                            <a href="{{ route('hrga.biodata_karyawan.demografi') }}" class="btn" style="background-color: #FFEAC5; color: black" target="_blank"><i class="fas fa-chart-pie"></i> Demografi</a>
                             <a href="{{ route('hrga.rekap_pelatihan') }}" class="btn" style="background-color: #EEF296; color: black"><i class="fas fa-file"></i> Rekap Pelatihan</a>
                             <button class="btn" style="background-color: #1AACAC; color: white" onclick="downloadDataKaryawan()"><i class="fas fa-download"></i> Download Rekap Excel</button>
                             <button class="btn" style="background-color: #F31559; color: white" onclick="buatDataResign()"><i class="fas fa-plus"></i> Buat
@@ -481,6 +484,45 @@
         function downloadDataKaryawan()
         {
             $('.modalExcelPeriode').modal('show');
+        }
+
+        function caraPenggunaan()
+        {
+            $('.modalCaraPenggunaan').modal('show');
+        }
+
+        function buatTransferPin(nik)
+        {
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('hrga/biodata_karyawan/') }}"+'/'+nik+'/detailTransferPin',
+                contentType: "application/json;  charset=utf-8",
+                cache: false,
+                beforeSend: function() {
+                },
+                success: (result) => {
+                    if (result.success == true) {
+                        document.getElementById('transferPinLama_nik').innerHTML = result.data.karyawan_lama.nik;
+                        document.getElementById('transferPinLama_nama').innerHTML = result.data.karyawan_lama.nama;
+                        document.getElementById('transferPinLama_pin').innerHTML = result.data.karyawan_lama.pin;
+
+                        $('#transferPinBaru_nikKaryawan').val(result.data.karyawan_baru.nik);
+                        document.getElementById('transferPinBaru_nik').innerHTML = result.data.karyawan_baru.nik;
+                        document.getElementById('transferPinBaru_nama').innerHTML = result.data.karyawan_baru.nama;
+                    }else{
+
+                    }
+
+                    $('.modalBuatTransferPin').modal('show');
+                },
+                error: function(request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            });
+
         }
 
         function detail(nik) {
@@ -1474,6 +1516,79 @@
             // console.log($('#search_date_download').val());
             document.getElementById('view_download').innerHTML = '<a href="{{ url("hrga/biodata_karyawan/download_rekap_excel/") }}'+'/'+$('#search_date_download').val()+'" class="btn btn-primary" target="_blank"><i class="fas fa-download"></i> Download Rekap</a>'
         })
+
+        $('#transferpin_simpan').submit(function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            Swal.fire({
+                title: 'Apakah sudah yakin?',
+                // text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '$success',
+                cancelButtonColor: '$danger',
+                confirmButtonText: 'Yes'
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('hrga.biodata_karyawan.transferPinSimpan') }}",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Proses...',
+                                text: 'Data sedang diproses',
+                                imageHeight: 80,
+                                animation: false,
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            })
+                        },
+                        success: (result) => {
+                            if (result.success == true) {
+                                Swal.fire(
+                                    result.message_title,
+                                    result.message_content,
+                                    'success'
+                                );
+                                
+                                table.ajax.reload(null, false);
+                                this.reset;
+
+                                $('.modalBuatTransferPin').modal('hide');
+                            }else{
+                                var error = result.error;
+                                var txt_error = ""
+                                error.forEach(fun_error);
+
+                                function fun_error(value, index) {
+                                    txt_error += value;
+                                }
+
+                                Swal.fire(
+                                    'Gagal!',
+                                    txt_error,
+                                    'error'
+                                )
+                            }
+                        },
+                        error: function(request, status, error) {
+                            Swal.fire(
+                                'Error',
+                                error,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            })
+
+            
+            // alert('test');
+        });
 
         function getProvinsi()
         {

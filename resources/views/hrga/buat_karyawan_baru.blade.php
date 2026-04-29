@@ -106,7 +106,7 @@
                                         <option value="{{ $provinsi['text'] }}">{{ $provinsi['text'] }}</option>
                                         @endforeach
                                     </select>
-                                    {{-- <label for="provinsi">Provinsi</label> --}}
+                                    <label for="provinsi">Provinsi</label>
                                 </div>
                             </div>
                             <div class="col-md-3">

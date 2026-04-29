@@ -7,22 +7,18 @@
             </div>
             <form id="search_rekap_all" method="post" enctype="multipart/form-data">
                 @csrf
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="">Tanggal Rekap</label>
-                    <div class="input-group">
-                        <input type="date" name="search_date_download" class="form-control" id="search_date_download">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="">Tanggal Rekap</label>
+                        <div class="input-group">
+                            <input type="date" name="search_date_download" class="form-control" id="search_date_download">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div id="view_download"></div>
                     </div>
                 </div>
-                <div class="mb-3">
-                    <div id="view_download"></div>
-                </div>
-            </div>
-            {{-- <div class="modal-footer">
-                <button type="submit" class="btn btn-soft-primary btn-sm">Search</button>
-                <button type="button" class="btn btn-soft-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-            </div> --}}
             </form>
         </div>
     </div>
