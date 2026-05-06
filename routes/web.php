@@ -319,6 +319,7 @@ Route::group(['middleware' => ['auth', 'LogVisits']], function() {
             Route::post('kontrak_kerja/simpan', [App\Http\Controllers\HRGAController::class, 'kontrak_kerja_simpan'])->name('hrga.biodata_karyawan.kontrak_kerja_simpan');
             Route::post('riwayat_konseling/simpan', [App\Http\Controllers\HRGAController::class, 'riwayat_konseling_simpan'])->name('hrga.biodata_karyawan.riwayat_konseling_simpan');
             Route::post('email_karyawan/simpan', [App\Http\Controllers\HRGAController::class, 'email_simpan'])->name('hrga.biodata_karyawan.email_simpan');
+            Route::post('foto_karyawan/simpan', [App\Http\Controllers\HRGAController::class, 'upload_foto_karyawan_simpan'])->name('hrga.biodata_karyawan.upload_foto_karyawan_simpan');
             Route::get('download_rekap_excel/{tanggal}', [App\Http\Controllers\HRGAController::class, 'download_rekap_excel'])->name('hrga.biodata_karyawan.donwload_rekap_excel');
             Route::post('karyawan_resign/simpan', [App\Http\Controllers\HRGAController::class, 'resign_simpan'])->name('hrga.biodata_karyawan.resign_simpan');
             Route::get('{nama}/cek_rekap_training', [App\Http\Controllers\HRGAController::class, 'cek_riwayat_training_karyawan'])->name('hrga.biodata_karyawan.cek_riwayat_training_karyawan');

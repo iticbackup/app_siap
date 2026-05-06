@@ -237,6 +237,10 @@ class HRGAController extends Controller
                                 if (empty($row->email)) {
                                     $btn .= '<button class="btn" style="background-color: #2C687B; color: white" onclick="buat_email(`'.$row->nik.'`)">'.'<i class="fas fa-envelope"></i> '.'Daftar Email'.'</button>';
                                 }
+
+                                if (empty($row->foto_karyawan) || $row->foto_karyawan == 0) {
+                                    $btn .= '<button class="btn" style="background-color: #2C687B; color: white" onclick="upload_foto(`'.$row->nik.'`)">'.'<i class="fas fa-upload"></i> '.'Upload Foto'.'</button>';
+                                }
                                 // $btn .= '<button class="btn btn-info" onclick="buat_kontrak(`'.$row->nik.'`)">'.'<i class="fas fa-plus"></i> '.'Input Kontrak'.'</button>';
                                 $btn .= '<button class="btn btn-danger" onclick="buatTransferPin(`'.$row->nik.'`)">'.'<i class="fas fa-exchange-alt"></i> '.'Transfer PIN'.'</button>';
                                 $btn .= '<button class="btn btn-success" onclick="detail(`'.$row->nik.'`)">'.'<i class="fas fa-eye"></i></button>';
@@ -2953,5 +2957,70 @@ class HRGAController extends Controller
         $data['periode'] = Carbon::now()->isoFormat('dddd, DD MMMM YYYY');
         // dd($data);
         return view('hrga.demografi',$data);
+    }
+
+    public function upload_foto_karyawan_simpan(Request $request)
+    {
+        $rules = [
+            'foto_karyawan' => 'required',
+        ];
+
+        $messages = [
+            'foto_karyawan.required'  => 'Upload Foto Karyawan wajib diisi.',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->passes()) {
+            $biodata_karyawan = $this->hrga_biodata_karyawan->where('nik',$request->upload_foto_id)->first();
+            
+            if (empty($biodata_karyawan)) {
+                return response()->json([
+                    'success' => false,
+                    'message_title' => 'Gagal',
+                    'message_content' => 'Karyawan Tidak Ditemukan'
+                ]);
+            }
+
+            if ($request->file('foto_karyawan')) {
+                if (File::exists('berkas/HRGA/data_karyawan/'.$biodata_karyawan->foto_karyawan)) {
+                    File::delete(public_path('berkas/HRGA/data_karyawan/'.$biodata_karyawan->foto_karyawan));
+                }
+
+                $file = $request->file('foto_karyawan');
+                $fileName = $biodata_karyawan->nik.'_'.Str::slug($biodata_karyawan->biodata_karyawan->nama).'.'.$file->getClientOriginalExtension();
+                $file->move(public_path('berkas/HRGA/data_karyawan'), $fileName);
+                $input['foto_karyawan'] = $fileName;
+            }
+
+            $biodata_karyawan->update($input);
+
+            if($biodata_karyawan){
+                $this->biodata_karyawan->where('nik',$biodata_karyawan->nik)->update([
+                    'foto_karyawan' => $input['foto_karyawan'],
+                ]);
+
+                $message_title="Berhasil !";
+                $message_content= $biodata_karyawan->nik." ".$biodata_karyawan->biodata_karyawan->nama." Upload Foto Berhasil Diupdate";
+                $message_type="success";
+                $message_succes = true;
+            }
+
+            $array_message = array(
+                'success' => $message_succes,
+                'message_title' => $message_title,
+                'message_content' => $message_content,
+                'message_type' => $message_type,
+            );
+
+            return response()->json($array_message);
+        }
+
+        return response()->json(
+            [
+                'success' => false,
+                'error' => $validator->errors()->all()
+            ]
+        );
     }
 }

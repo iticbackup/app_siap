@@ -33,6 +33,7 @@
     @include('hrga.modalDetail')
     @include('hrga.modalBuatKontrak')
     @include('hrga.modalBuatEmail')
+    @include('hrga.modalUploadFoto')
     @include('hrga.modalBuatRiwayatKonseling')
     @include('hrga.modalBuatRiwayatTraining')
     @include('hrga.modalExcelPeriode')
@@ -999,6 +1000,32 @@
             });
         }
 
+        function upload_foto(nik)
+        {
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('hrga/biodata_karyawan/') }}"+'/'+nik+'/detail',
+                contentType: "application/json;  charset=utf-8",
+                cache: false,
+                beforeSend: function() {
+                },
+                success: (result) => {
+                    $('#upload_foto_id').val(result.data.nik);
+                    document.getElementById('upload_foto_nik').innerHTML = result.data.nik;
+                    document.getElementById('upload_foto_karyawan').innerHTML = result.data.nama_karyawan;
+                    // $('#email_nama').val(result.data.nama_karyawan);
+                    
+                    $('.modalUploadFoto').modal('show');
+                },
+                error: function(request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            });
+        }
+
         $('#form-simpan').submit(function(e) {
             e.preventDefault();
             let formData = new FormData(this);
@@ -1490,6 +1517,65 @@
                                 );
                                 table.ajax.reload(null, false);
                                 $('.modalBuatEmail').modal('hide');
+                            }else{
+                                Swal.fire(
+                                    result.message_title,
+                                    result.message_content,
+                                    'warning'
+                                );
+                            }
+                        },
+                        error: function(request, status, error) {
+                            Swal.fire(
+                                'Error',
+                                error,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            })
+        });
+
+        $('#upload_foto_simpan').submit(function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            Swal.fire({
+                title: 'Apakah sudah yakin?',
+                // text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '$success',
+                cancelButtonColor: '$danger',
+                confirmButtonText: 'Yes'
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('hrga.biodata_karyawan.upload_foto_karyawan_simpan') }}",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Proses...',
+                                text: 'Data sedang diproses',
+                                imageHeight: 80,
+                                animation: false,
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            })
+                        },
+                        success: (result) => {
+                            if (result.success == true) {
+                                Swal.fire(
+                                    result.message_title,
+                                    result.message_content,
+                                    'success'
+                                );
+                                table.ajax.reload(null, false);
+                                $('.modalUploadFoto').modal('hide');
                             }else{
                                 Swal.fire(
                                     result.message_title,
