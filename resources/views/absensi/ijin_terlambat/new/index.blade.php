@@ -29,19 +29,28 @@
                 <div class="col-auto">
                     <form action="{{ route('ijin_terlambat.search') }}" method="get">
                         <div class="input-group">
-                            <div class="mb-3">
+                            <div class="mb-3 me-3">
+                                <label for="">Jenis Keterangan</label>
+                                <select name="keterangan" id="" class="form-control">
+                                    <option value="">-- Pilih Keterangan --</option>
+                                    @foreach ($status_absensis as $status_absensi)
+                                    <option value="{{ $status_absensi->status_id }}" {{ request('keterangan') == $status_absensi->status_id ? 'selected' : null }}>{{ $status_absensi->status_info }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3 me-3">
                                 <label for="">Cari NIK / Karyawan</label>
                                 <input type="search" name="cari" class="form-control"
                                     value="{{ !empty(request('cari')) ? request('cari') : null }}" placeholder="Search..."
                                     id="">
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3 me-3">
                                 <label for="">Mulai Tanggal</label>
                                 <input type="date" name="cari_tanggal_awal" class="form-control"
                                     value="{{ !empty(request('cari_tanggal_awal')) ? request('cari_tanggal_awal') : null }}"
                                     id="">
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3 me-3">
                                 <label for="">Sampai Tanggal</label>
                                 <input type="date" name="cari_tanggal_akhir" class="form-control"
                                     value="{{ !empty(request('cari_tanggal_akhir')) ? request('cari_tanggal_akhir') : null }}"
@@ -101,7 +110,10 @@
                         </td>
                         <td class="text-center" style="vertical-align: middle">
                             @if (!empty($ijin_terlambat->presensi_status->status_info))
-                                {{ $ijin_terlambat->presensi_status->status_info }}
+                                @php
+                                    $explode_presensiInfo_keterangan = explode('@',$ijin_terlambat->keterangan);
+                                @endphp
+                                {{ $ijin_terlambat->presensi_status->status_info.' - '.$explode_presensiInfo_keterangan[0] }}
                             @else
                             -
                             @endif

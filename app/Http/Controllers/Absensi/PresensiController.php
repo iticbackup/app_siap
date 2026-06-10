@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Absensi;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use App\Exports\AbsensiDownloadExcel;
 
 use App\Models\BiodataKaryawan;
@@ -38,20 +39,27 @@ class PresensiController extends Controller
         for ($i=$start_month_now; $i <= $end_month_now; $i++) { 
             $data['weeks'][] = $i;
         }
-        $data['biodata_karyawans'] = $this->biodata_karyawan->where(function($query) {
-                                                                $query->where('nik','>','1000003');
-                                                                // return $query->where('nik','!=','1000001')
-                                                                //             ->where('nik','!=','1000002')
-                                                                //             ->where('nik','!=','1000003');
-                                                            })
-                                                            // ->where('pin',1298)
-                                                            ->where('status_karyawan','!=','R')
-                                                            ->orderBy('id_departemen','asc')
-                                                            ->limit(10)
-                                                            // ->get();
-                                                            ->paginate(10);
+
+        $data['biodata_karyawans'] = Cache::remember('biodata_karyawan', 60, function(){
+            return $this->biodata_karyawan->where(function($query) {
+                                                $query->where('nik','>','1000003');
+                                                // return $query->where('nik','!=','1000001')
+                                                //             ->where('nik','!=','1000002')
+                                                //             ->where('nik','!=','1000003');
+                                            })
+                                            // ->where('pin',1298)
+                                            ->where('status_karyawan','!=','R')
+                                            ->orderBy('id_departemen','asc')
+                                            ->limit(10)
+                                            // ->get();
+                                            ->paginate(10);
+        });
+
         // dd($data);
-        $data['fin_pro'] = $this->fin_pro;
+        $data['fin_pro'] = Cache::remember('fin_pro', 60, function(){
+            return $this->fin_pro;
+        });
+
         $data['departemens'] = $this->itic_departemen->all();
         return view('absensi.presensi.index',$data);
     }
@@ -310,6 +318,16 @@ class PresensiController extends Controller
             $data['weeks'][] = $i;
         }
 
+        // $data['biodata_karyawans'] = Cache::remember('biodata_karyawan', 60, function(){
+        //     return $this->biodata_karyawan->where(function($query) {
+        //                                         $query->where('nik','>','1000003');
+        //                                     })
+        //                                     ->where('status_karyawan','!=','R')
+        //                                     // ->where('pin','11')
+        //                                     ->orderBy('id_departemen','asc')
+        //                                     // ->limit(10)
+        //                                     ->paginate(10);
+        // });
         $data['biodata_karyawans'] = $this->biodata_karyawan->where(function($query) {
                                                                 $query->where('nik','>','1000003');
                                                             })
@@ -318,9 +336,12 @@ class PresensiController extends Controller
                                                             ->orderBy('id_departemen','asc')
                                                             // ->limit(10)
                                                             ->paginate(10);
+
         $data['fin_pro'] = $this->fin_pro;
-        $data['departemens'] = $this->itic_departemen->all();
+
         $data['presensi_info'] = $this->presensi_info;
+
+        $data['departemens'] = $this->itic_departemen->all();
 
         return view('absensi.presensi.new.index',$data);
     }

@@ -39,29 +39,31 @@ class AbsensiController extends Controller
     public function index(Request $request)
     {
         if (auth()->user()->nik == 0000000) {
-            $data['biodata_karyawans'] = $this->biodata_karyawan
-                                                ->select(
-                                                    'biodata_karyawan.id as id',
-                                                    'biodata_karyawan.nik as nik',
-                                                    'biodata_karyawan.nama as nama',
-                                                    'biodata_karyawan.tempat_lahir as tempat_lahir',
-                                                    'biodata_karyawan.tgl_lahir as tgl_lahir',
-                                                    'biodata_karyawan.alamat as alamat',
-                                                    'biodata_karyawan.jenis_kelamin as jenis_kelamin',
-                                                    'biodata_karyawan.pin as pin',
-                                                    'departemen.nama_departemen as nama_departemen',
-                                                    'posisi.nama_posisi as nama_posisi',
-                                                )
-                                                ->leftJoin('departemen','departemen.id','=','biodata_karyawan.id_departemen')
-                                                ->leftJoin('posisi','posisi.id','=','biodata_karyawan.id_posisi')
-                                                ->where(function($query) {
-                                                    return $query->where('nik','!=','1000001')
-                                                                ->where('nik','!=','1000002')
-                                                                ->where('nik','!=','1000003');
-                                                })
-                                                ->orderBy('id_departemen','asc')
-                                                ->where('status_karyawan','!=','R')
-                                                ->paginate(20);
+            $data['biodata_karyawans'] = Cache::remember('biodata_karyawan', 60, function(){
+                return $this->biodata_karyawan ->select(
+                                        'biodata_karyawan.id as id',
+                                        'biodata_karyawan.nik as nik',
+                                        'biodata_karyawan.nama as nama',
+                                        'biodata_karyawan.tempat_lahir as tempat_lahir',
+                                        'biodata_karyawan.tgl_lahir as tgl_lahir',
+                                        'biodata_karyawan.alamat as alamat',
+                                        'biodata_karyawan.jenis_kelamin as jenis_kelamin',
+                                        'biodata_karyawan.pin as pin',
+                                        'departemen.nama_departemen as nama_departemen',
+                                        'posisi.nama_posisi as nama_posisi',
+                                    )
+                                    ->leftJoin('departemen','departemen.id','=','biodata_karyawan.id_departemen')
+                                    ->leftJoin('posisi','posisi.id','=','biodata_karyawan.id_posisi')
+                                    ->where(function($query) {
+                                        return $query->where('nik','!=','1000001')
+                                                    ->where('nik','!=','1000002')
+                                                    ->where('nik','!=','1000003');
+                                    })
+                                    ->orderBy('id_departemen','asc')
+                                    ->where('status_karyawan','!=','R')
+                                    ->paginate(20);
+            });
+            
             
             // dd($data);
             // $data['biodata_karyawans'] = $this->biodata_karyawan->with('departemen')
@@ -110,7 +112,8 @@ class AbsensiController extends Controller
                     //                                             })
                     //                                             ->where('status_karyawan','!=','R')
                     //                                             ->paginate(20);
-                    $data['biodata_karyawans'] = $this->biodata_karyawan
+                    $data['biodata_karyawans'] = Cache::remember('biodata_karyawan', 60, function(){
+                        return $this->biodata_karyawan
                                                 ->select(
                                                     'biodata_karyawan.id as id',
                                                     'biodata_karyawan.nik as nik',
@@ -134,6 +137,7 @@ class AbsensiController extends Controller
                                                 ->orderBy('id_departemen','asc')
                                                 ->where('status_karyawan','!=','R')
                                                 ->paginate(20);
+                    });
                                                 // dd($data);
                     $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
                     // dd($data);

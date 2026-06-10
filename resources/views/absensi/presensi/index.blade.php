@@ -149,6 +149,7 @@
                                 @endphp
                                 @foreach ($weeks as $key_week => $week)
                                     @php
+                                        // \Cache::remember('')
                                         $fin_pro_dates = $fin_pro->where('pin',$biodata_karyawan->pin)
                                                                 ->where('scan_date','LIKE','%'.$week.'%')
                                                                 ->where(function($query){

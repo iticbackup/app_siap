@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\PresensiInfo;
+use App\Models\PresensiStatus;
+
 use App\Models\BiodataKaryawan;
 
 use \Carbon\Carbon;
@@ -16,10 +18,12 @@ class IjinTerlambatController extends Controller
 {
     function __construct(
         PresensiInfo $presensi_info,
+        PresensiStatus $presensi_status,
         BiodataKaryawan $biodata_karyawan
         )
     {
         $this->presensi_info = $presensi_info;
+        $this->presensi_status = $presensi_status;
         $this->biodata_karyawan = $biodata_karyawan;
     }
 
@@ -33,7 +37,8 @@ class IjinTerlambatController extends Controller
                                             ->orderBy('scan_date','desc')
                                             ->paginate(20);
                                             // dd($data);
-        $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
+        // $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
+        $data['status_absensis'] = $this->presensi_status->get();
         // return view('absensi.ijin_terlambat.index',$data);
         return view('absensi.ijin_terlambat.new.index',$data);
     }
@@ -221,7 +226,13 @@ class IjinTerlambatController extends Controller
     public function search(Request $request)
     {
         $date_live = Carbon::now()->format('Y');
-        if ($request->cari) {
+
+        if ($request->keterangan) {
+            $data['ijin_terlambats'] = $this->presensi_info->where('status',$request->keterangan)
+                                                ->whereBetween('scan_date',[$request->cari_tanggal_awal, $request->cari_tanggal_akhir])
+                                                ->orderBy('scan_date','desc')
+                                                ->paginate(20)->withQueryString();
+        }elseif ($request->cari) {
             $biodata_karyawan = BiodataKaryawan::select('nik','pin')
                                                 ->where('nama','LIKE','%'.$request->cari.'%')
                                                 ->orWhere('nik','LIKE','%'.$request->cari.'%')
