@@ -113,7 +113,7 @@
                                 @php
                                     $explode_presensiInfo_keterangan = explode('@',$ijin_terlambat->keterangan);
                                 @endphp
-                                {{ $ijin_terlambat->presensi_status->status_info.' - '.$explode_presensiInfo_keterangan[0] }}
+                                {!! $ijin_terlambat->presensi_status->status_info.' - '.'<span class="text-primary">'.$explode_presensiInfo_keterangan[0].'</span>' !!}
                             @else
                             -
                             @endif
