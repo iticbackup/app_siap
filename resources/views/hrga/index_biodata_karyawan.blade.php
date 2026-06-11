@@ -28,6 +28,7 @@
     @include('hrga.modalBuatTransferPin')
     @include('hrga.modalBuat')
     @include('hrga.modalBuatDataResign')
+    @include('hrga.modalTransferKaryawanJeda')
     @include('hrga.modalCaraPenggunaan')
     @include('hrga.modalEdit')
     @include('hrga.modalDetail')
@@ -515,6 +516,65 @@
                     }
 
                     $('.modalBuatTransferPin').modal('show');
+                },
+                error: function(request, status, error) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: error,
+                    });
+                }
+            });
+
+        }
+
+        function buatTransferKaryawanJeda(nik)
+        {
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('hrga/biodata_karyawan/') }}"+'/'+nik+'/detail',
+                contentType: "application/json;  charset=utf-8",
+                cache: false,
+                beforeSend: function() {
+                },
+                success: (result) => {
+                    if (result.success == true) {
+                        $('.jeda_nik_karyawan_lama').val(result.data.nik);
+                        $('.jeda_nama_karyawan_lama').val(result.data.nama_karyawan);
+                        $('.jeda_tempat_lahir_lama').val(result.data.tempat_lahir);
+                        $('.jeda_tanggal_lahir_lama').val(result.data.tanggal_lahir);
+                        $('.jeda_jenis_kelamin_lama').val(result.data.jenis_kelamin);
+                        $('.jeda_jenis_kelamin_baru').val(result.data.jenis_kelamin == 'Perempuan' ? 'P' : 'L');
+                        $('.jeda_alamat_lama').val(result.data.alamat);
+                        $('.jeda_kecamatan_lama').val(result.data.kecamatan);
+                        $('.jeda_kelurahan_lama').val(result.data.kelurahan);
+                        $('.jeda_kab_kota_lama').val(result.data.kab_kota);
+                        $('.jeda_provinsi_lama').val(result.data.provinsi);
+                        $('.jeda_email_lama').val(result.data.email);
+                        $('.jeda_no_telepon_lama').val(result.data.no_telepon);
+                        $('.jeda_status_keluarga_lama').val(result.data.status_keluarga);
+                        $('.jeda_golongan_darah_lama').val(result.data.golongan_darah);
+                        $('.jeda_pendidikan_lama').val(result.data.pendidikan);
+                        $('.jeda_no_npwp_lama').val(result.data.no_npwp);
+                        $('.jeda_pin_lama').val(result.data.pin);
+                        $('.jeda_sim_kendaraan_lama').val(result.data.sim_kendaraan);
+                        $('.jeda_no_bpjs_ketenagakerjaan_lama').val(result.data.no_bpjs_ketenagakerjaan);
+                        $('.jeda_no_bpjs_kesehatan_lama').val(result.data.no_bpjs_kesehatan);
+                        $('.jeda_no_rekening_mandiri_lama').val(result.data.no_rekening_mandiri);
+                        $('.jeda_no_rekening_bws_lama').val(result.data.no_rekening_bws);
+                        $('.jeda_no_rekening_bca_lama').val(result.data.no_rekening_bca);
+                        $('.jeda_tanggal_masuk_lama').val(result.data.tanggal_masuk);
+                        // document.getElementById('transferPinLama_nik').innerHTML = result.data.karyawan_lama.nik;
+                        // document.getElementById('transferPinLama_nama').innerHTML = result.data.karyawan_lama.nama;
+                        // document.getElementById('transferPinLama_pin').innerHTML = result.data.karyawan_lama.pin;
+
+                        // $('#transferPinBaru_nikKaryawan').val(result.data.karyawan_baru.nik);
+                        // document.getElementById('transferPinBaru_nik').innerHTML = result.data.karyawan_baru.nik;
+                        // document.getElementById('transferPinBaru_nama').innerHTML = result.data.karyawan_baru.nama;
+                    }else{
+
+                    }
+
+                    $('.modalBuatTransferKaryawanJeda').modal('show');
                 },
                 error: function(request, status, error) {
                     iziToast.error({
@@ -1674,6 +1734,77 @@
 
             
             // alert('test');
+        });
+
+        $('#form-transfer-karyawan-jeda-simpan').submit(function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            Swal.fire({
+                title: 'Apakah sudah yakin?',
+                // text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '$success',
+                cancelButtonColor: '$danger',
+                confirmButtonText: 'Yes'
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('hrga.biodata_karyawan.transferKaryawanJedaSimpan') }}",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Proses...',
+                                text: 'Data sedang diproses',
+                                imageHeight: 80,
+                                animation: false,
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            })
+                        },
+                        success: (result) => {
+                            if (result.success == true) {
+                                Swal.fire(
+                                    result.message_title,
+                                    result.message_content,
+                                    'success'
+                                );
+                                
+                                table.ajax.reload(null, false);
+                                this.reset;
+
+                                $('.modalBuatTransferKaryawanJeda').modal('hide');
+                            }else{
+                                var error = result.error;
+                                var txt_error = ""
+                                error.forEach(fun_error);
+
+                                function fun_error(value, index) {
+                                    txt_error += value;
+                                }
+
+                                Swal.fire(
+                                    'Gagal!',
+                                    txt_error,
+                                    'error'
+                                )
+                            }
+                        },
+                        error: function(request, status, error) {
+                            Swal.fire(
+                                'Error',
+                                error,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            })
+
         });
 
         function getProvinsi()

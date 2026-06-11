@@ -242,7 +242,10 @@ class HRGAController extends Controller
                                     $btn .= '<button class="btn" style="background-color: #2C687B; color: white" onclick="upload_foto(`'.$row->nik.'`)">'.'<i class="fas fa-upload"></i> '.'Upload Foto'.'</button>';
                                 }
                                 // $btn .= '<button class="btn btn-info" onclick="buat_kontrak(`'.$row->nik.'`)">'.'<i class="fas fa-plus"></i> '.'Input Kontrak'.'</button>';
-                                $btn .= '<button class="btn btn-danger" onclick="buatTransferPin(`'.$row->nik.'`)">'.'<i class="fas fa-exchange-alt"></i> '.'Transfer PIN'.'</button>';
+                                if ($row->status_karyawan == 'A' || $row->status_karyawan == 'K') {
+                                    $btn .= '<button class="btn btn-danger" onclick="buatTransferPin(`'.$row->nik.'`)">'.'<i class="fas fa-exchange-alt"></i> '.'Transfer PIN'.'</button>';
+                                    $btn .= '<button class="btn btn-primary" onclick="buatTransferKaryawanJeda(`'.$row->nik.'`)">'.'<i class="fas fa-exchange-alt"></i> '.'Transfer Karyawan Jeda'.'</button>';
+                                }
                                 $btn .= '<button class="btn btn-success" onclick="detail(`'.$row->nik.'`)">'.'<i class="fas fa-eye"></i></button>';
                                 $btn .= '<button class="btn btn-warning" onclick="edit(`'.$row->nik.'`)">'.'<i class="fas fa-edit"></i></button>';
                                 $btn .= '</div>';
@@ -1600,7 +1603,8 @@ class HRGAController extends Controller
             $akhir = new DateTime();
             $diff = $awal->diff($akhir);
             $masa_kerja = $diff->y.' Tahun '.$diff->m.' Bulan '.$diff->d.' Hari';
-            $tanggal_masuk = Carbon::create($biodata_karyawan->biodata_karyawan->tanggal_masuk)->format('d-m-Y');
+            $tanggal_masuk = $biodata_karyawan->biodata_karyawan->tanggal_masuk;
+            // $tanggal_masuk = Carbon::create($biodata_karyawan->biodata_karyawan->tanggal_masuk)->format('d-m-Y');
             // $tanggal_masuk = Carbon::create($biodata_karyawan->log_posisi->tanggal)->format('d-m-Y');
         }
 
@@ -1937,6 +1941,195 @@ class HRGAController extends Controller
             );
 
             return response()->json($array_message);
+        }
+
+        return response()->json(
+            [
+                'success' => false,
+                'error' => $validator->errors()->all()
+            ]
+        );
+
+    }
+
+    public function transferKaryawanJedaSimpan(Request $request)
+    {
+        $rules = [
+            'nik_baru' => 'required',
+            'nama_karyawan_baru' => 'required',
+            'tempat_lahir_baru' => 'required',
+            'tanggal_lahir_baru' => 'required',
+            'jenis_kelamin_baru' => 'required',
+            'alamat_baru' => 'required',
+            'kecamatan_baru' => 'required',
+            'kelurahan_baru' => 'required',
+            'kab_kota_baru' => 'required',
+            'provinsi_baru' => 'required',
+            'email_baru' => 'required',
+            'no_telepon_baru' => 'required',
+            'status_keluarga_baru' => 'required',
+            'golongan_darah_baru' => 'required',
+            'pendidikan_baru' => 'required',
+            'no_npwp_baru' => 'required',
+            'sim_kendaraan_baru' => 'required',
+            'no_bpjs_ketenagakerjaan_baru' => 'required',
+            'no_bpjs_kesehatan_baru' => 'required',
+            'no_rekening_mandiri_baru' => 'required',
+            'no_rekening_bws_baru' => 'required',
+            'no_rekening_bca_baru' => 'required',
+            'tanggal_masuk_baru' => 'required',
+        ];
+
+        $messages = [
+            'nik_baru.required'  => 'NIK Karyawan wajib diisi.',
+            // 'nik_baru.unique'  => 'NIK Karyawan Sudah Ada.',
+            'nama_karyawan_baru.required'  => 'Nama Karyawan wajib diisi.',
+            'tempat_lahir_baru.required'  => 'Tempat Lahir wajib diisi',
+            'tanggal_lahir_baru.required'  => 'Tanggal Lahir wajib diisi',
+            'jenis_kelamin_baru.required'  => 'Jenis Kelamin wajib diisi',
+            'alamat_baru.required'  => 'Alamat wajib diisi',
+            'kecamatan_baru.required'  => 'Kecamatan wajib diisi',
+            'kelurahan_baru.required'  => 'Kelurahan wajib diisi',
+            'kab_kota_baru.required'  => 'Kab/Kota wajib diisi',
+            'provinsi_baru.required'  => 'Provinsi wajib diisi',
+            'email_baru.required'  => 'Email wajib diisi',
+            'no_telepon_baru.required'  => 'No. Telpon wajib diisi',
+            'status_keluarga_baru.required'  => 'Status Keluarga wajib diisi',
+            'golongan_darah_baru.required'  => 'Golongan Darah wajib diisi',
+            'pendidikan_baru.required'  => 'Pendidikan wajib diisi',
+            'no_npwp_baru.required'  => 'NPWP wajib diisi',
+            'sim_kendaraan_baru.required'  => 'SIM Kendaraan wajib diisi',
+            'no_bpjs_ketenagakerjaan_baru.required'  => 'BPJS Ketenagakerjaan wajib diisi',
+            'no_bpjs_kesehatan_baru.required'  => 'BPJS Kesehatan wajib diisi',
+            'no_rekening_mandiri_baru.required'  => 'Rekening Mandiri wajib diisi',
+            'no_rekening_bws_baru.required'  => 'Rekening BWS wajib diisi',
+            'no_rekening_bca_baru.required'  => 'Rekening BCA wajib diisi',
+            'tanggal_masuk_baru.required'  => 'Tanggal Masuk wajib diisi',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->passes()) {
+            $karyawan = $this->biodata_karyawan->where('nik',$request->nik_lama)->first();
+            
+            if (empty($karyawan)) {
+                return response()->json([
+                    'success' => false,
+                    'message_title' => 'Gagal',
+                    'message_content' => 'NIK Karyawan Tidak Ditemukan'
+                ]);
+            }
+
+            $inputBiodataKaryawan['id'] = $this->biodata_karyawan->max('id')+1;
+            $inputBiodataKaryawan['nik'] = $request->nik_baru;
+            $inputBiodataKaryawan['nama'] = $request->nama_karyawan_baru;
+            $inputBiodataKaryawan['tempat_lahir'] = $request->tempat_lahir_baru;
+            $inputBiodataKaryawan['tgl_lahir'] = $request->tanggal_lahir_baru;
+            $inputBiodataKaryawan['alamat'] = $request->alamat_baru.' '.$request->kelurahan_baru.', '.$request->kecamatan_baru.', '.$request->kab_kota.', '.$request->provinsi;
+            $inputBiodataKaryawan['jenis_kelamin'] = $request->jenis_kelamin_baru;
+            $inputBiodataKaryawan['id_posisi'] = $karyawan->id_posisi;
+            $inputBiodataKaryawan['id_jabatan'] = $karyawan->id_jabatan;
+            $inputBiodataKaryawan['id_departemen'] = $karyawan->id_departemen;
+            $inputBiodataKaryawan['id_departemen_bagian'] = $karyawan->id_departemen_bagian;
+            $inputBiodataKaryawan['departemen_dept'] = $karyawan->departemen_dept;
+            $inputBiodataKaryawan['departemen_bagian'] = $karyawan->departemen_bagian;
+            $inputBiodataKaryawan['departemen_level'] = $karyawan->departemen_level;
+            $inputBiodataKaryawan['rekening'] = $karyawan->rekening;
+            $inputBiodataKaryawan['credit'] = $karyawan->credit;
+            $inputBiodataKaryawan['agama'] = $request->agama_baru;
+            $inputBiodataKaryawan['status_klg'] = $request->status_keluarga_baru;
+            $inputBiodataKaryawan['no_npwp'] = $request->no_npwp_baru;
+            $inputBiodataKaryawan['no_telp'] = $request->no_telepon_baru;
+            $inputBiodataKaryawan['no_bpjs_ketenagakerjaan'] = $request->no_bpjs_ketenagakerjaan_baru;
+            $inputBiodataKaryawan['no_bpjs_kesehatan'] = $request->no_bpjs_kesehatan_baru;
+            $inputBiodataKaryawan['no_rekening_mandiri'] = $request->no_rekening_mandiri_baru;
+            $inputBiodataKaryawan['no_rekening_bws'] = $request->no_rekening_bws_baru;
+            $inputBiodataKaryawan['no_rekening_bca'] = $request->no_rekening_bca_baru;
+            $inputBiodataKaryawan['golongan_darah'] = $request->golongan_darah_baru;
+            $inputBiodataKaryawan['pendidikan'] = $request->pendidikan_baru;
+            $inputBiodataKaryawan['email'] = $request->email_baru;
+            $inputBiodataKaryawan['kunci_loker'] = $karyawan->kunci_loker;
+            $inputBiodataKaryawan['sim_kendaraan'] = $request->sim_kendaraan_baru;
+            $inputBiodataKaryawan['pin'] = $request->pin_baru;
+            $inputBiodataKaryawan['kewarganegaraan'] = $request->kewarganegaraan_baru;
+            $inputBiodataKaryawan['foto_karyawan'] = $karyawan->foto_karyawan;
+            $inputBiodataKaryawan['status_karyawan'] = 'A';
+            $inputBiodataKaryawan['tanggal_masuk'] = $request->tanggal_masuk_baru;
+
+            $simpanKaryawanBaru = $this->biodata_karyawan->create($inputBiodataKaryawan);
+
+            $karyawan->update([
+                'status_karyawan' => 'R'
+            ]);
+
+            if($simpanKaryawanBaru){
+
+                $karyawanHRGA = $this->hrga_biodata_karyawan->where('nik',$request->nik_lama)->first();
+
+                $inputBiodataKaryawanHRGA['id'] = $this->hrga_biodata_karyawan->max('id')+1;
+                $inputBiodataKaryawanHRGA['nik'] = $request->nik_baru;
+                $inputBiodataKaryawanHRGA['no_npwp'] = $request->no_npwp_baru;
+                $inputBiodataKaryawanHRGA['no_telepon'] = $request->no_telepon_baru;
+                $inputBiodataKaryawanHRGA['no_bpjs_ketenagakerjaan'] = $request->no_bpjs_ketenagakerjaan_baru;
+                $inputBiodataKaryawanHRGA['no_bpjs_kesehatan'] = $request->no_bpjs_kesehatan_baru;
+                $inputBiodataKaryawanHRGA['no_rekening_mandiri'] = $request->no_rekening_mandiri_baru;
+                $inputBiodataKaryawanHRGA['no_rekening_bws'] = $request->no_rekening_bws_baru;
+                $inputBiodataKaryawanHRGA['no_rekening_bca'] = $request->no_rekening_bca_baru;
+                $inputBiodataKaryawanHRGA['departemen_dept'] = $karyawanHRGA->departemen_dept;
+                $inputBiodataKaryawanHRGA['departemen_bagian'] = $karyawanHRGA->departemen_bagian;
+                $inputBiodataKaryawanHRGA['departemen_level'] = $karyawanHRGA->departemen_level;
+                $inputBiodataKaryawanHRGA['tempat_lahir'] = $request->tempat_lahir_baru;
+                $inputBiodataKaryawanHRGA['tanggal_lahir'] = $request->tanggal_lahir_baru;
+                $inputBiodataKaryawanHRGA['alamat'] = $request->alamat_baru;
+                $inputBiodataKaryawanHRGA['kecamatan'] = $request->kecamatan_baru;
+                $inputBiodataKaryawanHRGA['kelurahan'] = $request->kelurahan_baru;
+                $inputBiodataKaryawanHRGA['kab_kota'] = $request->kab_kota_baru;
+                $inputBiodataKaryawanHRGA['provinsi'] = $request->provinsi_baru;
+                $inputBiodataKaryawanHRGA['jenis_kelamin'] = $request->jenis_kelamin_baru == 'L' ? 'Laki - Laki' : 'Perempuan';
+                $inputBiodataKaryawanHRGA['status_keluarga'] = $request->status_keluarga_baru;
+                $inputBiodataKaryawanHRGA['golongan_darah'] = $request->golongan_darah_baru;
+                $inputBiodataKaryawanHRGA['pendidikan'] = $request->pendidikan_baru;
+                $inputBiodataKaryawanHRGA['pendidikan'] = $request->pendidikan_baru;
+                $inputBiodataKaryawanHRGA['email'] = $request->email_baru;
+                $inputBiodataKaryawanHRGA['kunci_loker'] = $karyawanHRGA->kunci_loker;
+                $inputBiodataKaryawanHRGA['sim_kendaraan'] = $request->sim_kendaraan_baru;
+                $inputBiodataKaryawanHRGA['foto_karyawan'] = $karyawanHRGA->foto_karyawan;
+                $inputBiodataKaryawanHRGA['status_karyawan'] = 'Y';
+
+                $this->hrga_biodata_karyawan->create($inputBiodataKaryawanHRGA);
+
+                $this->hrga_status_kerja->create([
+                    'id' => $this->hrga_status_kerja->max('id')+1,
+                    'hrga_biodata_karyawan_id' => $inputBiodataKaryawanHRGA['id'],
+                    'pk' => 'Tetap',
+                    'ke' => 1,
+                    'tgl_mulai' => $request->tanggal_masuk_baru
+                ]);
+
+                $this->hrga_karyawan_resign->create([
+                    'id' => $this->hrga_karyawan_resign->max('id')+1,
+                    'hrga_biodata_karyawan_id' => $inputBiodataKaryawanHRGA['id'],
+                    'tanggal_resign' => $request->tanggal_resign_lama
+                ]);
+
+                $karyawanHRGA->update([
+                    'status_karyawan' => 'T'
+                ]);
+
+                $message_title="Berhasil !";
+                $message_content= "Karyawan ".$request->nik_baru.' - '.$request->nama_baru." Berhasil Dibuat";
+                $message_type="success";
+                $message_succes = true;
+
+                $array_message = array(
+                    'success' => $message_succes,
+                    'message_title' => $message_title,
+                    'message_content' => $message_content,
+                    'message_type' => $message_type,
+                );
+
+                return response()->json($array_message);
+            }
         }
 
         return response()->json(
