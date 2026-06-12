@@ -247,7 +247,10 @@ class HRGAController extends Controller
                                     $btn .= '<button class="btn btn-primary" onclick="buatTransferKaryawanJeda(`'.$row->nik.'`)">'.'<i class="fas fa-exchange-alt"></i> '.'Transfer Karyawan Jeda'.'</button>';
                                 }
                                 $btn .= '<button class="btn btn-success" onclick="detail(`'.$row->nik.'`)">'.'<i class="fas fa-eye"></i></button>';
-                                $btn .= '<button class="btn btn-warning" onclick="edit(`'.$row->nik.'`)">'.'<i class="fas fa-edit"></i></button>';
+                                if ($row->status_karyawan == 'A' || $row->status_karyawan == 'K') {
+                                    $btn .= '<button class="btn btn-warning" onclick="edit(`'.$row->nik.'`)">'.'<i class="fas fa-edit"></i></button>';
+
+                                }
                                 $btn .= '</div>';
                                 return $btn;
                                 // return $row->nik;
