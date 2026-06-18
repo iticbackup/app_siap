@@ -145,224 +145,226 @@
                     <div class="card mb-2" data-title="Product Card" data-intro="Here is a product card with buttons!"
                         data-step="2">
                         <div class="card-body">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">NIK</th>
-                                        <th class="text-center">Nama</th>
-                                        <th class="text-center">Departemen</th>
-                                        <th class="text-center">Posisi</th>
-                                        <th class="text-center">Tanggal</th>
-                                        <th class="text-center">Jam Masuk</th>
-                                        <th class="text-center">Jam Pulang</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($biodata_karyawans as $key => $biodata_karyawan)
-                                        {{-- @dd($biodata_karyawan->fin_pro_new(date('Y-m-d'))) --}}
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
                                         <tr>
-                                            <td class="text-center" style="vertical-align: middle">
-                                                {{ $biodata_karyawan->nik }}</td>
-                                            <td class="text-center" style="vertical-align: middle">
-                                                {{ $biodata_karyawan->nama }}</td>
-                                            <td class="text-center" style="vertical-align: middle">
-                                                {{ $biodata_karyawan->nama_departemen }}</td>
-                                            <td class="text-center" style="vertical-align: middle">
-                                                {{ $biodata_karyawan->nama_posisi }}</td>
-                                            @php
-                                                $date_live = request('tanggal') ? request('tanggal') : date('Y-m-d');
-                                                $mesin_absensi = $fin_pro
-                                                    ->select(
-                                                        \DB::raw('DATE(scan_date) AS tanggal'),
-                                                        'pin AS pin',
-                                                        \DB::raw(
-                                                            "MAX(CASE WHEN DATE_FORMAT(scan_date,'%H:%i:%s') <= '11:59:59' THEN DATE_FORMAT(scan_date,'%H:%i:%s') ELSE NULL END) AS jam_masuk",
-                                                        ),
-                                                        \DB::raw(
-                                                            "MAX(CASE WHEN DATE_FORMAT(scan_date,'%H:%i:%s') >= '12:00:00' THEN DATE_FORMAT(scan_date,'%H:%i:%s') ELSE NULL END) AS jam_pulang",
-                                                        ),
-                                                    )
-                                                    ->where('pin', $biodata_karyawan->pin)
-                                                    // ->where('scan_date', 'LIKE', '%' . $date_live . '%')
-                                                    ->whereDate('scan_date', $date_live)
-                                                    // ->whereTime('scan_date', '<=', '11:59:59')
-                                                    ->groupBy(\DB::raw('DATE(scan_date)'), 'pin')
-                                                    ->orderBy(\DB::raw('DATE(scan_date)'))
-                                                    ->first();
-
-                                                // dd($mesin_absensi);
-
-                                                if (empty($mesin_absensi->jam_masuk)) {
-                                                    $presensi_info_masuk = $presensi_info
-                                                        ->where('scan_date', 'LIKE', '%' . $date_live . '%')
-                                                        ->where('pin', $biodata_karyawan->pin)
-                                                        ->whereTime('scan_date', '<=', '11:59:59')
-                                                        ->first();
-                                                    if (empty($presensi_info_masuk)) {
-                                                        $jam_masuk =
-                                                            '<a type="button" onclick="detail_non_absen_jam_masuk(`' .
-                                                            $date_live .
-                                                            '`,`' .
-                                                            $biodata_karyawan->pin .
-                                                            '`,`' .
-                                                            // 0 .
-                                                            '`)"><i data-acorn-icon="plus" class="text-success"></i></a>';
-                                                        // $jam_masuk = '-';
-                                                    } else {
-                                                        if ($presensi_info_masuk->status == 4) {
-                                                            $jam_masuk =
-                                                                '<a type="button" onclick="detail_non_absen_jam_masuk(`' .
-                                                                $date_live .
-                                                                '`,`' .
-                                                                $biodata_karyawan->pin .
-                                                                '`,`' .
-                                                                // 0 .
-                                                                '`)" style="color: red">Sakit</a>';
-                                                        } elseif ($presensi_info_masuk->status == 7) {
-                                                            $jam_masuk =
-                                                                '<a type="button" onclick="detail_non_absen_jam_masuk(`' .
-                                                                $date_live .
-                                                                '`,`' .
-                                                                $biodata_karyawan->pin .
-                                                                '`,`' .
-                                                                // 0 .
-                                                                '`)" style="color: purple">Absen</a>';
-                                                        } elseif ($presensi_info_masuk->status == 13) {
-                                                            $jam_masuk =
-                                                                '<a type="button" onclick="detail_non_absen_jam_masuk(`' .
-                                                                $date_live .
-                                                                '`,`' .
-                                                                $biodata_karyawan->pin .
-                                                                '`,`' .
-                                                                // 0 .
-                                                                '`)" style="color: orange">Cuti</a>';
-                                                        } else {
-                                                            $jam_masuk =
-                                                                '<a type="button" class="text-info" onclick="detail_edit_non_absensi_jam_masuk(`' .
-                                                                $date_live .
-                                                                '`,`' .
-                                                                $biodata_karyawan->pin .
-                                                                '`,`' .
-                                                                '`)">' .
-                                                                \Carbon\Carbon::create(
-                                                                    $presensi_info_masuk->scan_date,
-                                                                )->format('H:i') .
-                                                                '</a>';
-                                                        }
-                                                    }
-                                                } else {
-                                                    $jam_masuk =
-                                                        '<a type="button" onclick="detail_absensi_jam_masuk(`' .
-                                                        $mesin_absensi->tanggal .
-                                                        ' ' .
-                                                        $mesin_absensi->jam_masuk .
-                                                        '`,`' .
-                                                        $mesin_absensi->pin .
-                                                        '`)" class="text-success">' .
-                                                        \Carbon\Carbon::create($mesin_absensi->jam_masuk)->format(
-                                                            'H:i',
-                                                        ) .
-                                                        '</a>';
-                                                }
-
-                                                if (empty($mesin_absensi->jam_pulang)) {
-                                                    $presensi_info_pulang = $presensi_info
-                                                        ->where('scan_date', 'LIKE', '%' . $date_live . '%')
-                                                        ->where('pin', $biodata_karyawan->pin)
-                                                        ->whereTime('scan_date', '>=', '12:00:00')
-                                                        ->first();
-                                                    if (empty($presensi_info_pulang)) {
-                                                        $jam_pulang =
-                                                            '<a type="button" onclick="detail_non_absen_jam_keluar(`' .
-                                                            $date_live .
-                                                            '`,`' .
-                                                            $biodata_karyawan->pin .
-                                                            '`,`' .
-                                                            // 0 .
-                                                            '`)"><i data-acorn-icon="plus" class="text-success"></i></a>';
-                                                    } else {
-                                                        if ($presensi_info_pulang->status == 4) {
-                                                            $jam_pulang =
-                                                                '<a type="button" onclick="detail_non_absen_jam_keluar(`' .
-                                                                $mesin_absensi->tanggal .
-                                                                ' ' .
-                                                                $mesin_absensi->jam_pulang .
-                                                                '`,`' .
-                                                                $biodata_karyawan->pin .
-                                                                '`,`' .
-                                                                // 0 .
-                                                                '`)" style="color: red">Sakit</a>';
-                                                        } elseif ($presensi_info_pulang->status == 7) {
-                                                            $jam_pulang =
-                                                                '<a type="button" onclick="detail_non_absen_jam_keluar(`' .
-                                                                $mesin_absensi->tanggal .
-                                                                ' ' .
-                                                                $mesin_absensi->jam_pulang .
-                                                                '`,`' .
-                                                                $biodata_karyawan->pin .
-                                                                '`,`' .
-                                                                // 0 .
-                                                                '`)" style="color: purple">Absen</a>';
-                                                        } elseif ($presensi_info_pulang->status == 13) {
-                                                            $jam_pulang =
-                                                                '<a type="button" onclick="detail_non_absen_jam_keluar(`' .
-                                                                $mesin_absensi->tanggal .
-                                                                ' ' .
-                                                                $mesin_absensi->jam_pulang .
-                                                                '`,`' .
-                                                                $biodata_karyawan->pin .
-                                                                '`,`' .
-                                                                // 0 .
-                                                                '`)" style="color: orange">Cuti</a>';
-                                                        } else {
-                                                            $jam_pulang =
-                                                                '<a type="button" onclick="detail_non_absen_jam_keluar(`' .
-                                                                $mesin_absensi->tanggal .
-                                                                ' ' .
-                                                                $mesin_absensi->jam_pulang .
-                                                                '`,`' .
-                                                                $biodata_karyawan->pin .
-                                                                '`,`' .
-                                                                // 0 .
-                                                                '`)">' .
-                                                                $presensi_info_pulang->scan_date .
-                                                                '</a>';
-                                                        }
-                                                    }
-                                                } else {
-                                                    // $jam_pulang = $mesin_absensi->jam_pulang;
-                                                    $jam_pulang =
-                                                        '<a type="button" onclick="detail_absensi_jam_keluar(`' .
-                                                        $mesin_absensi->tanggal .
-                                                        ' ' .
-                                                        $mesin_absensi->jam_pulang .
-                                                        '`,`' .
-                                                        $mesin_absensi->pin .
-                                                        '`)" style="color: blue">' .
-                                                        \Carbon\Carbon::create($mesin_absensi->jam_pulang)->format(
-                                                            'H:i',
-                                                        ) .
-                                                        '</a>';
-                                                }
-
-                                                if (!empty(request('tanggal'))) {
-                                                    $tanggal = \Carbon\Carbon::create(request('tanggal'))->isoFormat(
-                                                        'DD MMMM YYYY',
-                                                    );
-                                                } else {
-                                                    $tanggal = \Carbon\Carbon::now()->isoFormat('DD MMMM YYYY');
-                                                }
-                                            @endphp
-                                            <td class="text-center">{{ $tanggal }}</td>
-                                            <td class="text-center" style="vertical-align: middle">{!! $jam_masuk !!}
-                                            </td>
-                                            <td class="text-center" style="vertical-align: middle">{!! $jam_pulang !!}
-                                            </td>
+                                            <th class="text-center">NIK</th>
+                                            <th class="text-center">Nama</th>
+                                            <th class="text-center">Departemen</th>
+                                            <th class="text-center">Posisi</th>
+                                            <th class="text-center">Tanggal</th>
+                                            <th class="text-center">Jam Masuk</th>
+                                            <th class="text-center">Jam Pulang</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            {{ $biodata_karyawans->links('vendor.pagination.paginationAcorn') }}
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($biodata_karyawans as $key => $biodata_karyawan)
+                                            {{-- @dd($biodata_karyawan->fin_pro_new(date('Y-m-d'))) --}}
+                                            <tr>
+                                                <td class="text-center" style="vertical-align: middle">
+                                                    {{ $biodata_karyawan->nik }}</td>
+                                                <td class="text-center" style="vertical-align: middle">
+                                                    {{ $biodata_karyawan->nama }}</td>
+                                                <td class="text-center" style="vertical-align: middle">
+                                                    {{ $biodata_karyawan->nama_departemen }}</td>
+                                                <td class="text-center" style="vertical-align: middle">
+                                                    {{ $biodata_karyawan->nama_posisi }}</td>
+                                                @php
+                                                    $date_live = request('tanggal') ? request('tanggal') : date('Y-m-d');
+                                                    $mesin_absensi = $fin_pro
+                                                        ->select(
+                                                            \DB::raw('DATE(scan_date) AS tanggal'),
+                                                            'pin AS pin',
+                                                            \DB::raw(
+                                                                "MAX(CASE WHEN DATE_FORMAT(scan_date,'%H:%i:%s') <= '11:59:59' THEN DATE_FORMAT(scan_date,'%H:%i:%s') ELSE NULL END) AS jam_masuk",
+                                                            ),
+                                                            \DB::raw(
+                                                                "MAX(CASE WHEN DATE_FORMAT(scan_date,'%H:%i:%s') >= '12:00:00' THEN DATE_FORMAT(scan_date,'%H:%i:%s') ELSE NULL END) AS jam_pulang",
+                                                            ),
+                                                        )
+                                                        ->where('pin', $biodata_karyawan->pin)
+                                                        // ->where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                        ->whereDate('scan_date', $date_live)
+                                                        // ->whereTime('scan_date', '<=', '11:59:59')
+                                                        ->groupBy(\DB::raw('DATE(scan_date)'), 'pin')
+                                                        ->orderBy(\DB::raw('DATE(scan_date)'))
+                                                        ->first();
+    
+                                                    // dd($mesin_absensi);
+    
+                                                    if (empty($mesin_absensi->jam_masuk)) {
+                                                        $presensi_info_masuk = $presensi_info
+                                                            ->where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                            ->where('pin', $biodata_karyawan->pin)
+                                                            ->whereTime('scan_date', '<=', '11:59:59')
+                                                            ->first();
+                                                        if (empty($presensi_info_masuk)) {
+                                                            $jam_masuk =
+                                                                '<a type="button" onclick="detail_non_absen_jam_masuk(`' .
+                                                                $date_live .
+                                                                '`,`' .
+                                                                $biodata_karyawan->pin .
+                                                                '`,`' .
+                                                                // 0 .
+                                                                '`)"><i data-acorn-icon="plus" class="text-success"></i></a>';
+                                                            // $jam_masuk = '-';
+                                                        } else {
+                                                            if ($presensi_info_masuk->status == 4) {
+                                                                $jam_masuk =
+                                                                    '<a type="button" onclick="detail_non_absen_jam_masuk(`' .
+                                                                    $date_live .
+                                                                    '`,`' .
+                                                                    $biodata_karyawan->pin .
+                                                                    '`,`' .
+                                                                    // 0 .
+                                                                    '`)" style="color: red">Sakit</a>';
+                                                            } elseif ($presensi_info_masuk->status == 7) {
+                                                                $jam_masuk =
+                                                                    '<a type="button" onclick="detail_non_absen_jam_masuk(`' .
+                                                                    $date_live .
+                                                                    '`,`' .
+                                                                    $biodata_karyawan->pin .
+                                                                    '`,`' .
+                                                                    // 0 .
+                                                                    '`)" style="color: purple">Absen</a>';
+                                                            } elseif ($presensi_info_masuk->status == 13) {
+                                                                $jam_masuk =
+                                                                    '<a type="button" onclick="detail_non_absen_jam_masuk(`' .
+                                                                    $date_live .
+                                                                    '`,`' .
+                                                                    $biodata_karyawan->pin .
+                                                                    '`,`' .
+                                                                    // 0 .
+                                                                    '`)" style="color: orange">Cuti</a>';
+                                                            } else {
+                                                                $jam_masuk =
+                                                                    '<a type="button" class="text-info" onclick="detail_edit_non_absensi_jam_masuk(`' .
+                                                                    $date_live .
+                                                                    '`,`' .
+                                                                    $biodata_karyawan->pin .
+                                                                    '`,`' .
+                                                                    '`)">' .
+                                                                    \Carbon\Carbon::create(
+                                                                        $presensi_info_masuk->scan_date,
+                                                                    )->format('H:i') .
+                                                                    '</a>';
+                                                            }
+                                                        }
+                                                    } else {
+                                                        $jam_masuk =
+                                                            '<a type="button" onclick="detail_absensi_jam_masuk(`' .
+                                                            $mesin_absensi->tanggal .
+                                                            ' ' .
+                                                            $mesin_absensi->jam_masuk .
+                                                            '`,`' .
+                                                            $mesin_absensi->pin .
+                                                            '`)" class="text-success">' .
+                                                            \Carbon\Carbon::create($mesin_absensi->jam_masuk)->format(
+                                                                'H:i',
+                                                            ) .
+                                                            '</a>';
+                                                    }
+    
+                                                    if (empty($mesin_absensi->jam_pulang)) {
+                                                        $presensi_info_pulang = $presensi_info
+                                                            ->where('scan_date', 'LIKE', '%' . $date_live . '%')
+                                                            ->where('pin', $biodata_karyawan->pin)
+                                                            ->whereTime('scan_date', '>=', '12:00:00')
+                                                            ->first();
+                                                        if (empty($presensi_info_pulang)) {
+                                                            $jam_pulang =
+                                                                '<a type="button" onclick="detail_non_absen_jam_keluar(`' .
+                                                                $date_live .
+                                                                '`,`' .
+                                                                $biodata_karyawan->pin .
+                                                                '`,`' .
+                                                                // 0 .
+                                                                '`)"><i data-acorn-icon="plus" class="text-success"></i></a>';
+                                                        } else {
+                                                            if ($presensi_info_pulang->status == 4) {
+                                                                $jam_pulang =
+                                                                    '<a type="button" onclick="detail_non_absen_jam_keluar(`' .
+                                                                    $mesin_absensi->tanggal .
+                                                                    ' ' .
+                                                                    $mesin_absensi->jam_pulang .
+                                                                    '`,`' .
+                                                                    $biodata_karyawan->pin .
+                                                                    '`,`' .
+                                                                    // 0 .
+                                                                    '`)" style="color: red">Sakit</a>';
+                                                            } elseif ($presensi_info_pulang->status == 7) {
+                                                                $jam_pulang =
+                                                                    '<a type="button" onclick="detail_non_absen_jam_keluar(`' .
+                                                                    $mesin_absensi->tanggal .
+                                                                    ' ' .
+                                                                    $mesin_absensi->jam_pulang .
+                                                                    '`,`' .
+                                                                    $biodata_karyawan->pin .
+                                                                    '`,`' .
+                                                                    // 0 .
+                                                                    '`)" style="color: purple">Absen</a>';
+                                                            } elseif ($presensi_info_pulang->status == 13) {
+                                                                $jam_pulang =
+                                                                    '<a type="button" onclick="detail_non_absen_jam_keluar(`' .
+                                                                    $mesin_absensi->tanggal .
+                                                                    ' ' .
+                                                                    $mesin_absensi->jam_pulang .
+                                                                    '`,`' .
+                                                                    $biodata_karyawan->pin .
+                                                                    '`,`' .
+                                                                    // 0 .
+                                                                    '`)" style="color: orange">Cuti</a>';
+                                                            } else {
+                                                                $jam_pulang =
+                                                                    '<a type="button" onclick="detail_non_absen_jam_keluar(`' .
+                                                                    $mesin_absensi->tanggal .
+                                                                    ' ' .
+                                                                    $mesin_absensi->jam_pulang .
+                                                                    '`,`' .
+                                                                    $biodata_karyawan->pin .
+                                                                    '`,`' .
+                                                                    // 0 .
+                                                                    '`)">' .
+                                                                    $presensi_info_pulang->scan_date .
+                                                                    '</a>';
+                                                            }
+                                                        }
+                                                    } else {
+                                                        // $jam_pulang = $mesin_absensi->jam_pulang;
+                                                        $jam_pulang =
+                                                            '<a type="button" onclick="detail_absensi_jam_keluar(`' .
+                                                            $mesin_absensi->tanggal .
+                                                            ' ' .
+                                                            $mesin_absensi->jam_pulang .
+                                                            '`,`' .
+                                                            $mesin_absensi->pin .
+                                                            '`)" style="color: blue">' .
+                                                            \Carbon\Carbon::create($mesin_absensi->jam_pulang)->format(
+                                                                'H:i',
+                                                            ) .
+                                                            '</a>';
+                                                    }
+    
+                                                    if (!empty(request('tanggal'))) {
+                                                        $tanggal = \Carbon\Carbon::create(request('tanggal'))->isoFormat(
+                                                            'DD MMMM YYYY',
+                                                        );
+                                                    } else {
+                                                        $tanggal = \Carbon\Carbon::now()->isoFormat('DD MMMM YYYY');
+                                                    }
+                                                @endphp
+                                                <td class="text-center">{{ $tanggal }}</td>
+                                                <td class="text-center" style="vertical-align: middle">{!! $jam_masuk !!}
+                                                </td>
+                                                <td class="text-center" style="vertical-align: middle">{!! $jam_pulang !!}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                {{ $biodata_karyawans->links('vendor.pagination.paginationAcorn') }}
+                            </div>
                         </div>
                     </div>
                 </div>
