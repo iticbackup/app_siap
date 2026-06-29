@@ -293,9 +293,103 @@ class AbsensiController extends Controller
         // }
     }
 
-    // public function detail($nik){
-    //     return $nik;
-    // }
+    public function indexNew(Request $request)
+    {
+        if (auth()->user()->nik == 0000000) {
+            // $data['biodata_karyawans'] = Cache::remember('biodata_karyawan', 60, function(){
+            //     return $this->biodata_karyawan ->select(
+            //                             'biodata_karyawan.id as id',
+            //                             'biodata_karyawan.nik as nik',
+            //                             'biodata_karyawan.nama as nama',
+            //                             'biodata_karyawan.tempat_lahir as tempat_lahir',
+            //                             'biodata_karyawan.tgl_lahir as tgl_lahir',
+            //                             'biodata_karyawan.alamat as alamat',
+            //                             'biodata_karyawan.jenis_kelamin as jenis_kelamin',
+            //                             'biodata_karyawan.pin as pin',
+            //                             'departemen.nama_departemen as nama_departemen',
+            //                             'posisi.nama_posisi as nama_posisi',
+            //                         )
+            //                         ->leftJoin('departemen','departemen.id','=','biodata_karyawan.id_departemen')
+            //                         ->leftJoin('posisi','posisi.id','=','biodata_karyawan.id_posisi')
+            //                         ->where(function($query) {
+            //                             return $query->where('nik','!=','1000001')
+            //                                         ->where('nik','!=','1000002')
+            //                                         ->where('nik','!=','1000003');
+            //                         })
+            //                         ->orderBy('id_departemen','asc')
+            //                         ->where('status_karyawan','!=','R')
+            //                         ->paginate(20);
+            // });
+
+            $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
+
+            $data['fin_pro'] = $this->fin_pro;
+            $data['presensi_info'] = $this->presensi_info;
+            $data['departemens'] = $this->itic_departemen->all();
+
+            $data['peringkat_absensis'] = $this->presensi_info->with('biodata_karyawan')
+                                                            ->select('pin',DB::raw('COUNT(*) as total_absensi'))
+                                                            ->whereYear('scan_date',date('Y'))
+                                                            ->groupBy('pin')
+                                                            ->orderBy('total_absensi','desc')
+                                                            ->limit(6)
+                                                            ->get();
+            // dd($data);
+            return view('absensi.home.index',$data);
+        }else{
+            $akses_departemen = $this->departemen_user->whereIn('departemen_id',[3,4])->where('nik',auth()->user()->nik)->first();
+            // dd($akses_departemen);
+            if (empty($akses_departemen)) {
+                return redirect()->back()->with('error','Maaf Anda Tidak Bisa Akses Halaman Absensi');
+            }else{
+                if ($akses_departemen->nik == auth()->user()->nik) {
+                    // $data['biodata_karyawans'] = Cache::remember('biodata_karyawan', 60, function(){
+                    //     return $this->biodata_karyawan
+                    //                             ->select(
+                    //                                 'biodata_karyawan.id as id',
+                    //                                 'biodata_karyawan.nik as nik',
+                    //                                 'biodata_karyawan.nama as nama',
+                    //                                 'biodata_karyawan.tempat_lahir as tempat_lahir',
+                    //                                 'biodata_karyawan.tgl_lahir as tgl_lahir',
+                    //                                 'biodata_karyawan.alamat as alamat',
+                    //                                 'biodata_karyawan.jenis_kelamin as jenis_kelamin',
+                    //                                 'biodata_karyawan.pin as pin',
+                    //                                 'departemen.nama_departemen as nama_departemen',
+                    //                                 'posisi.nama_posisi as nama_posisi',
+                    //                             )
+                    //                             ->leftJoin('departemen','departemen.id','=','biodata_karyawan.id_departemen')
+                    //                             ->leftJoin('posisi','posisi.id','=','biodata_karyawan.id_posisi')
+                    //                             // ->leftJoin('fin_pro.att_log','att_log.pin','=','biodata_karyawan.pin')
+                    //                             ->where(function($query) {
+                    //                                 return $query->where('nik','!=','1000001')
+                    //                                             ->where('nik','!=','1000002')
+                    //                                             ->where('nik','!=','1000003');
+                    //                             })
+                    //                             ->orderBy('id_departemen','asc')
+                    //                             ->where('status_karyawan','!=','R')
+                    //                             ->paginate(20);
+                    // });
+                                                // dd($data);
+                    $data['status_absensis'] = DB::connection('absensi')->table('att_status')->get();
+                    $data['fin_pro'] = $this->fin_pro;
+                    $data['presensi_info'] = $this->presensi_info;
+                    $data['departemens'] = $this->itic_departemen->all();
+
+                    $data['peringkat_absensis'] = $this->presensi_info->with('biodata_karyawan')
+                                                                    ->select('pin',DB::raw('COUNT(*) as total_absensi'))
+                                                                    ->whereYear('scan_date',date('Y'))
+                                                                    ->groupBy('pin')
+                                                                    ->orderBy('total_absensi','desc')
+                                                                    ->limit(6)
+                                                                    ->get();
+                    return view('absensi.home.index',$data);
+
+                }else{
+                    return redirect()->back()->with('error','Maaf Anda Tidak Bisa Akses Halaman Absensi');
+                }
+            }
+        }
+    }
 
     public function input_modal_nofinger_jam_masuk_absensi($date_live,$pin)
     {

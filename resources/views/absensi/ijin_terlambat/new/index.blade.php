@@ -70,6 +70,7 @@
                     <tr>
                         <th class="text-center" style="width: 15%">Karyawan</th>
                         <th class="text-center">Tanggal</th>
+                        <th class="text-center">Jenis Absensi</th>
                         <th class="text-center">Keterangan</th>
                         <th class="text-center">Jam Datang</th>
                         <th class="text-center">Action</th>
@@ -110,17 +111,21 @@
                         </td>
                         <td class="text-center" style="vertical-align: middle">
                             @if (!empty($ijin_terlambat->presensi_status->status_info))
-                                @php
-                                    $explode_presensiInfo_keterangan = explode('@',$ijin_terlambat->keterangan);
-                                @endphp
-                                {!! $ijin_terlambat->presensi_status->status_info.' - '.'<span class="text-primary">'.$explode_presensiInfo_keterangan[0].'</span>' !!}
+                                {!! $ijin_terlambat->presensi_status->status_info !!}
                             @else
                             -
                             @endif
                         </td>
                         <td class="text-center" style="vertical-align: middle">
+                            @php
+                                $explode_presensiInfo_keterangan = explode('@',$ijin_terlambat->keterangan);
+                            @endphp
+                            {{ $explode_presensiInfo_keterangan[0] }}
+                        </td>
+                        <td class="text-center" style="vertical-align: middle">
                             @if (
                                 $ijin_terlambat->presensi_status->status_id == 4 ||
+                                $ijin_terlambat->presensi_status->status_id == 6 ||
                                 $ijin_terlambat->presensi_status->status_id == 13
                             )
                                 -
@@ -145,6 +150,16 @@
                     </tr>
                     @endforelse
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th class="text-center" style="width: 15%">Karyawan</th>
+                        <th class="text-center">Tanggal</th>
+                        <th class="text-center">Jenis Absensi</th>
+                        <th class="text-center">Keterangan</th>
+                        <th class="text-center">Jam Datang</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </tfoot>
             </table>
             {{ $ijin_terlambats->links('vendor.pagination.paginationAcorn') }}
         </div>
