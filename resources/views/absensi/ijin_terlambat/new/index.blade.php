@@ -126,7 +126,8 @@
                             @if (
                                 $ijin_terlambat->presensi_status->status_id == 4 ||
                                 $ijin_terlambat->presensi_status->status_id == 6 ||
-                                $ijin_terlambat->presensi_status->status_id == 13
+                                $ijin_terlambat->presensi_status->status_id == 13 || 
+                                $ijin_terlambat->presensi_status->status_id == 14
                             )
                                 -
                             @else
